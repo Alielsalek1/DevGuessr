@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\MyBackendTemplate.Domain.csproj" />
-    <ProjectReference Include="..\Application\MyBackendTemplate.Application.csproj" />
+    <ProjectReference Include="..\Domain\Techdle.Domain.csproj" />
+    <ProjectReference Include="..\Application\Techdle.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

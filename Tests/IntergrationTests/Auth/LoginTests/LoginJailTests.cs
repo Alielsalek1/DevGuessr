@@ -11,7 +11,7 @@ namespace Tests.Auth;
 [Collection("Integration Tests")]
 public class LoginJailTests(CustomWebApplicationFactory factory) : BaseIntegrationTest(factory)
 {
-    private const string RedisPrefix = "MyBackendTemplate_";
+    private const string RedisPrefix = "Techdle_";
 
     [Fact]
     public async Task Login_FourFailedAttempts_CreatesJailInRedis()

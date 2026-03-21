@@ -5,7 +5,7 @@ networks:
 services:
   postgres:
     image: docker.io/postgres:16-alpine
-    container_name: mybackendtemplate-db
+    container_name: techdle-db
     restart: unless-stopped
     networks:
       - backend
@@ -23,7 +23,7 @@ services:
 
   redis:
     image: docker.io/redis:7-alpine
-    container_name: mybackendtemplate-redis
+    container_name: techdle-redis
     restart: unless-stopped
     networks:
       - backend
@@ -37,7 +37,7 @@ services:
     build:
       context: .
       dockerfile: Src/API/Dockerfile
-    container_name: mybackendtemplate-api
+    container_name: techdle-api
     restart: unless-stopped
     networks:
       - backend
@@ -53,7 +53,7 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: mybackendtemplate-nginx
+    container_name: techdle-nginx
     restart: unless-stopped
     networks:
       - backend
@@ -70,7 +70,7 @@ services:
 
   seq:
     image: datalust/seq:latest
-    container_name: mybackendtemplate-seq
+    container_name: techdle-seq
     restart: unless-stopped
     networks:
       - backend
@@ -82,7 +82,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: mybackendtemplate-rabbitmq
+    container_name: techdle-rabbitmq
     restart: unless-stopped
     networks:
       - backend

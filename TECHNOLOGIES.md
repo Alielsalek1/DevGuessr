@@ -1,6 +1,6 @@
 # Technology Reference
 
-This document summarizes the technologies and implementation patterns used in `MyBackendTemplate`.
+This document summarizes the technologies and implementation patterns used in `Techdle`.
 
 For architectural decision rationale, see:
 

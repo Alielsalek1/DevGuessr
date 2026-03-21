@@ -29,8 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\MyBackendTemplate.Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\MyBackendTemplate.Infrastructure.csproj" />
+    <ProjectReference Include="..\Application\Techdle.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\Techdle.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

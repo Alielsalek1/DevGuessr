@@ -55,11 +55,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
     public new async Task DisposeAsync()
     {
-        if (_orchestrator != null) await _orchestrator.DisposeAsync();
+        await base.DisposeAsync(); // Gracefully stops the Web Host and Hangfire first
+        if (_orchestrator != null) await _orchestrator.DisposeAsync(); // Then tear down the Postgres container safely
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "1");
         builder.UseEnvironment("Testing");
         builder.ConfigureTestServices(services =>
         {
@@ -104,6 +106,18 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         base.ConfigureClient(client);
         // Add a header that the middleware will use to set the IP
         client.DefaultRequestHeaders.Add("X-Test-Remote-IP", FakeRemoteIpAddressMiddleware.DefaultTestIpAddress);
+    }
+
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        var host = base.CreateHost(builder);
+        
+        // Mute Serilog globally for the test environment AFTER Program.cs configures it
+        Serilog.Log.Logger = new Serilog.LoggerConfiguration()
+            .MinimumLevel.Error()
+            .CreateLogger();
+            
+        return host;
     }
 }
 

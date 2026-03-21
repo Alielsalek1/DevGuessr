@@ -1,4 +1,4 @@
-using MyBackendTemplate.API.Middlewares;
+using Techdle.API.Middlewares;
 using DotNetEnv;
 using Serilog;
 using Microsoft.AspNetCore.Authorization;

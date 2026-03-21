@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Src\API\MyBackendTemplate.API.csproj" />
-    <ProjectReference Include="..\Src\Infrastructure\MyBackendTemplate.Infrastructure.csproj" />
+    <ProjectReference Include="..\Src\API\Techdle.API.csproj" />
+    <ProjectReference Include="..\Src\Infrastructure\Techdle.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

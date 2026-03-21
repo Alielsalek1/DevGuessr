@@ -89,12 +89,12 @@ public class RegisterationSuccessTests(CustomWebApplicationFactory factory) : Ba
         Assert.False(string.IsNullOrEmpty(token), "Token should not be null or empty");
 
         // Use the native Cache (IDistributedCache) to verify the value
-        // It handles the "MyBackendTemplate_" prefix automatically
+        // It handles the "Techdle_" prefix automatically
         var storedUserId = await Cache.GetStringAsync($"new_user:{token}");
         Assert.NotNull(storedUserId);
         
         // Use Redis provider only for TTL or low-level checks if needed, but with correct key
-        var redisKey = $"MyBackendTemplate_new_user:{token}";
+        var redisKey = $"Techdle_new_user:{token}";
         var ttl = await Redis.GetTTLAsync(redisKey);
         Assert.True(ttl > 0);
         Assert.True(ttl <= 600); // 10 minutes

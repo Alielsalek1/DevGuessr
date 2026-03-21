@@ -4,7 +4,7 @@ using Application.Constants;
 using Application.Utils;
 using Domain.Exceptions;
 
-namespace MyBackendTemplate.API.Middlewares;
+namespace Techdle.API.Middlewares;
 public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
 {
     private readonly RequestDelegate _next = next;

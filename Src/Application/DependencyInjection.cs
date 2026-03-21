@@ -67,7 +67,7 @@ public static class DependencyInjection
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = redisConnectionString;
-            options.InstanceName = "MyBackendTemplate_";
+            options.InstanceName = "Techdle_";
         });
         return services;
     }

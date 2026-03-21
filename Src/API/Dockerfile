@@ -3,24 +3,24 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy project files for restore
-COPY ["Src/Domain/MyBackendTemplate.Domain.csproj", "Src/Domain/"]
-COPY ["Src/Application/MyBackendTemplate.Application.csproj", "Src/Application/"]
-COPY ["Src/Infrastructure/MyBackendTemplate.Infrastructure.csproj", "Src/Infrastructure/"]
-COPY ["Src/API/MyBackendTemplate.API.csproj", "Src/API/"]
+COPY ["Src/Domain/Techdle.Domain.csproj", "Src/Domain/"]
+COPY ["Src/Application/Techdle.Application.csproj", "Src/Application/"]
+COPY ["Src/Infrastructure/Techdle.Infrastructure.csproj", "Src/Infrastructure/"]
+COPY ["Src/API/Techdle.API.csproj", "Src/API/"]
 
 # Restore dependencies for the API project only (ignores Tests)
-RUN dotnet restore "Src/API/MyBackendTemplate.API.csproj"
+RUN dotnet restore "Src/API/Techdle.API.csproj"
 
 # Copy entire source code
 COPY . .
 
 # Build the application
 WORKDIR "/src/Src/API"
-RUN dotnet build "MyBackendTemplate.API.csproj" -c Release -o /app/build
+RUN dotnet build "Techdle.API.csproj" -c Release -o /app/build
 
 # Publish stage
 FROM build AS publish
-RUN dotnet publish "MyBackendTemplate.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Techdle.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
@@ -38,4 +38,4 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
 
-ENTRYPOINT ["dotnet", "MyBackendTemplate.API.dll"]
+ENTRYPOINT ["dotnet", "Techdle.API.dll"]
