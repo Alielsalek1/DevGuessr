@@ -1,8 +1,6 @@
 namespace Infrastructure.Persistance.Configurations;
 
-using Domain.Constraints;
 using Domain.Constraints.User;
-using Domain.Models;
 using Domain.Models.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

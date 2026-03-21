@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using DotNet.Testcontainers.Containers;
 using Testcontainers.Redis;
 
 namespace Tests.Common.TestContainerDependencies;

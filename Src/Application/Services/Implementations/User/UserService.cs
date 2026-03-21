@@ -4,10 +4,8 @@ using Application.DTOs.User;
 using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
 using Application.Utils;
-using Domain.Models;
 using Domain.Models.User;
 using Domain.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Implementations;
@@ -35,9 +33,9 @@ public class UserService(IUserRepository userRepo, ILogger<UserService> logger) 
         return UserSuccesses.ProfileUpdated();
     }
     private async Task<Result<SuccessApiResponse>> ValidateUpdateProfileRequestAsync(
-        User? user, 
-        Guid userId, 
-        UpdateUserRequestDto request, 
+        User? user,
+        Guid userId,
+        UpdateUserRequestDto request,
         CancellationToken ct)
     {
         if (user is null)

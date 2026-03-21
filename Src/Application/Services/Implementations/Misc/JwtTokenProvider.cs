@@ -1,17 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Services.Interfaces;
 using Domain.Models.User;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
+using Application.Common.Options;
 
 namespace Application.Services.Implementations.Misc;
 
-public class JwtTokenProvider(IConfiguration config)
+public class JwtTokenProvider(IOptions<JwtOptions> jwtOptions)
 {
-    private readonly IConfiguration _config = config;
-    
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
+
     public string GenerateAccessToken(User user)
     {
         var claims = new[]
@@ -21,15 +21,14 @@ public class JwtTokenProvider(IConfiguration config)
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Unique ID
         };
 
-        var keyString = _config["JWT_KEY"] ?? throw new InvalidOperationException("JWT Key is not configured in environment variables.");
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _config["JWT_ISSUER"],
-            audience: _config["JWT_AUDIENCE"],
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(double.Parse(_config["JWT_DURATION_IN_MINUTES"] ?? "15")),
+            expires: DateTime.UtcNow.AddMinutes(_jwtOptions.DurationInMinutes == 0 ? 15 : _jwtOptions.DurationInMinutes),
             signingCredentials: creds
         );
 

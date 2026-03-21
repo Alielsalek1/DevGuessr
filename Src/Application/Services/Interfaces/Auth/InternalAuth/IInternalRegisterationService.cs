@@ -1,9 +1,9 @@
 using Application.DTOs.Auth;
-using Application.DTOs.User;
 using Application.Utils;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces;
+
 public interface IInternalRegisterationService
 {
     Task<Result<SuccessApiResponse<RegisterResponseDto>>> RegisterAsync(RegisterRequestDto registerRequest, CancellationToken cancellationToken);

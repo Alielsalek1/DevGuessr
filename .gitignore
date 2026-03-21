@@ -432,3 +432,5 @@ remember.txt
 .vscode
 *.key
 *.crt
+
+docker-compose.override.yml

@@ -1,4 +1,3 @@
-using System;
 using Tests.MailHog;
 using DotNet.Testcontainers.Containers;
 

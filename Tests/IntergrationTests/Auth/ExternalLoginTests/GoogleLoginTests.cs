@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Tests.Common;
-using TestsReusables.Auth;
 using Xunit;
 
 namespace Tests.Auth.ExternalLoginTests;

@@ -1,23 +1,16 @@
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
 using Application.Constants.ApiErrors;
 using Application.Constants.Successes;
 using Application.DTOs.ExternalAuth;
-using Application.DTOs.User;
 using Application.Repositories.Interfaces;
 using Application.Services.Implementations.Misc;
 using Application.Services.Interfaces;
 using Application.Utils;
 using Domain.Enums;
 using Domain.Extensions;
-using Domain.Models;
 using Domain.Models.User;
 using Domain.Models.UserRefreshTokens;
 using Domain.Shared;
 using Google.Apis.Auth;
-using MassTransit;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -25,12 +18,12 @@ namespace Application.Services.Implementations;
 
 public class ExternalAuthService(
     IUserRepository userRepo,
-    IRefreshTokenProvider refreshTokenprovider, 
+    IRefreshTokenProvider refreshTokenprovider,
     IConfiguration configuration,
     IGoogleAuthValidator googleAuthValidator,
     IUserRefreshTokensRepository userRefreshTokensRepository,
     JwtTokenProvider jwtTokenProvider,
-    ILogger<ExternalAuthService> logger) 
+    ILogger<ExternalAuthService> logger)
     : IExternalAuthService
 {
     private readonly IUserRepository _userRepository = userRepo;
@@ -42,14 +35,14 @@ public class ExternalAuthService(
     private readonly ILogger<ExternalAuthService> _logger = logger;
 
     public async Task<Result<SuccessApiResponse<GoogleAuthResponseDto>>> GoogleLoginAsync(GoogleAuthRequestDto authRequest, CancellationToken cancellationToken)
-    {        
+    {
         var payloadResult = await ValidateAndGetGooglePayloadAsync(authRequest.IdToken);
         if (!payloadResult.IsSuccess)
         {
             return Result<SuccessApiResponse<GoogleAuthResponseDto>>.Failure(payloadResult.Error);
         }
         var payload = payloadResult.Data;
-        
+
         var user = await _userRepository.GetUserByGoogleIdAsync(payload.Subject, cancellationToken);
         // We have this part to allow internal login scheme users to be able to also login with google
         if (user == null) // not found by google id
@@ -61,7 +54,7 @@ public class ExternalAuthService(
             }
             // found by email but not linked to google, link the google account
             // the user is an internal auth scheme user, so we need to update the user to be eligible for external login
-            else 
+            else
             {
                 user = await UpdateUserToBeEligibleForExternalLogin(user!, payload, cancellationToken);
             }
@@ -89,9 +82,9 @@ public class ExternalAuthService(
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings
             {
-                Audience = [googleClientId] 
+                Audience = [googleClientId]
             };
-            
+
             var payload = await _googleAuthValidator.ValidateAsync(idToken, settings);
             _logger.LogInformation("Google token validated for email: {Email}", payload.Email);
             return Result<GoogleJsonWebSignature.Payload>.Success(payload);
@@ -103,7 +96,7 @@ public class ExternalAuthService(
         }
     }
     private async Task<User> CreateExternalUserAsync(GoogleJsonWebSignature.Payload payload, CancellationToken ct)
-    {        
+    {
         var userCreationParams = new ExternalUserCreationParams
         {
             Email = payload.Email,
@@ -119,7 +112,7 @@ public class ExternalAuthService(
     }
 
     public async Task<Result<SuccessApiResponse<GoogleAuthResponseDto>>> LinkGoogleAccountAsync(GoogleAuthRequestDto authRequest, Guid userId, CancellationToken cancellationToken)
-    {        
+    {
         var payloadResult = await ValidateAndGetGooglePayloadAsync(authRequest.IdToken);
         if (!payloadResult.IsSuccess)
         {
@@ -172,7 +165,7 @@ public class ExternalAuthService(
     private async Task<bool> IsEmailInUseAsync(string email, CancellationToken cancellationToken)
     {
         return await _userRepository.IsEmailInUseAsync(email, cancellationToken);
-    } 
+    }
     private async Task<User> UpdateUserToBeEligibleForExternalLogin(User user, GoogleJsonWebSignature.Payload payload, CancellationToken ct)
     {
         user.UpdateUserToBeEligibleForExternalLogin(payload.Email, payload.Subject);

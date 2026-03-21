@@ -17,7 +17,7 @@ public class LinkGoogleLogicTests(CustomWebApplicationFactory factory) : BaseInt
     {
         // Arrange: Create a verified regular user (not guest)
         var (userId, password, username, email) = await AuthBackdoor.CreateVerifiedUserAsync();
-        
+
         // Login to get access token
         var loginRequest = new LoginRequestDto { UsernameOrEmail = email, Password = password };
         var loginResponse = await Client.PostAsJsonAsync("/api/v1/internal-auth/login", loginRequest);
@@ -50,7 +50,7 @@ public class LinkGoogleLogicTests(CustomWebApplicationFactory factory) : BaseInt
         // Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestAccessToken = loginContent!.Data.AccessToken;
 
         // Setup validator to return the existing email
@@ -74,10 +74,10 @@ public class LinkGoogleLogicTests(CustomWebApplicationFactory factory) : BaseInt
         // Arrange: Create an admin user
         var email = "admin@example.com";
         var (adminUserId, password, username, _) = await AuthBackdoor.CreateVerifiedUserAsync(email: email);
-        
+
         // Manually set user to admin role
         await SetUserRoleAsync(adminUserId, 1); // Admin role
-        
+
         // Login to get access token
         var loginRequest = new LoginRequestDto { UsernameOrEmail = email, Password = password };
         var loginResponse = await Client.PostAsJsonAsync("/api/v1/internal-auth/login", loginRequest);
@@ -106,7 +106,7 @@ public class LinkGoogleLogicTests(CustomWebApplicationFactory factory) : BaseInt
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -144,7 +144,7 @@ public class LinkGoogleLogicTests(CustomWebApplicationFactory factory) : BaseInt
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -207,7 +207,7 @@ public class LinkGoogleLogicTests(CustomWebApplicationFactory factory) : BaseInt
     /// <summary>
     /// Helper method to delete a user from the database
     /// </summary>
-    private async Task DeleteUserAsync(Guid userId)
+    private static async Task DeleteUserAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -225,7 +225,7 @@ public class LinkGoogleLogicTests(CustomWebApplicationFactory factory) : BaseInt
     /// <summary>
     /// Helper method to set user role in the database
     /// </summary>
-    private async Task SetUserRoleAsync(Guid userId, int role)
+    private static async Task SetUserRoleAsync(Guid userId, int role)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");

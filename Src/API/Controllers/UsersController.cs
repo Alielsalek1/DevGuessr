@@ -5,7 +5,6 @@ using Application.Services.Interfaces;
 using Application.Utils;
 using Asp.Versioning;
 using Domain.Shared;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -19,7 +18,7 @@ namespace API.Controllers;
 public class UsersController(IUserFacadeService userFacade) : ControllerBase
 {
     private readonly IUserFacadeService _userFacade = userFacade;
-    
+
     /// <summary>
     /// Update authenticated user's profile
     /// </summary>
@@ -55,7 +54,7 @@ public class UsersController(IUserFacadeService userFacade) : ControllerBase
         {
             return this.ToActionResult(Result<SuccessApiResponse>.Failure(userIdResult.Error));
         }
-        
+
         var result = await _userFacade.GetProfileAsync(userIdResult.Data, ct);
         return this.ToActionResult(result);
     }

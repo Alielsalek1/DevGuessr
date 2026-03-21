@@ -1,8 +1,6 @@
 namespace Infrastructure.Persistance.Configurations;
 
-using Domain.Models;
 using Domain.Models.User;
-using Domain.Models.UserDevice;
 using Domain.Models.UserRefreshTokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -17,7 +15,7 @@ public class UserRefreshTokensConfiguration : IEntityTypeConfiguration<UserRefre
             .Property(urt => urt.RefreshTokenHash)
             .HasMaxLength(64)
             .IsRequired();
-        builder            
+        builder
             .HasOne<User>()
             .WithMany()
             .HasForeignKey(urt => urt.UserId)

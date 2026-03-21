@@ -30,7 +30,7 @@ public static class EnvironmentVariableLoader
             }
         }
 
-        if (missing.Any())
+        if (missing.Count != 0)
         {
             throw new InvalidOperationException(
                 $"Missing required environment variables: {string.Join(", ", missing)}");

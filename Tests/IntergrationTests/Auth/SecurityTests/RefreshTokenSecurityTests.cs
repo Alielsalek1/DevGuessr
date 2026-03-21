@@ -42,7 +42,7 @@ public class RefreshTokenSecurityTests(CustomWebApplicationFactory factory) : Ba
 
         // Assert: New token hash is different and old token is marked as used
         Assert.NotEqual(originalHash, newHash);
-        
+
         var isOldTokenUsed = await IsRefreshTokenMarkedAsUsedAsync(originalHash!);
         Assert.True(isOldTokenUsed);
     }
@@ -52,7 +52,7 @@ public class RefreshTokenSecurityTests(CustomWebApplicationFactory factory) : Ba
     {
         // Arrange: Create user and add tokens for 2 devices
         var (userId, password, username, email) = await AuthBackdoor.CreateVerifiedUserAsync("MultiDeviceUser", "multidevice@example.com", "Password123!");
-        
+
         var device1 = Guid.NewGuid();
         var device2 = Guid.NewGuid();
 
@@ -67,7 +67,7 @@ public class RefreshTokenSecurityTests(CustomWebApplicationFactory factory) : Ba
         Assert.True(tokenCount >= 2); // At least 2 tokens
     }
 
-    private async Task<string?> GetRefreshTokenHashFromDbAsync(Guid userId)
+    private static async Task<string?> GetRefreshTokenHashFromDbAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         await using var conn = new NpgsqlConnection(connStr);
@@ -81,7 +81,7 @@ public class RefreshTokenSecurityTests(CustomWebApplicationFactory factory) : Ba
         return result as string;
     }
 
-    private async Task<bool> IsRefreshTokenMarkedAsUsedAsync(string tokenHash)
+    private static async Task<bool> IsRefreshTokenMarkedAsUsedAsync(string tokenHash)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         await using var conn = new NpgsqlConnection(connStr);
@@ -95,7 +95,7 @@ public class RefreshTokenSecurityTests(CustomWebApplicationFactory factory) : Ba
         return result != null && (bool)result;
     }
 
-    private async Task<int> GetRefreshTokenCountForUserAsync(Guid userId)
+    private static async Task<int> GetRefreshTokenCountForUserAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         await using var conn = new NpgsqlConnection(connStr);

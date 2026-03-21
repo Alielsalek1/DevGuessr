@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using Application.DTOs.Auth;
 using Application.Utils;
 using Infrastructure.Persistance;
@@ -104,9 +103,9 @@ public class RegisterationLogicTests(CustomWebApplicationFactory factory) : Base
         using var scope = Factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == Email);
-        
+
         Assert.NotNull(user);
-        
+
         // Verify that no refresh token is created during registration (only after first login)
         var refreshTokens = await dbContext.UserRefreshTokens.Where(rt => rt.UserId == user.Id).ToListAsync();
         Assert.Empty(refreshTokens); // Registration doesn't create refresh tokens anymore

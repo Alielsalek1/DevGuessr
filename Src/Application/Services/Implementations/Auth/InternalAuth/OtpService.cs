@@ -1,8 +1,6 @@
-using System.Security.Cryptography;
 using System.Text.Json;
 using Application.Services.Interfaces.Auth.InternalAuth;
 using Microsoft.Extensions.Caching.Distributed;
-using Application.DTOs.Auth.InternalAuth;
 
 namespace Application.Services.Implementations.Auth.InternalAuth;
 
@@ -57,6 +55,12 @@ public class OtpService<T>(
         }
         var payloadJson = JsonSerializer.Serialize(payload, JsonOptions);
         return string.Equals(payloadJson, cachedValue, StringComparison.Ordinal);
+    }
+
+    public async Task InvalidateAsync(string otp, CancellationToken cancellationToken)
+    {
+        var key = BuildKey(_strategy.KeyPrefix, otp);
+        await _cache.RemoveAsync(key, cancellationToken);
     }
 
     private static string BuildKey(string prefix, string otp)

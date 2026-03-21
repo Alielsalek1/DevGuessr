@@ -1,22 +1,21 @@
 using API.ActionFilters;
+using API.Extensions;
 using Application.Constants;
 using Application.Utils;
 using Asp.Versioning;
 using FluentValidation.AspNetCore;
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Threading.RateLimiting;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Microsoft.Extensions.Options;
+using Application.Common.Options;
+using Infrastructure.Common.Options;
 
 namespace API;
 
@@ -24,52 +23,48 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApiLayer(
         this IServiceCollection services,
-        string jwtKey,
-        string jwtIssuer,
-        string jwtAudience,
-        string connectionString,
         bool isDevelopment = false)
     {
-        services.AddAuthenticationAndAuthorization(jwtKey, jwtIssuer, jwtAudience);
+        services.AddAuthenticationAndAuthorization();
         services.AddControllersWithValidation();
         services.AddRateLimiting();
         services.AddApiVersioningConfiguration();
         services.AddActionFilters();
         services.ConfigureForwardedHeaders();
-        services.AddHangfireConfiguration(connectionString);
+        services.AddHangfireConfiguration();
+        
         if (isDevelopment)
         {
-            services.AddSwaggerDocumentation();
+            services.AddOpenApiDocumentation();
         }
 
         return services;
     }
 
-    private static IServiceCollection AddAuthenticationAndAuthorization(
-        this IServiceCollection services,
-        string jwtKey,
-        string jwtIssuer,
-        string jwtAudience)
+    private static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services)
     {
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
+        .AddJwtBearer(options => { });
+
+        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .PostConfigure<IOptions<JwtOptions>>((options, jwtOptions) =>
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtIssuer,
-                ValidAudience = jwtAudience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                ValidAlgorithms = [SecurityAlgorithms.HmacSha256] // Strictly enforce the algorithm
-            };
-        });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Value.Issuer,
+                    ValidAudience = jwtOptions.Value.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key)),
+                    ValidAlgorithms = [SecurityAlgorithms.HmacSha256]
+                };
+            });
 
         services.AddAuthorization();
         return services;
@@ -79,26 +74,21 @@ public static class DependencyInjection
     {
         services.AddControllers(options =>
         {
-            // authorize all endpoints by default, individual endpoints can override with [AllowAnonymous]
             var policy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
                 .Build();
             options.Filters.Add(new AuthorizeFilter(policy));
-
             options.Filters.Add<ValidationFilter>();
-            
-            // Request size limits to prevent DoS attacks
-            options.MaxModelBindingCollectionSize = 1000; // Max items in a collection
+            options.MaxModelBindingCollectionSize = 1000;
         })
         .ConfigureApiBehaviorOptions(options =>
         {
             options.SuppressModelStateInvalidFilter = true;
         });
 
-        // Global request size limit (30MB default, 10MB for most APIs)
         services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
         {
-            options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB
+            options.MultipartBodyLengthLimit = 10 * 1024 * 1024;
         });
 
         services.AddFluentValidationAutoValidation();
@@ -158,70 +148,11 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
-    {
-        services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "Backend Template API",
-                Version = "1.0",
-                Description = "The Architect's Forge - A high-performance, resilient backend template with Clean Architecture",
-                Contact = new OpenApiContact
-                {
-                    Name = "Development Team",
-                    Email = "dev@example.com"
-                },
-                License = new OpenApiLicense
-                {
-                    Name = "MIT"
-                }
-            });
-
-            // Add JWT Bearer token support in Swagger
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                Description = "Enter your JWT token in the format: Bearer {token}"
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    new string[] { }
-                }
-            });
-
-            // Include XML comments if available
-            var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
-            if (System.IO.File.Exists(xmlPath))
-            {
-                options.IncludeXmlComments(xmlPath);
-            }
-        });
-
-        return services;
-    }
-
     private static IServiceCollection ConfigureForwardedHeaders(this IServiceCollection services)
     {
         services.Configure<ForwardedHeadersOptions>(options =>
         {
             options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            
-            // In a production environment, you should be more specific about known proxies.
-            // For this template, we clear them to allow the Nginx container to be recognized.
             options.KnownNetworks.Clear();
             options.KnownProxies.Clear();
         });
@@ -229,13 +160,18 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddHangfireConfiguration(this IServiceCollection services, string connectionString)
+    private static IServiceCollection AddHangfireConfiguration(this IServiceCollection services)
     {
-        services.AddHangfire(configuration => configuration
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
+        services.AddHangfire((serviceProvider, configuration) => 
+        {
+            var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+            
+            configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(dbOptions.ConnectionString));
+        });
 
         services.AddHangfireServer();
         return services;

@@ -3,8 +3,6 @@ using Application.DTOs.User;
 using Application.Utils;
 using Domain.Shared;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces;
 

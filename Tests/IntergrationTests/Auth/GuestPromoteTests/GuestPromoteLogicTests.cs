@@ -21,7 +21,7 @@ public class GuestPromoteLogicTests(CustomWebApplicationFactory factory) : BaseI
         // Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto
@@ -50,7 +50,7 @@ public class GuestPromoteLogicTests(CustomWebApplicationFactory factory) : BaseI
         // Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto
@@ -122,7 +122,7 @@ public class GuestPromoteLogicTests(CustomWebApplicationFactory factory) : BaseI
 
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -151,7 +151,7 @@ public class GuestPromoteLogicTests(CustomWebApplicationFactory factory) : BaseI
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var firstPromoteRequest = new RegisterRequestDto
@@ -185,7 +185,7 @@ public class GuestPromoteLogicTests(CustomWebApplicationFactory factory) : BaseI
     /// <summary>
     /// Helper method to delete a user from the database
     /// </summary>
-    private async Task DeleteUserAsync(Guid userId)
+    private static async Task DeleteUserAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");

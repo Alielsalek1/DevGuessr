@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
-using Tests.Common;
 using Tests.Common.TestContainerDependencies;
 using TestsReusables.Auth;
 using Xunit;

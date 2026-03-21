@@ -1,10 +1,8 @@
-using Application.Services;
 using Application.Services.Interfaces;
 using Application.Services.Implementations;
 using Application.Validators.Auth;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using MassTransit;
 using Application.Services.Implementations.Auth;
 using Application.Services.Implementations.Auth.InternalAuth;
 using Application.Services.Interfaces.Auth;
@@ -13,26 +11,19 @@ using Application.Services.Implementations.Misc;
 using Application.DTOs.Auth.InternalAuth;
 using FluentEmail.Smtp;
 using FluentEmail.Core.Interfaces;
-using System.Net;
+using FluentEmail.Core;
+using Microsoft.Extensions.Options;
+using Application.Common.Options;
 
 namespace Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(
-        this IServiceCollection services,
-        Dictionary<string, string> emailConfig,
-        string redisConnectionString,
-        string rabbitMqHost,
-        string rabbitMqPort,
-        string rabbitMqUsername,
-        string rabbitMqPassword)
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddValidation();
-        services.AddEmailServices(emailConfig);
-        services.AddCaching(redisConnectionString);
+        services.AddEmailServices();
         services.AddApplicationServices();
-        services.AddMessageBroker(rabbitMqHost, rabbitMqPort, rabbitMqUsername, rabbitMqPassword);
 
         return services;
     }
@@ -43,32 +34,37 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddEmailServices(this IServiceCollection services, Dictionary<string, string> emailConfig)
+    private static IServiceCollection AddEmailServices(this IServiceCollection services)
     {
-        var enableSsl = bool.Parse(emailConfig["EnableSsl"]);
-        services
-            .AddFluentEmail(emailConfig["From"]);
-        
-        services.AddScoped<ISender>(sp => new SmtpSender(new System.Net.Mail.SmtpClient(emailConfig["Host"])
+        services.AddScoped<ISender>(sp =>
         {
-            Port = int.Parse(emailConfig["Port"]),
-            Credentials = new System.Net.NetworkCredential(emailConfig["Username"], emailConfig["Password"]),
-            EnableSsl = enableSsl
-        }));
-        
+            var emailOptions = sp.GetRequiredService<IOptions<EmailOptions>>().Value;
+            return new SmtpSender(new System.Net.Mail.SmtpClient(emailOptions.Host)
+            {
+                Port = emailOptions.Port,
+                Credentials = new System.Net.NetworkCredential(emailOptions.Username, emailOptions.Password),
+                EnableSsl = emailOptions.EnableSsl
+            });
+        });
+
+        // We also need to configure FluentEmail itself with the 'From' address
+        services.AddFluentEmail(string.Empty) // Placeholder
+            .AddSmtpSender(string.Empty, 25); // Placeholder
+
+        // Better approach for FluentEmail with Options:
+        services.AddScoped<IFluentEmail>(sp =>
+        {
+            var emailOptions = sp.GetRequiredService<IOptions<EmailOptions>>().Value;
+            var sender = sp.GetRequiredService<ISender>();
+            return new Email(emailOptions.From)
+            {
+                Sender = sender
+            };
+        });
+
         services.AddScoped<RegisterationConfirmationEmailSender>();
         services.AddScoped<NewDeviceConfirmationEmailSender>();
         services.AddScoped<PasswordResetEmailSender>();
-        return services;
-    }
-
-    private static IServiceCollection AddCaching(this IServiceCollection services, string redisConnectionString)
-    {
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = redisConnectionString;
-            options.InstanceName = "Techdle_";
-        });
         return services;
     }
 
@@ -97,29 +93,6 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserFacadeService, UserFacadeService>();
 
-        return services;
-    }
-
-    private static IServiceCollection AddMessageBroker(
-        this IServiceCollection services,
-        string rabbitMqHost,
-        string rabbitMqPort,
-        string rabbitMqUsername,
-        string rabbitMqPassword)
-    {
-        services.AddMassTransit(x =>
-        {
-            x.UsingRabbitMq((context, cfg) =>
-            {
-                cfg.Host(rabbitMqHost, ushort.TryParse(rabbitMqPort, out var port) ? port : (ushort)5672, "/", h =>
-                {
-                    h.Username(rabbitMqUsername);
-                    h.Password(rabbitMqPassword);
-                });
-
-                cfg.ConfigureEndpoints(context);
-            });
-        });
         return services;
     }
 }

@@ -4,8 +4,6 @@ using Application.Services.Interfaces;
 using Application.Utils;
 using Domain.Shared;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Services.Implementations;
 
@@ -19,7 +17,7 @@ public class InternalAuthFacadeService(
     private readonly IInternalUserVerificationService _userConfirmationService = userConfirmationService;
     private readonly IInternalPasswordResetService _passwordResetService = passwordResetService;
     private readonly IInternalSessionService _internalIdentityService = internalIdentityService;
-    
+
     public Task<Result<SuccessApiResponse<RegisterResponseDto>>> RegisterAsync(RegisterRequestDto registerRequest, CancellationToken cancellationToken)
         => _internalAuthService.RegisterAsync(registerRequest, cancellationToken);
 
@@ -43,7 +41,7 @@ public class InternalAuthFacadeService(
 
     public Task<Result<SuccessApiResponse<RefreshTokenResponseDto>>> RefreshTokenAsync(RefreshTokenRequestDto refreshTokenRequest, string refreshTokenCookie, CancellationToken cancellationToken)
         => _internalIdentityService.RefreshTokenAsync(refreshTokenRequest.UserId, refreshTokenCookie, cancellationToken);
-    
+
     public Task<Result<SuccessApiResponse<RegisterResponseDto>>> GuestPromoteAsync(RegisterRequestDto registerRequest, Guid userId, CancellationToken cancellationToken)
         => _internalAuthService.GuestPromoteAsync(registerRequest, userId, cancellationToken);
 

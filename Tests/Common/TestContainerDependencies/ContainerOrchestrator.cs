@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DotNet.Testcontainers.Containers;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 using Testcontainers.RabbitMq;
-using Tests.MailHog;
 
 namespace Tests.Common.TestContainerDependencies;
 
@@ -51,7 +47,7 @@ public class ContainerOrchestrator : IAsyncDisposable
         }
 
         // Ensure EF migrations have been applied using the app's service provider
-        await _databaseProvider.EnsureDatabaseMigratedAsync(services);
+        await DatabaseProvider.EnsureDatabaseMigratedAsync(services);
 
         // Create and initialize respawner now that tables exist
         _respawnerProvider = new RespawnerProvider(connString);

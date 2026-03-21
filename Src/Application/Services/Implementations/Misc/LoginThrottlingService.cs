@@ -1,9 +1,7 @@
 using System.Net;
-using Application.Repositories.Interfaces;
 using Application.Services.Interfaces.Auth;
 using Domain.Models.User;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Implementations.Misc;
 
@@ -22,7 +20,7 @@ public class LoginThrottlingService(IDistributedCache cache) : ILoginThrottlingS
         var attemptsString = await _cache.GetStringAsync(key, cancellationToken);
         return string.IsNullOrEmpty(attemptsString) ? 0 : int.Parse(attemptsString);
     }
-    
+
     public async Task IncrementUserLoginAttempts(User user, IPAddress ipAddress, int newAttempts, CancellationToken cancellationToken)
     {
         string key = $"login_attempts:{user.Id}:{ipAddress}";
@@ -31,12 +29,12 @@ public class LoginThrottlingService(IDistributedCache cache) : ILoginThrottlingS
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20)
         }, cancellationToken);
     }
-    
+
     public bool ShouldBeJailed(int attempts)
     {
         return attempts > 3;
     }
-    
+
     public async Task JailUser(User user, IPAddress ipAddress, CancellationToken cancellationToken)
     {
         await _cache.SetStringAsync($"jail:{user!.Id}:{ipAddress}", "true", new DistributedCacheEntryOptions

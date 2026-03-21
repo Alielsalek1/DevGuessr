@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using Domain.Constraints.User;
 using Domain.Exceptions;
 
 namespace Domain.Constraints.User;
@@ -21,7 +20,7 @@ public static class UserGuard
     public static void ValidateUsername(string username)
     {
         NotNullOrEmpty(username, nameof(username));
-        
+
         if (username.Length < UserConstraints.UsernameMinLength || username.Length > UserConstraints.UsernameMaxLength)
             throw new DomainException(
                 $"Username must be between {UserConstraints.UsernameMinLength} and {UserConstraints.UsernameMaxLength} characters.",
@@ -31,7 +30,7 @@ public static class UserGuard
     public static void ValidatePasswordHash(string passwordHash)
     {
         NotNullOrEmpty(passwordHash, nameof(passwordHash));
-        
+
         if (passwordHash.Length != UserConstraints.PasswordHashLength)
             throw new DomainException(
                 $"Password hash must be exactly {UserConstraints.PasswordHashLength} characters.",

@@ -16,7 +16,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -44,7 +44,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -59,7 +59,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         // Verify user was updated in database
         var (username, email, role) = await GetUserDetailsAsync(guestUserId);
         Assert.Equal("updateduser@example.com", email);
@@ -72,7 +72,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var originalUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -88,7 +88,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(originalUserId, content!.Data.UserId);
-        
+
         // Verify in database
         var userExists = await CheckUserExistsAsync(originalUserId);
         Assert.True(userExists);
@@ -100,7 +100,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -115,7 +115,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         // Verify auth scheme was set to External in database
         var authScheme = await GetUserAuthSchemeAsync(guestUserId);
         Assert.Equal(1, authScheme); // External = 1
@@ -127,7 +127,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -142,7 +142,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+
         // Verify email is marked as verified
         var isVerified = await IsEmailVerifiedAsync(guestUserId);
         Assert.True(isVerified);
@@ -154,7 +154,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var originalAccessToken = loginContent!.Data.AccessToken;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -176,7 +176,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
     /// <summary>
     /// Helper method to get user details from the database
     /// </summary>
-    private async Task<(string Username, string Email, int Role)> GetUserDetailsAsync(Guid userId)
+    private static async Task<(string Username, string Email, int Role)> GetUserDetailsAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -196,14 +196,14 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
             var role = reader.GetInt32(2);
             return (username, email, role);
         }
-        
+
         throw new InvalidOperationException($"User with ID {userId} not found");
     }
 
     /// <summary>
     /// Helper method to check if a user exists
     /// </summary>
-    private async Task<bool> CheckUserExistsAsync(Guid userId)
+    private static async Task<bool> CheckUserExistsAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -223,7 +223,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
     /// Helper method to check if user has Google authentication (external auth)
     /// Returns 1 (External) if google_id is set, 0 (Internal) otherwise
     /// </summary>
-    private async Task<int> GetUserAuthSchemeAsync(Guid userId)
+    private static async Task<int> GetUserAuthSchemeAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -243,7 +243,7 @@ public class LinkGoogleSuccessTests(CustomWebApplicationFactory factory) : BaseI
     /// <summary>
     /// Helper method to check if email is verified
     /// </summary>
-    private async Task<bool> IsEmailVerifiedAsync(Guid userId)
+    private static async Task<bool> IsEmailVerifiedAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");

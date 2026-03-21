@@ -1,4 +1,3 @@
-using System;
 using Testcontainers.RabbitMq;
 
 namespace Tests.Common.TestContainerDependencies;

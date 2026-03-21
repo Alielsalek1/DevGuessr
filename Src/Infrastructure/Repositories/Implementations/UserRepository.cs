@@ -1,8 +1,6 @@
-using Domain.Models;
 using Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Application.Repositories.Interfaces;
-using Domain.Exceptions;
 using Domain.Models.User;
 
 namespace Infrastructure.Repositories.Implementations;
@@ -52,7 +50,7 @@ public class UserRepository(AppDbContext dbContext) : IUserRepository
         var rowsAffected = await _dbContext.Users
             .Where(u => u.Email == email && u.IsEmailVerified == false)
             .ExecuteUpdateAsync(setters => setters
-                .SetProperty(u => u.IsEmailVerified, true), 
+                .SetProperty(u => u.IsEmailVerified, true),
                 cancellationToken);
 
         return rowsAffected > 0;

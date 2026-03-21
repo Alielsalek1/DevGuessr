@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
-using Domain.Constraints.User;
 using Domain.Exceptions;
 
 namespace Domain.Constraints.userDevice;

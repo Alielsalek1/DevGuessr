@@ -7,6 +7,8 @@ using Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+namespace API.Controllers;
+
 /// <summary>
 /// External Authentication Controller
 /// 
@@ -66,5 +68,5 @@ public class ExternalAuthController(IExternalAuthService authService) : Controll
             this.AddRefreshTokenCookie(newRefreshToken);
         }
         return this.ToActionResult(result);
-    }   
+    }
 }

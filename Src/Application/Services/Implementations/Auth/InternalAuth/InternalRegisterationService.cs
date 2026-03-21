@@ -1,5 +1,4 @@
 using Application.DTOs.Auth;
-using Application.DTOs.User;
 using Application.Services.Interfaces;
 using Domain.Models.User;
 using Domain.Shared;
@@ -8,11 +7,8 @@ using Application.Constants.ApiErrors;
 using Application.Constants.Successes;
 using Application.Utils;
 using Application.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Domain.Extensions;
 using Application.Services.Interfaces.Auth.InternalAuth;
-using Application.Services.Implementations.Auth.InternalAuth;
 using Application.DTOs.Auth.InternalAuth;
 using Application.Services.Implementations.Misc;
 using Hangfire;
@@ -108,7 +104,7 @@ public class InternalRegisterationService(
         var user = CreateUserForRegisteration(registerRequest);
         user.SetGuestId(userId);
         var validateGuestPromototionRequestAsyncResult = await ValidateGuestPromoteRequestAsync(user, cancellationToken);
-        if (!validateGuestPromototionRequestAsyncResult.IsSuccess)        
+        if (!validateGuestPromototionRequestAsyncResult.IsSuccess)
         {
             return validateGuestPromototionRequestAsyncResult;
         }
@@ -143,7 +139,7 @@ public class InternalRegisterationService(
         }
 
         var RegisterRequestValidationResult = await ValidateRegisterRequestAsync(user, cancellationToken);
-        if (!RegisterRequestValidationResult.IsSuccess)        
+        if (!RegisterRequestValidationResult.IsSuccess)
         {
             return RegisterRequestValidationResult;
         }

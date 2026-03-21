@@ -15,7 +15,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -36,7 +36,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         Assert.Equal(201, content.StatusCode);
         Assert.Contains("registered successfully", content.Message.ToLower());
         Assert.Contains("confirmation code", content.Message.ToLower());
-        
+
         // Verify the userId remains the same
         Assert.Equal(guestUserId, content.Data.UserId);
     }
@@ -47,7 +47,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -63,7 +63,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         // Verify user data was updated in database
         var (username, email, role) = await GetUserDetailsAsync(guestUserId);
         Assert.Equal("PromotedGuest2", username);
@@ -77,7 +77,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto
@@ -92,12 +92,12 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         // Verify confirmation email was sent
         await Task.Delay(500); // Give email time to be sent
         var mailhogClient = Mailhog.CreateClient();
         var emailMessages = await mailhogClient.SearchMessagesByRecipientAsync("promotedguest3@example.com");
-        
+
         Assert.NotNull(emailMessages);
         Assert.True(emailMessages.Items.Count > 0, "No confirmation email was sent");
     }
@@ -108,7 +108,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var originalUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -125,7 +125,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.Equal(originalUserId, content!.Data.UserId);
-        
+
         // Verify in database
         var userExists = await CheckUserExistsAsync(originalUserId);
         Assert.True(userExists);
@@ -137,7 +137,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var guestUserId = loginContent!.Data.UserId;
         var accessToken = loginContent.Data.AccessToken;
 
@@ -153,7 +153,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        
+
         // Verify password hash is set in database (not empty)
         var passwordHash = await GetUserPasswordHashAsync(guestUserId);
         Assert.False(string.IsNullOrWhiteSpace(passwordHash));
@@ -162,7 +162,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
     /// <summary>
     /// Helper method to get user details from the database
     /// </summary>
-    private async Task<(string Username, string Email, int Role)> GetUserDetailsAsync(Guid userId)
+    private static async Task<(string Username, string Email, int Role)> GetUserDetailsAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -179,14 +179,14 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
         {
             return (reader.GetString(0), reader.GetString(1), reader.GetInt32(2));
         }
-        
+
         throw new InvalidOperationException($"User with ID {userId} not found");
     }
 
     /// <summary>
     /// Helper method to check if a user exists
     /// </summary>
-    private async Task<bool> CheckUserExistsAsync(Guid userId)
+    private static async Task<bool> CheckUserExistsAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -205,7 +205,7 @@ public class GuestPromoteSuccessTests(CustomWebApplicationFactory factory) : Bas
     /// <summary>
     /// Helper method to get user password hash
     /// </summary>
-    private async Task<string> GetUserPasswordHashAsync(Guid userId)
+    private static async Task<string> GetUserPasswordHashAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");

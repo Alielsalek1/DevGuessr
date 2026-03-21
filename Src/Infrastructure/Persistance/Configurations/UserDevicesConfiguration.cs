@@ -1,8 +1,5 @@
 namespace Infrastructure.Persistance.Configurations;
 
-using Domain.Constraints;
-using Domain.Constraints.User;
-using Domain.Models;
 using Domain.Models.User;
 using Domain.Models.UserDevice;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +12,7 @@ public class UserDevicesConfiguration : IEntityTypeConfiguration<UserDevice>
         builder
             .HasKey(ud => new { ud.UserId, ud.DeviceId });
         // mark userId as foregin key to Users table
-        builder            
+        builder
             .HasOne<User>()
             .WithMany()
             .HasForeignKey(ud => ud.UserId)

@@ -1,5 +1,3 @@
-using System;
-
 namespace Tests.Common.TestContainerDependencies;
 
 public static class SeqProvider

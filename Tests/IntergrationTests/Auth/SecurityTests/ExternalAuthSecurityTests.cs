@@ -1,8 +1,6 @@
 using System.Net;
 using Application.DTOs.Auth;
-using Application.DTOs.ExternalAuth;
 using Application.Utils;
-using Domain.Enums;
 using Npgsql;
 using Tests.Common;
 using TestsReusables.Auth;
@@ -44,7 +42,7 @@ public class ExternalAuthSecurityTests(CustomWebApplicationFactory factory) : Ba
         var email = $"hybriduser_{userId.ToString().Substring(0, 8)}@example.com";
         var password = "HybridPassword123!";
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
-        
+
         await CreateExternalAuthUserWithPasswordAsync(userId, email, "google_67890", passwordHash);
 
         var loginRequest = new LoginRequestDto
@@ -78,7 +76,7 @@ public class ExternalAuthSecurityTests(CustomWebApplicationFactory factory) : Ba
         Assert.Null(username);
     }
 
-    private async Task CreateExternalAuthUserAsync(Guid userId, string email, string googleId)
+    private static async Task CreateExternalAuthUserAsync(Guid userId, string email, string googleId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         await using var conn = new NpgsqlConnection(connStr);
@@ -100,7 +98,7 @@ public class ExternalAuthSecurityTests(CustomWebApplicationFactory factory) : Ba
         await cmd.ExecuteNonQueryAsync();
     }
 
-    private async Task CreateExternalAuthUserWithPasswordAsync(Guid userId, string email, string googleId, string passwordHash)
+    private static async Task CreateExternalAuthUserWithPasswordAsync(Guid userId, string email, string googleId, string passwordHash)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         await using var conn = new NpgsqlConnection(connStr);
@@ -120,12 +118,12 @@ public class ExternalAuthSecurityTests(CustomWebApplicationFactory factory) : Ba
         cmd.Parameters.AddWithValue("@google_id", googleId);
 
         await cmd.ExecuteNonQueryAsync();
-        
+
         // Seed device to avoid device confirmation email
         await AuthBackdoor.SeedUserDeviceAsync(email, AuthBackdoor.TestDeviceId);
     }
 
-    private async Task<string?> GetUsernameFromDbAsync(Guid userId)
+    private static async Task<string?> GetUsernameFromDbAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         await using var conn = new NpgsqlConnection(connStr);

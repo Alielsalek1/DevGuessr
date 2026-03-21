@@ -4,8 +4,6 @@ using Application.DTOs.Auth;
 using Application.Utils;
 using Tests.Common;
 using TestsReusables.Auth;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Tests.Auth;
@@ -47,7 +45,7 @@ public class ResetPasswordSuccessTests(CustomWebApplicationFactory factory) : Ba
             UsernameOrEmail = email,
             Password = newPassword
         };
-        
+
         var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/v1/internal-auth/login")
         {
             Content = JsonContent.Create(loginRequest)

@@ -1,6 +1,4 @@
-using Application.Services.Interfaces;
 using FluentEmail.Core;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Implementations;
 

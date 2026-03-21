@@ -87,7 +87,7 @@ public class InternalAuthController(IInternalAuthFacadeService authFacade) : Con
     [ProducesResponseType(typeof(FailApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(FailApiResponse), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Login(
-        [FromBody] LoginRequestDto loginRequest, 
+        [FromBody] LoginRequestDto loginRequest,
         CancellationToken cancellationToken)
     {
         var ipAddressResult = this.GetClientIpAddress();
@@ -112,7 +112,7 @@ public class InternalAuthController(IInternalAuthFacadeService authFacade) : Con
     [HttpPost("confirm-login")]
     [AllowAnonymous]
     public async Task<IActionResult> ConfirmLogin(
-        [FromBody] ConfirmLoginRequestDto confirmLoginRequest, 
+        [FromBody] ConfirmLoginRequestDto confirmLoginRequest,
         CancellationToken cancellationToken)
     {
         var result = await _authFacade.ConfirmLoginAsync(confirmLoginRequest, cancellationToken);
@@ -140,12 +140,12 @@ public class InternalAuthController(IInternalAuthFacadeService authFacade) : Con
         var deviceIdResult = this.GetDeviceIdCookie();
         var deviceId = deviceIdResult.IsSuccess ? deviceIdResult.Data : Guid.NewGuid();
 
-       var result = await _authFacade.ConfirmEmailAsync(confirmEmailRequest, deviceId, cancellationToken);
-       if (result.IsSuccess && result.Data.Data != null)
-       {
-           this.AddDeviceIdCookie(result.Data.Data.DeviceId);
-       }
-       return this.ToActionResult(result);
+        var result = await _authFacade.ConfirmEmailAsync(confirmEmailRequest, deviceId, cancellationToken);
+        if (result.IsSuccess && result.Data.Data != null)
+        {
+            this.AddDeviceIdCookie(result.Data.Data.DeviceId);
+        }
+        return this.ToActionResult(result);
     }
 
     /// <summary>
@@ -157,7 +157,7 @@ public class InternalAuthController(IInternalAuthFacadeService authFacade) : Con
     [ProducesResponseType(typeof(FailApiResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(FailApiResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ResendConfirmationEmail(
-        [FromBody] ResendConfirmationEmailRequestDto resendConfirmationEmailRequest, 
+        [FromBody] ResendConfirmationEmailRequestDto resendConfirmationEmailRequest,
         CancellationToken cancellationToken)
     {
         var result = await _authFacade.ResendConfirmationEmailAsync(resendConfirmationEmailRequest, cancellationToken);
@@ -204,7 +204,7 @@ public class InternalAuthController(IInternalAuthFacadeService authFacade) : Con
     {
         var refreshTokenResult = this.GetRefreshTokenCookie();
         if (!refreshTokenResult.IsSuccess)
-        {            
+        {
             return this.ToActionResult(Result<SuccessApiResponse<RefreshTokenResponseDto>>.Failure(refreshTokenResult.Error));
         }
         var result = await _authFacade.RefreshTokenAsync(refreshTokenRequest, refreshTokenResult.Data, cancellationToken);

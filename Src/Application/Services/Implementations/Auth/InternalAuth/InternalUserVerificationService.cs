@@ -10,7 +10,6 @@ using Application.Utils;
 using Domain.Models.User;
 using Domain.Models.UserDevice;
 using Domain.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Hangfire;
 
@@ -23,7 +22,7 @@ public class InternalUserVerificationService(
     ILogger<InternalUserVerificationService> logger,
     IUserDevicesRepository userDeviceRepository,
     IBackgroundJobClient backgroundJobClient
-) 
+)
     : IInternalUserVerificationService
 {
     private readonly IUserRepository _userRepository = userRepository;

@@ -1,7 +1,7 @@
-using Domain.Models;
 using Domain.Models.User;
 
 namespace Application.Repositories.Interfaces;
+
 public interface IUserRepository
 {
     Task<bool> IsUsernameInUseAsync(string username, CancellationToken cancellationToken);

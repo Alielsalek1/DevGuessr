@@ -23,12 +23,12 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
         Assert.True(content.Success);
         Assert.Equal(200, content.StatusCode);
         Assert.Equal("Guest login successful.", content.Message);
-        
+
         // Verify response data
         Assert.NotNull(content.Data);
         Assert.NotEqual(Guid.Empty, content.Data.UserId);
         Assert.False(string.IsNullOrWhiteSpace(content.Data.AccessToken));
-        
+
         // Verify refresh token cookie is set (RefreshToken is JsonIgnored in response)
         Assert.NotNull(refreshTokenCookie);
     }
@@ -42,7 +42,7 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        
+
         // Verify user exists in database
         var userId = content!.Data.UserId;
         var userExists = await CheckUserExistsInDatabaseAsync(userId);
@@ -58,7 +58,7 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        
+
         // Verify user has Guest role (role = 2)
         var userId = content!.Data.UserId;
         var userRole = await GetUserRoleAsync(userId);
@@ -70,7 +70,7 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
     {
         // Act: Login as guest
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
-        
+
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
         var accessToken = loginContent!.Data!.AccessToken;
 
@@ -91,10 +91,10 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
     {
         // Act: Login as guest
         var (loginResponse, loginContent, _, refreshTokenCookie) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
-        
+
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
         Assert.NotNull(refreshTokenCookie);
-        
+
         var userId = loginContent!.Data.UserId;
 
         // Act: Use the refresh token to get a new access token
@@ -120,7 +120,7 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
         // Assert: Both requests succeed
         Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
         Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
-        
+
         // Assert: Different user IDs are created
         Assert.NotEqual(content1!.Data.UserId, content2!.Data.UserId);
         Assert.NotEqual(content1.Data.AccessToken, content2.Data.AccessToken);
@@ -129,7 +129,7 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
     /// <summary>
     /// Helper method to check if a user exists in the database
     /// </summary>
-    private async Task<bool> CheckUserExistsInDatabaseAsync(Guid userId)
+    private static async Task<bool> CheckUserExistsInDatabaseAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -148,7 +148,7 @@ public class GuestLoginSuccessTests(CustomWebApplicationFactory factory) : BaseI
     /// <summary>
     /// Helper method to get the role of a user from the database
     /// </summary>
-    private async Task<int> GetUserRoleAsync(Guid userId)
+    private static async Task<int> GetUserRoleAsync(Guid userId)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");

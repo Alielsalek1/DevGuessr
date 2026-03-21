@@ -10,7 +10,7 @@ namespace Tests.Auth;
 [Collection("Integration Tests")]
 public class RegisterationEmailTests(CustomWebApplicationFactory factory) : BaseIntegrationTest(factory)
 {
-    private string GetDecodedBody(string base64Body)
+    private static string GetDecodedBody(string base64Body)
     {
         var bytes = Convert.FromBase64String(base64Body);
         return Encoding.UTF8.GetString(bytes);
@@ -63,7 +63,7 @@ public class RegisterationEmailTests(CustomWebApplicationFactory factory) : Base
 
         var email = messages.Items[0];
         var subject = email.Content.Headers["Subject"][0];
-        
+
         Assert.NotNull(subject);
         Assert.Contains("Verification", subject, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("Code", subject, StringComparison.OrdinalIgnoreCase);
@@ -108,7 +108,7 @@ public class RegisterationEmailTests(CustomWebApplicationFactory factory) : Base
 
         var email = messages.Items[0];
         var body = GetDecodedBody(email.Content.Body);
-        
+
         // Match a 6-digit code
         var match = Regex.Match(body, @"\b\d{6}\b");
         Assert.True(match.Success, "6-digit verification code not found in email body");

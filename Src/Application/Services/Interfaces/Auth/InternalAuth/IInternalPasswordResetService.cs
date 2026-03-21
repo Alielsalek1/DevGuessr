@@ -1,8 +1,6 @@
 using Application.DTOs.Auth;
 using Application.Utils;
 using Domain.Shared;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces;
 

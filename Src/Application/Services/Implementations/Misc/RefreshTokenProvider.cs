@@ -1,15 +1,7 @@
-using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Application.Services.Interfaces;
-using Domain.Models;
-using Domain.Models.User;
 using Domain.Models.UserRefreshTokens;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services.Implementations;
 
@@ -21,11 +13,11 @@ public class RefreshTokenProvider() : IRefreshTokenProvider
         var randomNumber = new byte[32];
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
-        
+
         // Convert to Base64 to make it a URL-safe string for the user
         return Convert.ToBase64String(randomNumber);
     }
-    
+
     public string HashRefreshToken(string refreshToken)
     {
         var inputBytes = Encoding.UTF8.GetBytes(refreshToken);
@@ -37,16 +29,16 @@ public class RefreshTokenProvider() : IRefreshTokenProvider
 
     public bool IsInvalidRefreshToken(UserRefreshToken? RefreshTokenFromDb, string refreshTokenFromCookie)
     {
-        if (RefreshTokenFromDb == null || 
+        if (RefreshTokenFromDb == null ||
         RefreshTokenFromDb.RefreshTokenExpiryTime <= DateTime.UtcNow ||
-        RefreshTokenFromDb.RefreshTokenHash != HashRefreshToken(refreshTokenFromCookie) || 
+        RefreshTokenFromDb.RefreshTokenHash != HashRefreshToken(refreshTokenFromCookie) ||
         IsRefreshTokenUsedOutsideGracePeriod(RefreshTokenFromDb))
         {
             return true;
         }
         return false;
     }
-    
+
     private static bool IsRefreshTokenUsedOutsideGracePeriod(UserRefreshToken userRefreshToken)
     {
         return userRefreshToken.IsUsed && userRefreshToken.UsedAt.HasValue && (DateTime.UtcNow - userRefreshToken.UsedAt.Value).TotalSeconds > 40;

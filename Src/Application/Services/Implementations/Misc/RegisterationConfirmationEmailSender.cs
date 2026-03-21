@@ -1,4 +1,3 @@
-using Application.Services.Implementations;
 using FluentEmail.Core;
 
 namespace Application.Services.Implementations.Misc;

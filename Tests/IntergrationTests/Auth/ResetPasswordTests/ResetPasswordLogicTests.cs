@@ -1,8 +1,6 @@
 using System.Net;
 using Application.DTOs.Auth;
 using Application.Utils;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
 using Tests.Common;
 using TestsReusables.Auth;
 using Xunit;

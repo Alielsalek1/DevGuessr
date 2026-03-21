@@ -1,17 +1,13 @@
-using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Xunit;
 using Tests.Common.TestContainerDependencies;
 using Tests.MailHog;
 using Application.Services.Interfaces;
-using System.Net;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace Tests.Common;
 

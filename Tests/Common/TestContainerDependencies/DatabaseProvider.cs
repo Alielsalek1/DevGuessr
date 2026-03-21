@@ -1,10 +1,6 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistance;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Tests.Common.TestContainerDependencies;
 
@@ -17,7 +13,7 @@ public class DatabaseProvider
         _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
     }
 
-    public async Task EnsureDatabaseMigratedAsync(IServiceProvider services)
+    public static async Task EnsureDatabaseMigratedAsync(IServiceProvider services)
     {
         using var scope = services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();

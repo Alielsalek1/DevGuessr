@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 
 namespace Tests.MailHog;
+
 public class MailhogClient
 {
     private readonly HttpClient _httpClient;

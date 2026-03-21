@@ -1,5 +1,4 @@
 using Application.DTOs.Auth;
-using Application.DTOs.Auth.InternalAuth;
 using Application.DTOs.ExternalAuth;
 using Application.DTOs.User;
 using Application.Utils;

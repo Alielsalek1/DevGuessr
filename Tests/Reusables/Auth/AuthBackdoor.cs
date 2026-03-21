@@ -1,11 +1,10 @@
-using System;
-using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
 namespace TestsReusables.Auth;
+
 public static class AuthBackdoor
 {
     public static readonly Guid TestDeviceId = Guid.Parse("00000000-0000-0000-0000-000000000001");
@@ -74,7 +73,7 @@ public static class AuthBackdoor
     {
         using var scope = factory.Services.CreateScope();
         var cache = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
-        
+
         var key = $"new_user:{token}";
         var json = JsonSerializer.Serialize(new Application.DTOs.Auth.InternalAuth.RegistrationOtpPayload(userId), new JsonSerializerOptions(JsonSerializerDefaults.Web));
         await cache.SetStringAsync(key, json, new DistributedCacheEntryOptions
@@ -91,7 +90,7 @@ public static class AuthBackdoor
     {
         using var scope = factory.Services.CreateScope();
         var cache = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
-        
+
         var key = $"reset_password:{token}";
         var json = JsonSerializer.Serialize(new Application.DTOs.Auth.InternalAuth.PasswordResetOtpPayload(userId), new JsonSerializerOptions(JsonSerializerDefaults.Web));
         await cache.SetStringAsync(key, json, new DistributedCacheEntryOptions
@@ -108,7 +107,7 @@ public static class AuthBackdoor
     {
         using var scope = factory.Services.CreateScope();
         var cache = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
-        
+
         var key = $"new_device:{token}";
         var json = JsonSerializer.Serialize(new Application.DTOs.Auth.InternalAuth.NewDeviceOtpPayload(userId, deviceId), new JsonSerializerOptions(JsonSerializerDefaults.Web));
         await cache.SetStringAsync(key, json, new DistributedCacheEntryOptions

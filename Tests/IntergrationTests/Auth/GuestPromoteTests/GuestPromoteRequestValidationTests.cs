@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using Application.DTOs.Auth;
 using Application.Utils;
 using Tests.Common;
-using TestsReusables.Auth;
 using Xunit;
 
 namespace Tests.Auth;
@@ -58,7 +57,7 @@ public class GuestPromoteRequestValidationTests(CustomWebApplicationFactory fact
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto
@@ -84,7 +83,7 @@ public class GuestPromoteRequestValidationTests(CustomWebApplicationFactory fact
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto
@@ -110,7 +109,7 @@ public class GuestPromoteRequestValidationTests(CustomWebApplicationFactory fact
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto
@@ -136,7 +135,7 @@ public class GuestPromoteRequestValidationTests(CustomWebApplicationFactory fact
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto
@@ -164,7 +163,7 @@ public class GuestPromoteRequestValidationTests(CustomWebApplicationFactory fact
         // Arrange: Create a guest user
         var (loginResponse, loginContent, _, _) = await GuestLoginTestHelpers.PostGuestLoginAsync<SuccessApiResponse<GuestLoginResponseDto>>(Client);
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
-        
+
         var accessToken = loginContent!.Data.AccessToken;
 
         var promoteRequest = new RegisterRequestDto

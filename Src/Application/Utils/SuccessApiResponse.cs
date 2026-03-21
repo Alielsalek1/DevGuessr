@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Http;
-
 namespace Application.Utils;
+
 public record SuccessApiResponse<T>
 {
     public bool Success { get; init; } = true;
