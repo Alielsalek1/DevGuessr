@@ -1,4 +1,5 @@
 using Techdle.API.Middlewares;
+using Npgsql;
 using DotNetEnv;
 using Serilog;
 using Domain;
@@ -68,7 +69,7 @@ try
     var redisConnectionString = EnvironmentVariableLoader.GetRequired("REDIS_CONNECTION_STRING");
 
     builder.Services.AddHealthChecks()
-        .AddNpgSql(connectionString, name: "database", tags: ["ready"])
+        .AddNpgSql(sp => sp.GetRequiredService<NpgsqlDataSource>(), name: "database", tags: ["ready"])
         .AddRedis(redisConnectionString, name: "redis", tags: ["ready"])
         .AddHangfire(options =>
         {

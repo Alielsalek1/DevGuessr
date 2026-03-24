@@ -37,6 +37,35 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         using var serviceProvider = services.BuildServiceProvider();
         // Initialize respawner after migrations
         await _orchestrator.InitializeRespawnerAsync(serviceProvider);
+
+        // Wait for the application to be healthy (especially MassTransit bus)
+        await WaitForHealthyAsync();
+    }
+
+    private async Task WaitForHealthyAsync()
+    {
+        var client = CreateClient();
+        var maxRetries = 30;
+        var delay = TimeSpan.FromSeconds(1);
+
+        for (int i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                var response = await client.GetAsync("/health/ready");
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+            }
+            catch
+            {
+                // Ignore exceptions during startup
+            }
+            await Task.Delay(delay);
+        }
+
+        throw new Exception("Application failed to become healthy within the timeout period.");
     }
 
     // Note: Database and Redis operations should be performed via the exposed providers
@@ -110,7 +139,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         
         // Mute Serilog globally for the test environment AFTER Program.cs configures it
         Serilog.Log.Logger = new Serilog.LoggerConfiguration()
-            .MinimumLevel.Error()
+            .MinimumLevel.Warning()
             .CreateLogger();
             
         return host;

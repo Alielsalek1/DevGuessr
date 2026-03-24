@@ -43,7 +43,7 @@ fi
 # 3. Verify Nginx Caching Header
 echo -n "[Test 4] Nginx Caching Logic... "
 # We perform a GET request and check for the X-Cache-Status header we added in nginx.conf
-CACHE_HEADER=$(curl -k -I -s https://localhost/api/v1/internal-auth/login | grep -i "X-Cache-Status")
+CACHE_HEADER=$(curl -k -I -s https://localhost/ | grep -i "X-Cache-Status")
 if [[ -n "$CACHE_HEADER" ]]; then
     echo -e "${GREEN}PASS${NC} (Found: $CACHE_HEADER)"
 else

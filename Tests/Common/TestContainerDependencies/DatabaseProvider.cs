@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Persistance;
+using Npgsql;
 
 namespace Tests.Common.TestContainerDependencies;
 
@@ -29,9 +30,14 @@ public class DatabaseProvider
             services.Remove(descriptor);
         }
 
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(_connectionString);
+        dataSourceBuilder.EnableDynamicJson();
+        var dataSource = dataSourceBuilder.Build();
+        services.AddSingleton(dataSource);
+
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(_connectionString)
+            options.UseNpgsql(dataSource)
                    .UseSnakeCaseNamingConvention()
                    .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
         });
@@ -46,9 +52,14 @@ public class DatabaseProvider
             services.Remove(descriptor);
         }
         var conn = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(conn!);
+        dataSourceBuilder.EnableDynamicJson();
+        var dataSource = dataSourceBuilder.Build();
+        services.AddSingleton(dataSource);
+
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseNpgsql(conn)
+            options.UseNpgsql(dataSource)
                    .UseSnakeCaseNamingConvention()
                    .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
         });

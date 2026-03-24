@@ -1,4 +1,5 @@
 using Infrastructure.Persistance;
+using Npgsql;
 using Infrastructure.Repositories.Implementations;
 using Application.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -23,18 +24,25 @@ public static class DependencyInjection
 
     private static IServiceCollection AddDatabase(this IServiceCollection services)
     {
+        services.AddSingleton<NpgsqlDataSource>(sp => 
+        {
+            var dbOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+            var builder = new NpgsqlDataSourceBuilder(dbOptions.ConnectionString);
+            builder.EnableDynamicJson();
+            return builder.Build();
+        });
+
         services.AddDbContext<AppDbContext>((serviceProvider, options) =>
         {
-            var dbOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-            options.UseNpgsql(dbOptions.ConnectionString)
-                   .UseSnakeCaseNamingConvention()
-                   .UseNpgsql(dbOptions.ConnectionString, npgsqlOptions =>
+            var dataSource = serviceProvider.GetRequiredService<NpgsqlDataSource>();
+            options.UseNpgsql(dataSource, npgsqlOptions =>
                    {
                        npgsqlOptions.EnableRetryOnFailure(
                            maxRetryCount: 5,
                            maxRetryDelay: TimeSpan.FromSeconds(10),
                            errorCodesToAdd: null);
-                   });
+                   })
+                   .UseSnakeCaseNamingConvention();
         });
         return services;
     }
@@ -44,6 +52,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserDevicesRepository, UserDevicesRepository>();
         services.AddScoped<IUserRefreshTokensRepository, UserRefreshTokensRepository>();
+        services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
         return services;
     }
 
