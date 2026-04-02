@@ -40,6 +40,8 @@ public static class OptionsExtensions
         services.Configure<RedisOptions>(options =>
         {
             options.ConnectionString = EnvironmentVariableLoader.GetRequired("REDIS_CONNECTION_STRING");
+            var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "Techdle";
+            options.InstanceName = projectName.EndsWith("_") ? projectName : $"{projectName}_";
         });
 
         services.Configure<RabbitMqOptions>(options =>
@@ -48,6 +50,12 @@ public static class OptionsExtensions
             options.Port = Environment.GetEnvironmentVariable("RABBITMQ_PORT") ?? "5672";
             options.Username = EnvironmentVariableLoader.GetRequired("RABBITMQ_USERNAME");
             options.Password = EnvironmentVariableLoader.GetRequired("RABBITMQ_PASSWORD");
+        });
+
+        services.Configure<FileStorageOptions>(options =>
+        {
+            options.UploadPath = Environment.GetEnvironmentVariable("UPLOAD_PATH") ?? "uploads";
+            options.BaseUrl = Environment.GetEnvironmentVariable("UPLOAD_BASE_URL") ?? "/uploads";
         });
 
         return services;

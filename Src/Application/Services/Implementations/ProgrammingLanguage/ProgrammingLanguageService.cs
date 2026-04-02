@@ -42,6 +42,12 @@ public class ProgrammingLanguageService(
             return Result<SuccessApiResponse<AddProgrammingLanguageTagByNameResponseDto>>.Failure(ProgrammingLanguageErrors.LanguageNotFound);
         }
 
+        if (language.Tags.Any(t => t.Equals(request.Tag, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogWarning("Tag {Tag} already exists in programming language {Name}", request.Tag, name);
+            return Result<SuccessApiResponse<AddProgrammingLanguageTagByNameResponseDto>>.Failure(ProgrammingLanguageErrors.TagAlreadyExists);
+        }
+
         language.AddTag(request.Tag);
         await _repository.UpdateAsync(language, ct);
         _logger.LogInformation("Added tag {Tag} to programming language {Name} (Id: {Id})", request.Tag, language.Name, language.Id);
@@ -56,6 +62,12 @@ public class ProgrammingLanguageService(
         {
             _logger.LogWarning("Programming language {Name} not found for RemoveTag", name);
             return Result<SuccessApiResponse<RemoveProgrammingLanguageTagByNameResponseDto>>.Failure(ProgrammingLanguageErrors.LanguageNotFound);
+        }
+
+        if (!language.Tags.Any(t => t.Equals(request.Tag, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogWarning("Tag {Tag} not found in programming language {Name}", request.Tag, name);
+            return Result<SuccessApiResponse<RemoveProgrammingLanguageTagByNameResponseDto>>.Failure(ProgrammingLanguageErrors.TagNotFound);
         }
 
         language.RemoveTag(request.Tag);

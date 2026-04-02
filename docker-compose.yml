@@ -50,6 +50,8 @@ services:
         condition: service_healthy
     env_file:
       - .env
+    volumes:
+      - uploads_data:/app/uploads
 
   nginx:
     image: nginx:latest
@@ -99,4 +101,6 @@ volumes:
   postgres_data:
     driver: local
   nginx_cache:
+    driver: local
+  uploads_data:
     driver: local

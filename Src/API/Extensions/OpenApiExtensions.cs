@@ -19,11 +19,14 @@ public static class OpenApiExtensions
             // 1. Add general API info
             options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
+                var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "Backend Template API";
+                var projectDescription = Environment.GetEnvironmentVariable("PROJECT_DESCRIPTION") ?? "The Architect's Forge - A high-performance, resilient backend template with Clean Architecture";
+
                 document.Info = new OpenApiInfo
                 {
-                    Title = "Backend Template API",
+                    Title = projectName,
                     Version = "v1",
-                    Description = "The Architect's Forge - A high-performance, resilient backend template with Clean Architecture",
+                    Description = projectDescription,
                     Contact = new OpenApiContact
                     {
                         Name = "Development Team",
@@ -107,7 +110,8 @@ public static class OpenApiExtensions
     {
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/openapi/v1.json", "Backend Template API v1.0");
+            var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "Backend Template API";
+            options.SwaggerEndpoint("/openapi/v1.json", $"{projectName} v1.0");
             options.RoutePrefix = "api-docs";
             options.DefaultModelsExpandDepth(2);
             options.DefaultModelExpandDepth(1);

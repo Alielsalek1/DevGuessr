@@ -101,4 +101,59 @@ public class ProgrammingLanguageTagTests(CustomWebApplicationFactory factory) : 
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+    [Fact]
+    public async Task AddTag_AlreadyExistingTag_Returns409Conflict()
+    {
+        var client = await GetAuthenticatedClientAsync("AddDupTagUser");
+        var createRequest = new CreateProgrammingLanguageRequestDto
+        {
+            Name = "DupTagLang",
+            YearFirstAppeared = 2010,
+            TypingDiscipline = "Static",
+            TypeStrength = "Strong",
+            ExecutionModel = "Compiled",
+            MemoryManagement = "Manual",
+            Tags = ["ExistingTag"]
+        };
+
+        var (createResponse, createdContent, _) = await ProgrammingLanguagesTestHelpers.CreateAsync<SuccessApiResponse<CreateProgrammingLanguageResponseDto>>(client, createRequest);
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var name = createdContent!.Data.Name;
+
+        var tagRequest = new AddProgrammingLanguageTagByNameRequestDto { Tag = "ExistingTag" };
+        var (response, content, _) = await ProgrammingLanguagesTestHelpers.AddTagAsync<FailApiResponse>(client, name, tagRequest);
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.NotNull(content);
+        Assert.False(content.Success);
+        Assert.Equal("The programming language already has this tag.", content.Message);
+    }
+
+    [Fact]
+    public async Task RemoveTag_NonexistentTag_Returns404NotFound()
+    {
+        var client = await GetAuthenticatedClientAsync("RemMissTagUser");
+        var createRequest = new CreateProgrammingLanguageRequestDto
+        {
+            Name = "RemMissTagLang",
+            YearFirstAppeared = 2010,
+            TypingDiscipline = "Static",
+            TypeStrength = "Strong",
+            ExecutionModel = "Compiled",
+            MemoryManagement = "Manual",
+            Tags = ["ExistingTag"]
+        };
+
+        var (createResponse, createdContent, _) = await ProgrammingLanguagesTestHelpers.CreateAsync<SuccessApiResponse<CreateProgrammingLanguageResponseDto>>(client, createRequest);
+        Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+        var name = createdContent!.Data.Name;
+
+        var tagRequest = new RemoveProgrammingLanguageTagByNameRequestDto { Tag = "NonExistentTag" };
+        var (response, content, _) = await ProgrammingLanguagesTestHelpers.RemoveTagAsync<FailApiResponse>(client, name, tagRequest);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.NotNull(content);
+        Assert.False(content.Success);
+        Assert.Equal("The programming language does not have this tag.", content.Message);
+    }
 }

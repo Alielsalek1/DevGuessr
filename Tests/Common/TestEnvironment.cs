@@ -93,4 +93,13 @@ public static class TestEnvironment
     {
         SeqProvider.SetSeqUrl("http://localhost:5341");
     }
+
+    /// <summary>
+    /// Sets environment variables for uploading files.
+    /// </summary>
+    public static void SetUploadEnvironmentVariables()
+    {
+        Environment.SetEnvironmentVariable("UPLOAD_PATH", "test-uploads");
+        Environment.SetEnvironmentVariable("UPLOAD_BASE_URL", "/uploads");
+    }
 }

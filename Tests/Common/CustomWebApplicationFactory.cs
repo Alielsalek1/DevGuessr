@@ -24,6 +24,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         TestEnvironment.SetSeqUrl();
         // hardcode JWT for testing purposes
         TestEnvironment.SetJwtEnvironmentVariables();
+        // hardcode Upload config for testing purposes
+        TestEnvironment.SetUploadEnvironmentVariables();
 
         // Set up test environment and start orchestrator (owns containers + providers)
         TestEnvironment.Configure();
@@ -87,6 +89,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "1");
+        Environment.SetEnvironmentVariable("UPLOAD_PATH", "test-uploads");
+        Environment.SetEnvironmentVariable("UPLOAD_BASE_URL", "/uploads");
         builder.UseEnvironment("Testing");
         builder.ConfigureTestServices(services =>
         {
@@ -136,12 +140,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     protected override IHost CreateHost(IHostBuilder builder)
     {
         var host = base.CreateHost(builder);
-        
+
         // Mute Serilog globally for the test environment AFTER Program.cs configures it
         Serilog.Log.Logger = new Serilog.LoggerConfiguration()
             .MinimumLevel.Warning()
             .CreateLogger();
-            
+
         return host;
     }
 }

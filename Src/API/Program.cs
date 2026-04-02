@@ -98,6 +98,22 @@ try
     app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
     app.UseHangfireDashboard("/hangfire");
 
+    // Serve uploaded images (e.g. /uploads/...) as static files
+    var uploadPath = EnvironmentVariableLoader.GetRequired("UPLOAD_PATH");
+    var uploadBaseUrl = EnvironmentVariableLoader.GetRequired("UPLOAD_BASE_URL");
+    
+    var fullUploadPath = Path.Combine(builder.Environment.ContentRootPath, uploadPath);
+    if (!Directory.Exists(fullUploadPath))
+    {
+        Directory.CreateDirectory(fullUploadPath);
+    }
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(fullUploadPath),
+        RequestPath = uploadBaseUrl 
+    });
+
     app.UseAuthentication();
     app.UseAuthorization();
 

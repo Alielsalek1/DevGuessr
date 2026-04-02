@@ -11,7 +11,12 @@ namespace Tests.Auth;
 [Collection("Integration Tests")]
 public class LoginJailTests(CustomWebApplicationFactory factory) : BaseIntegrationTest(factory)
 {
-    private const string RedisPrefix = "Techdle_";
+    private static string GetRedisPrefix()
+    {
+        var name = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "Techdle";
+        return name.EndsWith("_") ? name : $"{name}_";
+    }
+    private readonly string RedisPrefix = GetRedisPrefix();
 
     [Fact]
     public async Task Login_FourFailedAttempts_CreatesJailInRedis()

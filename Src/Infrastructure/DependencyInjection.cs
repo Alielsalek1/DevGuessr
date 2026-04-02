@@ -8,6 +8,8 @@ using MassTransit;
 using Microsoft.Extensions.Options;
 using Infrastructure.Common.Options;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Infrastructure.Common.Services;
+using Application.Services.Interfaces.Misc;
 
 namespace Infrastructure;
 
@@ -17,6 +19,7 @@ public static class DependencyInjection
     {
         services.AddDatabase();
         services.AddRepositories();
+        services.AddFileStorage();
         services.AddCaching();
         services.AddMessageBroker();
         return services;
@@ -53,6 +56,13 @@ public static class DependencyInjection
         services.AddScoped<IUserDevicesRepository, UserDevicesRepository>();
         services.AddScoped<IUserRefreshTokensRepository, UserRefreshTokensRepository>();
         services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
+        services.AddScoped<ILogodleTargetRepository, LogodleTargetRepository>();
+        return services;
+    }
+
+    private static IServiceCollection AddFileStorage(this IServiceCollection services)
+    {
+        services.AddScoped<IFileStorageService, FileStorageService>();
         return services;
     }
 

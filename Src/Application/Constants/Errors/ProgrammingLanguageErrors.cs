@@ -28,4 +28,19 @@ public static class ProgrammingLanguageErrors
         string.Empty,
         StatusCodes.Status400BadRequest
     );
+    public static readonly Error TagAlreadyExists = new(
+        ProgrammingLanguageErrorCodes.TagAlreadyExists,
+        "The programming language already has this tag.",
+        [],
+        string.Empty,
+        StatusCodes.Status409Conflict
+    );
+
+    public static readonly Error TagNotFound = new(
+        ProgrammingLanguageErrorCodes.TagNotFound,
+        "The programming language does not have this tag.",
+        [],
+        string.Empty,
+        StatusCodes.Status404NotFound
+    );
 }
