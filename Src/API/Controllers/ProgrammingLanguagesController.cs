@@ -10,7 +10,7 @@ using Techdle.Application.Services.Interfaces.ProgrammingLanguage;
 namespace API.Controllers;
 
 [ApiController]
-[AllowAnonymous]
+[Authorize(Roles = "Admin")]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/programming-languages")]
 public class ProgrammingLanguagesController(IProgrammingLanguageService programmingLanguageService) : ControllerBase

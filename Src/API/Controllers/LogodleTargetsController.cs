@@ -10,7 +10,7 @@ using Techdle.Application.Services.Interfaces.LogodleTarget;
 namespace API.Controllers;
 
 [ApiController]
-[AllowAnonymous]
+[Authorize(Roles = "Admin")]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/logodle-targets")]
 public class LogodleTargetsController(ILogodleTargetService logodleTargetService) : ControllerBase
