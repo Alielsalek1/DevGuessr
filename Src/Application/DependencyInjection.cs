@@ -12,6 +12,8 @@ using Application.Services.Implementations.ProgrammingLanguage;
 using Techdle.Application.Services.Interfaces.ProgrammingLanguage;
 using Application.Services.Implementations.LogodleTarget;
 using Techdle.Application.Services.Interfaces.LogodleTarget;
+using Application.Services.Implementations.TechnectionCategory;
+using Techdle.Application.Services.Interfaces.TechnectionCategory;
 using Application.DTOs.Auth.InternalAuth;
 using FluentEmail.Smtp;
 using FluentEmail.Core.Interfaces;
@@ -102,6 +104,9 @@ public static class DependencyInjection
 
         // LogodleTarget Services
         services.AddScoped<ILogodleTargetService, LogodleTargetService>();
+
+        // TechnectionCategory Services
+        services.AddScoped<ITechnectionCategoryService, TechnectionCategoryService>();
 
         return services;
     }

@@ -4,6 +4,7 @@ using Domain.Models.User;
 using Domain.Models.UserDevice;
 using Domain.Models.ProgrammingLanguage;
 using Domain.Models.LogodleTarget;
+using Domain.Models.TechnectionCategory;
 
 namespace Infrastructure.Persistance;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
@@ -13,6 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<UserRefreshToken> UserRefreshTokens => Set<UserRefreshToken>();
     public DbSet<ProgrammingLanguage> ProgrammingLanguages => Set<ProgrammingLanguage>();
     public DbSet<LogodleTarget> LogodleTargets => Set<LogodleTarget>();
+    public DbSet<TechnectionCategory> TechnectionCategories => Set<TechnectionCategory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

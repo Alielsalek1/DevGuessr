@@ -57,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRefreshTokensRepository, UserRefreshTokensRepository>();
         services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
         services.AddScoped<ILogodleTargetRepository, LogodleTargetRepository>();
+        services.AddScoped<ITechnectionCategoryRepository, TechnectionCategoryRepository>();
         return services;
     }
 

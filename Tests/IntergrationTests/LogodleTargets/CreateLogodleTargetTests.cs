@@ -16,7 +16,7 @@ public class CreateLogodleTargetTests(CustomWebApplicationFactory factory) : Bas
     private async Task<HttpClient> GetAuthenticatedClientAsync(string username)
     {
         var email = $"{username.ToLower()}@example.com";
-        var (_, password, _, _) = await AuthBackdoor.CreateVerifiedUserAsync(username, email, "Pass123");
+        var (_, password, _, _) = await AuthBackdoor.CreateVerifiedUserAsync(username, email, "Pass123", Domain.Enums.Roles.Admin);
         var loginRequest = new LoginRequestDto { UsernameOrEmail = email, Password = password };
         var (_, loginContent, _) = await LoginTestHelpers.PostLoginAsync<SuccessApiResponse<LoginResponseDto>>(Client, loginRequest);
         

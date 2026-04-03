@@ -2,9 +2,10 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master, main, "feature/*" ]
+    branches: [ master, main, "feature/**" ]
   pull_request:
     branches: [ master, main ]
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
@@ -21,6 +22,11 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
+
+    - name: Fix inotify limit
+      run: |
+        echo "fs.inotify.max_user_instances=524288" | sudo tee -a /etc/sysctl.conf
+        sudo sysctl -p
 
     - name: Restore dependencies
       run: dotnet restore
@@ -54,7 +60,7 @@ jobs:
 
       - name: Lowercase repository name
         run: |
-          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+          echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta

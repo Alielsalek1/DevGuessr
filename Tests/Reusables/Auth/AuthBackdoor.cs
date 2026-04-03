@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using Domain.Enums;
 
 namespace TestsReusables.Auth;
 
@@ -14,9 +15,9 @@ public static class AuthBackdoor
     /// Also seeds the default test device for this user to ensure 200 OK on login.
     /// Returns the created user's Guid and the plain password used.
     /// </summary>
-    public static async Task<(Guid UserId, string Password, string Username, string Email)> CreateVerifiedUserAsync(string? username = null, string? email = null, string? password = null)
+    public static async Task<(Guid UserId, string Password, string Username, string Email)> CreateVerifiedUserAsync(string? username = null, string? email = null, string? password = null, Roles role = Roles.User)
     {
-        var result = await CreateUserAsync(true, username, email, password);
+        var result = await CreateUserAsync(true, username, email, password, role);
         await SeedUserDeviceAsync(result.Email, TestDeviceId);
         return result;
     }
@@ -25,12 +26,12 @@ public static class AuthBackdoor
     /// Inserts a registered user into the test Postgres database with IsEmailVerified = false.
     /// Returns the created user's Guid and the plain password used.
     /// </summary>
-    public static async Task<(Guid UserId, string Password, string Username, string Email)> CreateUnverifiedUserAsync(string? username = null, string? email = null, string? password = null)
+    public static async Task<(Guid UserId, string Password, string Username, string Email)> CreateUnverifiedUserAsync(string? username = null, string? email = null, string? password = null, Roles role = Roles.User)
     {
-        return await CreateUserAsync(false, username, email, password);
+        return await CreateUserAsync(false, username, email, password, role);
     }
 
-    private static async Task<(Guid UserId, string Password, string Username, string Email)> CreateUserAsync(bool isEmailVerified, string? username, string? email, string? password)
+    private static async Task<(Guid UserId, string Password, string Username, string Email)> CreateUserAsync(bool isEmailVerified, string? username, string? email, string? password, Roles role)
     {
         var connStr = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         if (string.IsNullOrEmpty(connStr)) throw new InvalidOperationException("CONNECTION_STRING environment variable is not set.");
@@ -54,7 +55,7 @@ public static class AuthBackdoor
         cmd.Parameters.AddWithValue("@password_hash", passwordHash);
         cmd.Parameters.AddWithValue("@email", mail);
         cmd.Parameters.AddWithValue("@is_email_verified", isEmailVerified);
-        cmd.Parameters.AddWithValue("@role", 0);
+        cmd.Parameters.AddWithValue("@role", (int)role);
         cmd.Parameters.AddWithValue("@address", string.Empty);
         cmd.Parameters.AddWithValue("@phone_number", string.Empty);
         cmd.Parameters.AddWithValue("@google_id", DBNull.Value);
