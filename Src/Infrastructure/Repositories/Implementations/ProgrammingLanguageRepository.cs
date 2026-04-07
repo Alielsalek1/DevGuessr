@@ -1,3 +1,4 @@
+using Application.DTOs.TechdlePlayer;
 using Application.Repositories.Interfaces;
 using Domain.Models.ProgrammingLanguage;
 using Infrastructure.Persistance;
@@ -56,5 +57,20 @@ public class ProgrammingLanguageRepository(AppDbContext dbContext) : IProgrammin
             .ExecuteDeleteAsync(cancellationToken);
 
         return rowsAffected > 0;
+    }
+
+    public async Task<ProgrammingLanguage?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _dbContext.ProgrammingLanguages
+            .AsNoTracking()
+            .FirstOrDefaultAsync(pl => pl.Id == id, cancellationToken);
+    }
+
+    public async Task<ProgrammingLanguage?> GetRandomAsync(CancellationToken cancellationToken)
+    {
+        return await _dbContext.ProgrammingLanguages
+            .AsNoTracking()
+            .OrderBy(pl => EF.Functions.Random())
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

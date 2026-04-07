@@ -58,6 +58,8 @@ public static class DependencyInjection
         services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
         services.AddScoped<ILogodleTargetRepository, LogodleTargetRepository>();
         services.AddScoped<ITechnectionCategoryRepository, TechnectionCategoryRepository>();
+        services.AddScoped<IDailyTechdleRepository, DailyTechdleRepository>();
+        services.AddScoped<IDailyLogodleRepository, DailyLogodleRepository>();
         return services;
     }
 

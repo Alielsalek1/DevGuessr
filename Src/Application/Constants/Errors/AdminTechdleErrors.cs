@@ -1,0 +1,24 @@
+using Application.Constants.ApiErrors;
+using Domain.Shared;
+using Microsoft.AspNetCore.Http;
+
+namespace Application.Constants.Errors;
+
+public static class AdminTechdleErrors
+{
+    public static readonly Error PuzzleAlreadyExists = new(
+        AdminTechdleErrorCodes.PuzzleAlreadyExists,
+        "Today's puzzle has already been generated.",
+        [],
+        string.Empty,
+        StatusCodes.Status409Conflict
+    );
+
+    public static readonly Error NoLanguagesFound = new(
+        AdminTechdleErrorCodes.NoLanguagesFound,
+        "Cannot generate puzzle: No programming languages exist in the database.",
+        [],
+        string.Empty,
+        StatusCodes.Status400BadRequest
+    );
+}

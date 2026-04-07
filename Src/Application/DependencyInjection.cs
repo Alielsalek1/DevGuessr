@@ -108,6 +108,11 @@ public static class DependencyInjection
         // TechnectionCategory Services
         services.AddScoped<ITechnectionCategoryService, TechnectionCategoryService>();
 
+        // TechdlePlayer Services
+        services.AddScoped<ITechdlePlayerService, TechdlePlayerService>();
+
+        // LogodlePlayer Services
+        services.AddScoped<ILogodlePlayerService, LogodlePlayerService>();
         return services;
     }
 }

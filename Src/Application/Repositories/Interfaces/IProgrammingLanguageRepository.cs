@@ -1,3 +1,4 @@
+using Application.DTOs.TechdlePlayer;
 using Domain.Models.ProgrammingLanguage;
 
 namespace Application.Repositories.Interfaces;
@@ -10,4 +11,6 @@ public interface IProgrammingLanguageRepository
     Task AddAsync(ProgrammingLanguage language, CancellationToken cancellationToken);
     Task UpdateAsync(ProgrammingLanguage language, CancellationToken cancellationToken);
     Task<bool> DeleteByNameAsync(string name, CancellationToken cancellationToken);
+    Task<ProgrammingLanguage?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<ProgrammingLanguage?> GetRandomAsync(CancellationToken cancellationToken);
 }

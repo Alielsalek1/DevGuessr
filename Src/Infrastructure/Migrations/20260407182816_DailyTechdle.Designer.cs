@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Techdle.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407182816_DailyTechdle")]
+    partial class DailyTechdle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,34 +25,6 @@ namespace Techdle.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Models.DailyLogodle.DailyLogodle", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("LogodleTargetId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("logodle_target_id");
-
-                    b.Property<DateOnly>("PuzzleDate")
-                        .HasColumnType("date")
-                        .HasColumnName("puzzle_date");
-
-                    b.HasKey("Id")
-                        .HasName("pk_daily_logodles");
-
-                    b.HasIndex("LogodleTargetId")
-                        .HasDatabaseName("ix_daily_logodles_logodle_target_id");
-
-                    b.HasIndex("PuzzleDate")
-                        .IsUnique()
-                        .HasDatabaseName("ix_daily_logodles_puzzle_date");
-
-                    b.ToTable("daily_logodles", (string)null);
-                });
 
             modelBuilder.Entity("Domain.Models.DailyTechdle.DailyTechdle", b =>
                 {
@@ -310,18 +285,6 @@ namespace Techdle.Infrastructure.Migrations
                         .HasName("pk_user_refresh_tokens");
 
                     b.ToTable("user_refresh_tokens", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.DailyLogodle.DailyLogodle", b =>
-                {
-                    b.HasOne("Domain.Models.LogodleTarget.LogodleTarget", "Target")
-                        .WithMany()
-                        .HasForeignKey("LogodleTargetId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_daily_logodles_logodle_targets_logodle_target_id");
-
-                    b.Navigation("Target");
                 });
 
             modelBuilder.Entity("Domain.Models.DailyTechdle.DailyTechdle", b =>
