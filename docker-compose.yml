@@ -36,7 +36,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Src/API/Dockerfile
+      dockerfile: Backend/API/Dockerfile
     container_name: techdle-api
     restart: unless-stopped
     networks:

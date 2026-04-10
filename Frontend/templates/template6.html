@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevQuest - Stats Modal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#e6b0ff",
+                    "surface-bright": "#2c2c2c",
+                    "on-primary-fixed-variant": "#540054",
+                    "outline": "#767575",
+                    "tertiary-fixed": "#00ffff",
+                    "on-tertiary-fixed-variant": "#006868",
+                    "on-error-container": "#ffb2b9",
+                    "surface-container-highest": "#262626",
+                    "inverse-surface": "#fcf9f8",
+                    "tertiary": "#c1fffe",
+                    "on-tertiary-container": "#005d5d",
+                    "on-surface-variant": "#adaaaa",
+                    "secondary-dim": "#b516ff",
+                    "surface-container": "#1a1919",
+                    "on-primary-container": "#440044",
+                    "tertiary-fixed-dim": "#00efef",
+                    "surface": "#0e0e0e",
+                    "on-surface": "#ffffff",
+                    "on-primary": "#580058",
+                    "on-secondary-fixed": "#56007d",
+                    "on-secondary-fixed-variant": "#8100b9",
+                    "error": "#ff6e84",
+                    "surface-container-low": "#131313",
+                    "on-primary-fixed": "#000000",
+                    "error-dim": "#d73357",
+                    "primary": "#ff7cf5",
+                    "surface-container-lowest": "#000000",
+                    "on-tertiary": "#006767",
+                    "primary-fixed-dim": "#ff1cfe",
+                    "outline-variant": "#484847",
+                    "surface-dim": "#0e0e0e",
+                    "error-container": "#a70138",
+                    "on-tertiary-fixed": "#004949",
+                    "on-error": "#490013",
+                    "on-secondary": "#380053",
+                    "secondary-fixed": "#edc2ff",
+                    "surface-variant": "#262626",
+                    "tertiary-dim": "#00e6e6",
+                    "secondary": "#d078ff",
+                    "inverse-primary": "#aa00aa",
+                    "on-background": "#ffffff",
+                    "inverse-on-surface": "#565555",
+                    "background": "#0e0e0e",
+                    "on-secondary-container": "#fff5fd",
+                    "surface-tint": "#ff7cf5",
+                    "primary-fixed": "#ff5af9",
+                    "secondary-container": "#9500d6",
+                    "primary-dim": "#ff51fa",
+                    "surface-container-high": "#201f1f",
+                    "primary-container": "#ff5af9",
+                    "tertiary-container": "#00ffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0rem",
+                    "lg": "0rem",
+                    "xl": "0rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "mono": ["JetBrains Mono"],
+                    "body": ["Inter"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .pixel-leak-tr { position: relative; }
+        .pixel-leak-tr::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            right: -16px;
+            width: 16px;
+            height: 1px;
+            background-color: #484847;
+        }
+        .pixel-leak-bl { position: relative; }
+        .pixel-leak-bl::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: -1px;
+            width: 1px;
+            height: 16px;
+            background-color: #FF7CF5;
+        }
+        .chromatic-hover:hover {
+            box-shadow: -2px 0 0 #FF00FF, 2px 0 0 #00FFFF;
+        }
+        .glass-background {
+            background: rgba(14, 14, 14, 0.8);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-hidden">
+<!-- Mock Background Content (Blurred) -->
+<div class="fixed inset-0 z-0 flex flex-col items-center justify-center opacity-20 select-none pointer-events-none">
+<div class="grid grid-cols-5 gap-2">
+<!-- Mock game tiles -->
+<div class="w-12 h-12 bg-surface-container-highest border border-outline-variant/20"></div>
+<div class="w-12 h-12 bg-surface-container-highest border border-outline-variant/20"></div>
+<div class="w-12 h-12 bg-surface-container-highest border border-outline-variant/20"></div>
+<div class="w-12 h-12 bg-surface-container-highest border border-outline-variant/20"></div>
+<div class="w-12 h-12 bg-surface-container-highest border border-outline-variant/20"></div>
+</div>
+</div>
+<!-- Top Navigation Anchor (Shared Component) -->
+<header class="bg-[#0E0E0E]/80 backdrop-blur-xl text-on-surface flex justify-between items-center w-full px-6 py-4 max-w-full docked full-width top-0 z-50 fixed">
+<div class="text-2xl font-black italic tracking-tighter text-[#FF7CF5] uppercase">DevQuest</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-[#FF7CF5] border-b-2 border-[#FF7CF5] font-mono tracking-widest uppercase text-sm" href="#">Techdle</a>
+<a class="text-[#ADAAAA] font-mono hover:text-[#FF7CF5] transition-all duration-300 tracking-widest uppercase text-sm" href="#">Logodle</a>
+<a class="text-[#ADAAAA] font-mono hover:text-[#FF7CF5] transition-all duration-300 tracking-widest uppercase text-sm" href="#">Technections</a>
+<a class="text-[#ADAAAA] font-mono hover:text-[#FF7CF5] transition-all duration-300 tracking-widest uppercase text-sm" href="#">Stats</a>
+</nav>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#ADAAAA] hover:text-[#FF7CF5] transition-colors cursor-pointer">leaderboard</span>
+<span class="material-symbols-outlined text-[#ADAAAA] hover:text-[#FF7CF5] transition-colors cursor-pointer">settings</span>
+</div>
+</header>
+<!-- Overlay Container -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center px-4 glass-background">
+<!-- Stats Modal -->
+<div class="w-full max-w-md bg-surface-container-low border-l border-t border-outline-variant/20 relative p-8">
+<!-- Glitchy Corner Details -->
+<div class="absolute -top-[1px] -right-[16px] w-16 h-[1px] bg-outline-variant"></div>
+<div class="absolute -bottom-[16px] -left-[1px] w-[1px] h-16 bg-primary"></div>
+<!-- Modal Header -->
+<div class="flex flex-col gap-1 mb-8">
+<span class="font-mono text-[10px] tracking-[0.3em] text-on-surface-variant uppercase">SYSTEM_NOTIFICATION // SESSION_COMPLETE</span>
+<h1 class="font-headline text-5xl font-black italic tracking-tighter text-primary uppercase leading-none">
+                    Techdle Solved!
+                </h1>
+</div>
+<!-- Stats Grid (Bento Style) -->
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="bg-surface-container p-4 border-b border-outline-variant/10">
+<div class="font-mono text-xs text-on-surface-variant mb-1 uppercase tracking-wider">Streak</div>
+<div class="font-headline text-3xl font-bold text-on-surface">12</div>
+</div>
+<div class="bg-surface-container p-4 border-b border-outline-variant/10">
+<div class="font-mono text-xs text-on-surface-variant mb-1 uppercase tracking-wider">Win Rate</div>
+<div class="font-headline text-3xl font-bold text-on-surface">94%</div>
+</div>
+</div>
+<!-- Guess Map -->
+<div class="mb-8">
+<div class="font-mono text-[10px] tracking-[0.2em] text-on-surface-variant uppercase mb-4 flex justify-between">
+<span>Guess Map</span>
+<span class="text-tertiary">LVL. 42</span>
+</div>
+<div class="bg-surface-container-highest p-6 font-mono text-xl tracking-widest leading-loose text-center">
+<div class="flex justify-center gap-2 mb-2">
+<span class="text-on-surface-variant">⬛</span>
+<span class="text-on-surface-variant">⬛</span>
+<span class="text-primary">🟪</span>
+<span class="text-on-surface-variant">⬛</span>
+<span class="text-on-surface-variant">⬛</span>
+</div>
+<div class="flex justify-center gap-2 mb-2">
+<span class="text-on-surface-variant">⬛</span>
+<span class="text-primary">🟪</span>
+<span class="text-primary">🟪</span>
+<span class="text-on-surface-variant">⬛</span>
+<span class="text-on-surface-variant">⬛</span>
+</div>
+<div class="flex justify-center gap-2">
+<span class="text-tertiary">🟦</span>
+<span class="text-tertiary">🟦</span>
+<span class="text-tertiary">🟦</span>
+<span class="text-tertiary">🟦</span>
+<span class="text-tertiary">🟦</span>
+</div>
+</div>
+</div>
+<!-- Action Section -->
+<div class="flex flex-col gap-6">
+<button class="w-full bg-tertiary-container text-on-tertiary-fixed font-headline font-black py-4 uppercase tracking-tighter text-xl chromatic-hover transition-all flex items-center justify-center gap-3 active:scale-[0.98]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">content_copy</span>
+                    Copy Results
+                </button>
+<div class="flex justify-between items-end border-t border-outline-variant/20 pt-6">
+<div class="flex flex-col gap-1">
+<span class="font-mono text-[10px] tracking-widest text-on-surface-variant uppercase">Next Puzzle</span>
+<div class="font-mono text-2xl text-tertiary-fixed-dim">
+                            08:42:15
+                        </div>
+</div>
+<button class="font-mono text-xs tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 uppercase">
+                        Close
+                        <span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+<!-- Aesthetic Pixel Leak -->
+<div class="absolute -top-4 -left-4 w-2 h-2 bg-primary/20"></div>
+<div class="absolute top-0 left-0 w-8 h-[1px] bg-primary/40"></div>
+<div class="absolute top-0 left-0 w-[1px] h-8 bg-primary/40"></div>
+</div>
+</div>
+<!-- Side Nav Anchor (Hidden for focus but represented in structure) -->
+<aside class="hidden md:flex flex-col h-full py-8 bg-[#0E0E0E] w-64 fixed left-0 top-0 border-r border-[#ADAAAA]/10 z-40 opacity-30 blur-sm pointer-events-none">
+<div class="px-6 mb-12">
+<div class="text-[#FF7CF5] font-black uppercase tracking-widest">ROOT_USER</div>
+<div class="text-[10px] font-mono text-[#ADAAAA] tracking-[0.3em]">RANK: SENIOR</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="text-[#FF7CF5] bg-[#131313] border-r-4 border-[#FF7CF5] px-4 py-3 flex items-center gap-3 font-mono text-sm tracking-widest uppercase">
+<span class="material-symbols-outlined">terminal</span> Techdle
+            </div>
+<div class="text-[#ADAAAA] px-4 py-3 flex items-center gap-3 hover:bg-[#131313]/50 font-mono text-sm tracking-widest uppercase">
+<span class="material-symbols-outlined">category</span> Logodle
+            </div>
+<div class="text-[#ADAAAA] px-4 py-3 flex items-center gap-3 hover:bg-[#131313]/50 font-mono text-sm tracking-widest uppercase">
+<span class="material-symbols-outlined">extension</span> Technections
+            </div>
+<div class="text-[#ADAAAA] px-4 py-3 flex items-center gap-3 hover:bg-[#131313]/50 font-mono text-sm tracking-widest uppercase">
+<span class="material-symbols-outlined">analytics</span> Stats
+            </div>
+</div>
+</aside>
+</body></html>

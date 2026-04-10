@@ -10,14 +10,11 @@ namespace Tests.Common;
 public abstract class BaseIntegrationTest : IAsyncLifetime
 {
     protected readonly CustomWebApplicationFactory Factory;
-    protected readonly HttpClient Client;
+    protected HttpClient Client { get; private set; } = null!;
 
     protected BaseIntegrationTest(CustomWebApplicationFactory factory)
     {
         Factory = factory;
-        Client = factory.CreateClient();
-        // Add default test device ID cookie to all requests
-        Client.DefaultRequestHeaders.Add("Cookie", $"deviceId={AuthBackdoor.TestDeviceId}");
     }
 
     // Facades for providers to avoid Law of Demeter violations
@@ -30,6 +27,13 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
 
     public virtual async Task InitializeAsync()
     {
+        // Create the test client after fixture/container initialization to avoid startup races.
+        if (Client == null)
+        {
+            Client = Factory.CreateClient();
+            Client.DefaultRequestHeaders.Add("Cookie", $"deviceId={AuthBackdoor.TestDeviceId}");
+        }
+
         // Clear test validator configuration
         TestGoogleAuthValidator.Clear();
 

@@ -28,8 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Src\API\Techdle.API.csproj" />
-    <ProjectReference Include="..\Src\Infrastructure\Techdle.Infrastructure.csproj" />
+    <ProjectReference Include="..\Backend\API\Techdle.API.csproj" />
+    <ProjectReference Include="..\Backend\Infrastructure\Techdle.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

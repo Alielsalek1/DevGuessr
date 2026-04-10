@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "secondary-fixed-dim": "#e6b0ff",
+                  "surface-bright": "#2c2c2c",
+                  "on-primary-fixed-variant": "#540054",
+                  "outline": "#767575",
+                  "tertiary-fixed": "#00ffff",
+                  "on-tertiary-fixed-variant": "#006868",
+                  "on-error-container": "#ffb2b9",
+                  "surface-container-highest": "#262626",
+                  "inverse-surface": "#fcf9f8",
+                  "tertiary": "#c1fffe",
+                  "on-tertiary-container": "#005d5d",
+                  "on-surface-variant": "#adaaaa",
+                  "secondary-dim": "#b516ff",
+                  "surface-container": "#1a1919",
+                  "on-primary-container": "#440044",
+                  "tertiary-fixed-dim": "#00efef",
+                  "surface": "#0e0e0e",
+                  "on-surface": "#ffffff",
+                  "on-primary": "#580058",
+                  "on-secondary-fixed": "#56007d",
+                  "on-secondary-fixed-variant": "#8100b9",
+                  "error": "#ff6e84",
+                  "surface-container-low": "#131313",
+                  "on-primary-fixed": "#000000",
+                  "error-dim": "#d73357",
+                  "primary": "#ff7cf5",
+                  "surface-container-lowest": "#000000",
+                  "on-tertiary": "#006767",
+                  "primary-fixed-dim": "#ff1cfe",
+                  "outline-variant": "#484847",
+                  "surface-dim": "#0e0e0e",
+                  "error-container": "#a70138",
+                  "on-tertiary-fixed": "#004949",
+                  "on-error": "#490013",
+                  "on-secondary": "#380053",
+                  "secondary-fixed": "#edc2ff",
+                  "surface-variant": "#262626",
+                  "tertiary-dim": "#00e6e6",
+                  "secondary": "#d078ff",
+                  "inverse-primary": "#aa00aa",
+                  "on-background": "#ffffff",
+                  "inverse-on-surface": "#565555",
+                  "background": "#0e0e0e",
+                  "on-secondary-container": "#fff5fd",
+                  "surface-tint": "#ff7cf5",
+                  "primary-fixed": "#ff5af9",
+                  "secondary-container": "#9500d6",
+                  "primary-dim": "#ff51fa",
+                  "surface-container-high": "#201f1f",
+                  "primary-container": "#ff5af9",
+                  "tertiary-container": "#00ffff"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0rem",
+                  "lg": "0rem",
+                  "xl": "0rem",
+                  "full": "9999px"
+          },
+          "fontFamily": {
+                  "headline": ["Space Grotesk"],
+                  "body": ["Inter"],
+                  "label": ["Space Grotesk"],
+                  "mono": ["JetBrains Mono"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .pixel-leak-tr::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      right: -16px;
+      width: 16px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.3;
+    }
+    .pixel-leak-bl::after {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      left: -1px;
+      width: 1px;
+      height: 16px;
+      background: currentColor;
+      opacity: 0.3;
+    }
+    .glitch-shadow:hover {
+      box-shadow: -2px 0 0 #ff00ff, 2px 0 0 #00ffff;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant/10 bg-[#0E0E0E] flex flex-col py-8 z-50">
+<div class="px-6 mb-12">
+<h1 class="text-[#FF7CF5] font-black text-xl tracking-tighter uppercase font-headline">DevQuest</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Techdle -->
+<a class="text-[#ADAAAA] px-4 py-3 flex items-center gap-3 hover:bg-[#131313]/50 font-mono text-sm tracking-widest uppercase transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#00FFFF]">terminal</span>
+<span>Techdle</span>
+</a>
+<!-- Logodle (ACTIVE) -->
+<a class="text-[#FF7CF5] bg-[#131313] border-r-4 border-[#FF7CF5] px-4 py-3 flex items-center gap-3 font-mono text-sm tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined">category</span>
+<span>Logodle</span>
+</a>
+<!-- Technections -->
+<a class="text-[#ADAAAA] px-4 py-3 flex items-center gap-3 hover:bg-[#131313]/50 font-mono text-sm tracking-widest uppercase transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#00FFFF]">extension</span>
+<span>Technections</span>
+</a>
+<!-- Stats -->
+<a class="text-[#ADAAAA] px-4 py-3 flex items-center gap-3 hover:bg-[#131313]/50 font-mono text-sm tracking-widest uppercase transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#00FFFF]">analytics</span>
+<span>Stats</span>
+</a>
+</nav>
+<div class="px-6 py-6 border-t border-outline-variant/10">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 bg-surface-container-high border border-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">person</span>
+</div>
+<div>
+<p class="font-mono text-[10px] text-on-surface-variant tracking-tighter">ROOT_USER</p>
+<p class="font-mono text-[8px] text-primary/60 uppercase tracking-widest">Rank: Senior</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 font-mono text-xs font-bold tracking-widest uppercase glitch-shadow transition-all duration-300">
+        PLAY DAILY
+      </button>
+</div>
+<div class="px-4 space-y-1">
+<a class="text-[#ADAAAA] px-4 py-2 flex items-center gap-3 hover:text-[#00FFFF] font-mono text-[10px] uppercase transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span>Settings</span>
+</a>
+<a class="text-[#ADAAAA] px-4 py-2 flex items-center gap-3 hover:text-[#00FFFF] font-mono text-[10px] uppercase transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span>Docs</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 h-screen flex flex-col relative">
+<!-- TopAppBar -->
+<header class="bg-[#0E0E0E]/80 backdrop-blur-xl flex justify-between items-center w-full px-12 py-6 max-w-full z-40">
+<div class="flex items-baseline gap-4">
+<h2 class="text-3xl font-black italic tracking-tighter text-[#FF7CF5] uppercase font-headline">Logodle</h2>
+<span class="font-mono text-[10px] text-tertiary tracking-widest uppercase opacity-70">Sess_ID: 992-XPL</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-[#ADAAAA] font-mono hover:text-[#FF7CF5] transition-all duration-300 flex items-center gap-2 text-xs">
+<span class="material-symbols-outlined text-lg">leaderboard</span>
+</button>
+<button class="text-[#ADAAAA] font-mono hover:text-[#FF7CF5] transition-all duration-300 flex items-center gap-2 text-xs">
+<span class="material-symbols-outlined text-lg">settings</span>
+</button>
+</div>
+</header>
+<!-- Split View Content -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left: Blurred Logo Container -->
+<div class="w-1/2 flex items-center justify-center p-12 bg-surface">
+<div class="relative group">
+<!-- Pixel Leak Decoration -->
+<div class="absolute -top-4 -left-4 w-8 h-8 border-t border-l border-primary/40"></div>
+<div class="absolute -bottom-4 -right-4 w-8 h-8 border-b border-r border-tertiary/40"></div>
+<div class="w-[450px] aspect-square bg-surface-container-low flex items-center justify-center relative overflow-hidden group">
+<!-- Static/Noise Overlay -->
+<div class="absolute inset-0 opacity-5 pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+<img class="w-3/4 h-3/4 object-contain filter blur-[32px] transition-all duration-700 group-hover:blur-[28px]" data-alt="Minimalist technology company logo with geometric shapes, heavily distorted with a gaussian blur effect and digital noise texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4bne4OGZ7VlcI9exfGSV5BGazvMMivXEsApyHCu74iTvmZEPpxUFvBc6lxeesgvbu-Iunq_otUh9qgP1WM2DUcFRbxOWR2BKGZOHP7MT-zNqqGV-bDwfnlSoppsi97P8eMYfbD4L_-RBNMaXgEdoD03Q2Ti-hJQye1IRFkXywbvoQQkjPBHwqWmy4lhTELkanRcisITUEhGYwErFBAVcmnizh6msOWfG_DBJ5avFdIIh7hFF9oMSf4C3nrparl5QJmZwzXG5t36k"/>
+<div class="absolute top-4 right-4 flex flex-col items-end gap-1">
+<span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-tighter">Zoom: 100%</span>
+<span class="font-mono text-[10px] text-tertiary uppercase tracking-tighter">Status: Encrypted</span>
+</div>
+</div>
+<div class="mt-8 flex justify-between items-start">
+<div class="space-y-1">
+<p class="font-mono text-[10px] text-on-surface-variant uppercase tracking-[0.2em]">Puzzle #412</p>
+<h3 class="font-headline text-2xl font-bold text-on-surface uppercase tracking-tight">Vapor Hardware Corp.</h3>
+</div>
+<div class="text-right">
+<p class="font-mono text-[10px] text-on-surface-variant uppercase tracking-[0.2em]">Difficulty</p>
+<div class="flex gap-1 mt-1">
+<div class="w-4 h-1 bg-primary"></div>
+<div class="w-4 h-1 bg-primary"></div>
+<div class="w-4 h-1 bg-outline-variant"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Guess History & Input -->
+<div class="w-1/2 flex flex-col p-12 border-l border-outline-variant/10 bg-surface-container-low">
+<div class="flex-1">
+<div class="mb-12">
+<span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-[0.3em] block mb-4">Transmission History</span>
+<div class="space-y-4">
+<!-- Guess Item -->
+<div class="flex items-center justify-between group py-3 px-4 bg-surface relative overflow-hidden">
+<div class="absolute left-0 top-0 w-1 h-full bg-error"></div>
+<div class="flex items-center gap-4">
+<span class="font-mono text-xs text-on-surface-variant">01</span>
+<span class="font-headline text-lg font-medium text-on-surface tracking-tight uppercase">Microchip</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-error uppercase">Mismatched</span>
+<span class="material-symbols-outlined text-error text-sm">close</span>
+</div>
+</div>
+<!-- Guess Item -->
+<div class="flex items-center justify-between group py-3 px-4 bg-surface relative overflow-hidden">
+<div class="absolute left-0 top-0 w-1 h-full bg-error"></div>
+<div class="flex items-center gap-4">
+<span class="font-mono text-xs text-on-surface-variant">02</span>
+<span class="font-headline text-lg font-medium text-on-surface tracking-tight uppercase">Intel Core</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-error uppercase">Mismatched</span>
+<span class="material-symbols-outlined text-error text-sm">close</span>
+</div>
+</div>
+<!-- Active/Next Slot -->
+<div class="flex items-center justify-between py-3 px-4 border border-outline-variant/20 border-dashed">
+<div class="flex items-center gap-4">
+<span class="font-mono text-xs text-on-surface-variant opacity-40">03</span>
+<span class="font-headline text-lg font-medium text-on-surface-variant/40 tracking-tight uppercase italic">Awaiting Input...</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-sm">more_horiz</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Glitch Input Section -->
+<div class="relative">
+<div class="mb-2 flex justify-between items-end">
+<label class="font-mono text-[10px] text-primary uppercase tracking-[0.2em]">Command_Line</label>
+<span class="font-mono text-[10px] text-on-surface-variant">4 Attempts Left</span>
+</div>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-highest border-0 border-b border-outline-variant py-6 px-6 font-mono text-lg tracking-widest text-on-surface placeholder:text-outline-variant focus:ring-0 focus:border-primary transition-all" placeholder="IDENTIFY LOGO..." type="text"/>
+<button class="absolute right-4 p-2 text-primary hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">subdirectory_arrow_left</span>
+</button>
+<!-- Input Decoration: Pixel Leaks -->
+<div class="absolute bottom-0 right-0 w-4 h-[1px] bg-primary"></div>
+<div class="absolute bottom-0 right-0 h-4 w-[1px] bg-primary"></div>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-4">
+<button class="group flex items-center justify-center gap-3 py-3 border border-outline-variant/20 hover:border-tertiary/40 transition-all font-mono text-[10px] uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm group-hover:text-tertiary">lightbulb</span>
+              Request Hint
+            </button>
+<button class="group flex items-center justify-center gap-3 py-3 border border-outline-variant/20 hover:border-error/40 transition-all font-mono text-[10px] uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm group-hover:text-error">skip_next</span>
+              Skip Sequence
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Background Decoration -->
+<div class="fixed top-0 right-0 w-96 h-96 bg-primary/5 blur-[120px] -z-10 pointer-events-none"></div>
+<div class="fixed bottom-0 left-0 w-96 h-96 bg-tertiary/5 blur-[120px] -z-10 pointer-events-none"></div>
+</main>
+</body></html>

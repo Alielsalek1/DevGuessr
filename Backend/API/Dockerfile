@@ -3,19 +3,19 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy project files for restore
-COPY ["Src/Domain/Techdle.Domain.csproj", "Src/Domain/"]
-COPY ["Src/Application/Techdle.Application.csproj", "Src/Application/"]
-COPY ["Src/Infrastructure/Techdle.Infrastructure.csproj", "Src/Infrastructure/"]
-COPY ["Src/API/Techdle.API.csproj", "Src/API/"]
+COPY ["Backend/Domain/Techdle.Domain.csproj", "Backend/Domain/"]
+COPY ["Backend/Application/Techdle.Application.csproj", "Backend/Application/"]
+COPY ["Backend/Infrastructure/Techdle.Infrastructure.csproj", "Backend/Infrastructure/"]
+COPY ["Backend/API/Techdle.API.csproj", "Backend/API/"]
 
 # Restore dependencies for the API project only (ignores Tests)
-RUN dotnet restore "Src/API/Techdle.API.csproj"
+RUN dotnet restore "Backend/API/Techdle.API.csproj"
 
 # Copy entire source code
 COPY . .
 
 # Build the application
-WORKDIR "/src/Src/API"
+WORKDIR "/src/Backend/API"
 RUN dotnet build "Techdle.API.csproj" -c Release -o /app/build
 
 # Publish stage

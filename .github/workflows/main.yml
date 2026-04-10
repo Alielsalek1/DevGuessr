@@ -14,6 +14,7 @@ jobs:
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -29,13 +30,17 @@ jobs:
         sudo sysctl -p
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore Techdle.sln
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build Techdle.sln --no-restore --configuration Debug
 
     - name: Test
-      run: dotnet test --no-build --configuration Release --verbosity normal
+      timeout-minutes: 25
+      env:
+        ASPNETCORE_ENVIRONMENT: Testing
+        DOTNET_ENVIRONMENT: Testing
+      run: dotnet test Tests/Techdle.Tests.csproj --no-restore --configuration Debug --verbosity normal --blame-hang --blame-hang-timeout 10m
 
   publish:
     name: Publish to GHCR
@@ -76,7 +81,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Src/API/Dockerfile
+          file: Backend/API/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#e6b0ff",
+                        "surface-bright": "#2c2c2c",
+                        "on-primary-fixed-variant": "#540054",
+                        "outline": "#767575",
+                        "tertiary-fixed": "#00ffff",
+                        "on-tertiary-fixed-variant": "#006868",
+                        "on-error-container": "#ffb2b9",
+                        "surface-container-highest": "#262626",
+                        "inverse-surface": "#fcf9f8",
+                        "tertiary": "#c1fffe",
+                        "on-tertiary-container": "#005d5d",
+                        "on-surface-variant": "#adaaaa",
+                        "secondary-dim": "#b516ff",
+                        "surface-container": "#1a1919",
+                        "on-primary-container": "#440044",
+                        "tertiary-fixed-dim": "#00efef",
+                        "surface": "#0e0e0e",
+                        "on-surface": "#ffffff",
+                        "on-primary": "#580058",
+                        "on-secondary-fixed": "#56007d",
+                        "on-secondary-fixed-variant": "#8100b9",
+                        "error": "#ff6e84",
+                        "surface-container-low": "#131313",
+                        "on-primary-fixed": "#000000",
+                        "error-dim": "#d73357",
+                        "primary": "#ff7cf5",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary": "#006767",
+                        "primary-fixed-dim": "#ff1cfe",
+                        "outline-variant": "#484847",
+                        "surface-dim": "#0e0e0e",
+                        "error-container": "#a70138",
+                        "on-tertiary-fixed": "#004949",
+                        "on-error": "#490013",
+                        "on-secondary": "#380053",
+                        "secondary-fixed": "#edc2ff",
+                        "surface-variant": "#262626",
+                        "tertiary-dim": "#00e6e6",
+                        "secondary": "#d078ff",
+                        "inverse-primary": "#aa00aa",
+                        "on-background": "#ffffff",
+                        "inverse-on-surface": "#565555",
+                        "background": "#0e0e0e",
+                        "on-secondary-container": "#fff5fd",
+                        "surface-tint": "#ff7cf5",
+                        "primary-fixed": "#ff5af9",
+                        "secondary-container": "#9500d6",
+                        "primary-dim": "#ff51fa",
+                        "surface-container-high": "#201f1f",
+                        "primary-container": "#ff5af9",
+                        "tertiary-container": "#00ffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"],
+                        "mono": ["JetBrains Mono"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0E0E0E;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        
+        .chromatic-hover:hover {
+            box-shadow: -2px 0 0 #FF00FF, 2px 0 0 #00FFFF;
+        }
+        
+        .pixel-leak-v::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            right: 0;
+            width: 1px;
+            height: 16px;
+            background-color: #484847;
+        }
+
+        .glass-panel {
+            background: rgba(19, 19, 19, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 z-50 w-full bg-[#0E0E0E]/80 backdrop-blur-xl flex justify-between items-center px-6 py-4">
+<div class="text-2xl font-black italic tracking-tighter text-[#FF7CF5] uppercase">
+            DevQuest
+        </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#FF7CF5] border-b-2 border-[#FF7CF5] font-mono text-sm tracking-widest uppercase py-1" href="#">Home</a>
+<a class="text-[#ADAAAA] font-mono text-sm tracking-widest uppercase hover:text-[#FF7CF5] transition-all duration-300" href="#">Archive</a>
+<a class="text-[#ADAAAA] font-mono text-sm tracking-widest uppercase hover:text-[#FF7CF5] transition-all duration-300" href="#">Compete</a>
+</nav>
+<div class="flex items-center gap-4 text-[#ADAAAA]">
+<span class="material-symbols-outlined hover:text-[#FF7CF5] cursor-pointer transition-colors">leaderboard</span>
+<span class="material-symbols-outlined hover:text-[#FF7CF5] cursor-pointer transition-colors">settings</span>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-screen w-64 fixed left-0 top-0 border-r border-[#ADAAAA]/10 bg-[#0E0E0E] py-8 z-40">
+<div class="px-6 mb-12 mt-16">
+<div class="text-[#FF7CF5] font-black font-mono text-xs tracking-tighter mb-1 uppercase">ROOT_USER</div>
+<div class="text-[#ADAAAA] font-mono text-[10px] tracking-widest uppercase">Rank: Senior</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="text-[#FF7CF5] bg-[#131313] border-r-4 border-[#FF7CF5] px-6 py-3 flex items-center gap-3 font-mono text-xs tracking-widest uppercase group" href="#">
+<span class="material-symbols-outlined text-sm">terminal</span>
+                Techdle
+            </a>
+<a class="text-[#ADAAAA] px-6 py-3 flex items-center gap-3 hover:bg-[#131313]/50 hover:text-[#00FFFF] transition-colors duration-150 font-mono text-xs tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined text-sm">category</span>
+                Logodle
+            </a>
+<a class="text-[#ADAAAA] px-6 py-3 flex items-center gap-3 hover:bg-[#131313]/50 hover:text-[#00FFFF] transition-colors duration-150 font-mono text-xs tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined text-sm">extension</span>
+                Technections
+            </a>
+<a class="text-[#ADAAAA] px-6 py-3 flex items-center gap-3 hover:bg-[#131313]/50 hover:text-[#00FFFF] transition-colors duration-150 font-mono text-xs tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined text-sm">analytics</span>
+                Stats
+            </a>
+</nav>
+<div class="mt-auto px-6 space-y-4">
+<button class="w-full py-3 bg-[#FF7CF5] text-[#580058] font-black font-mono text-xs tracking-widest uppercase chromatic-hover transition-all">
+                PLAY DAILY
+            </button>
+<div class="pt-6 border-t border-[#ADAAAA]/10 flex flex-col gap-3">
+<a class="text-[#ADAAAA] flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xs">settings</span> Settings
+                </a>
+<a class="text-[#ADAAAA] flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xs">menu_book</span> Docs
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-24 pb-12 px-6 md:px-12 min-h-screen flex flex-col items-center">
+<!-- Hero Section -->
+<section class="w-full max-w-6xl mb-16 text-center lg:text-left">
+<div class="mb-2 font-mono text-[#00FFFF] text-xs tracking-[0.3em] uppercase">SYSTEM_READY // 24.04</div>
+<h1 class="font-headline text-5xl md:text-7xl font-black tracking-tighter text-on-surface mb-6 leading-none">
+                SELECT YOUR <span class="text-primary italic">TERMINAL</span>
+</h1>
+<!-- Progress Tracker -->
+<div class="max-w-md mt-8">
+<div class="flex justify-between items-end mb-2">
+<span class="font-mono text-[10px] text-[#ADAAAA] tracking-widest uppercase">Daily Quest Progress</span>
+<span class="font-mono text-xs text-[#00FFFF] font-bold">1/3 COMPLETED</span>
+</div>
+<div class="h-[2px] w-full bg-[#131313] relative overflow-hidden">
+<div class="absolute top-0 left-0 h-full w-1/3 bg-[#00FFFF] shadow-[0_0_8px_#00FFFF]"></div>
+</div>
+</div>
+</section>
+<!-- Game Cards: Bento Grid -->
+<section class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Techdle Card -->
+<div class="relative group cursor-pointer">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="glass-panel p-8 border-l-2 border-[#FF7CF5] h-[450px] flex flex-col justify-between transition-transform duration-300 group-hover:-translate-y-2 pixel-leak-v">
+<div>
+<div class="font-mono text-[10px] text-[#ADAAAA] mb-8 tracking-[0.2em] uppercase">MODULE_01 // DEFINITION</div>
+<h2 class="font-headline text-4xl font-bold tracking-tighter text-on-surface mb-4">Techdle</h2>
+<p class="text-[#ADAAAA] font-mono text-xs leading-relaxed max-w-[200px]">Decode the daily technical term from a single cryptic definition.</p>
+</div>
+<div class="flex flex-col gap-4">
+<img class="w-full h-32 object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Abstract digital grid of glowing computer code and binary data flowing in a dark cybernetic environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtgL2Fz6BadoMkSxar_msrqskESQLRwcyZR1fbsYHoSF9YQ4ub42uzjYLjQ90CaCk7U1ffkt_wkZhouK30xvz4uYn2Jilxh10CtX3btGapqHeMK8pfcaUBjOMHUFRtiQbh2W19PwpR5TwKy1rjocuZn-cpouRu5x2qcLNmPI80nrQUx8RuVE3hQ1R04_3P61G6Y68onqYfWS1O2EQZJBBbt7vpwwjj3eAHcPL5Hp0_9PQQhKfQt6ZJFGXlOt3fh5QgSHLlA0nx1dM"/>
+<div class="flex justify-between items-center">
+<span class="font-mono text-[10px] text-primary">STATUS: OPEN</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Logodle Card -->
+<div class="relative group cursor-pointer">
+<div class="absolute inset-0 bg-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="glass-panel p-8 border-l-2 border-[#D078FF] h-[450px] flex flex-col justify-between transition-transform duration-300 group-hover:-translate-y-2 pixel-leak-v">
+<div>
+<div class="font-mono text-[10px] text-[#ADAAAA] mb-8 tracking-[0.2em] uppercase">MODULE_02 // VISUAL</div>
+<h2 class="font-headline text-4xl font-bold tracking-tighter text-on-surface mb-4">Logodle</h2>
+<p class="text-[#ADAAAA] font-mono text-xs leading-relaxed max-w-[200px]">Identify the tech giant by a 16x16 pixelated fragment of their brand.</p>
+</div>
+<div class="flex flex-col gap-4">
+<img class="w-full h-32 object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Vibrant abstract geometric shapes in neon pink and purple forming a fragmented corporate identity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwAKHJBbOGg4qEPyYCcnAQjuhsuEvDj9patGlY1j1ehxw2MkX5Wm9ewt5bSPF5gTHvEn8OCqmjRQKW-cNtr9NFSNCnCdwRY_k0v01E7r99GT33eqKPCp8OJmcBmgfJjOrl5VgCptqosbsZlSZ13DSYRmTJK2L8ShSCnvn0pwFeylXs14m0o4c45BFmPyWFVTcjqJ1dEkGTRRH7QUZHNnjAFgG7kmohb1RhemY6DQfNFqDq_n7H3idqB4gtYBPbXcgFx_ZwgnzX15Q"/>
+<div class="flex justify-between items-center">
+<span class="font-mono text-[10px] text-secondary">STATUS: COMPLETED</span>
+<span class="material-symbols-outlined text-secondary font-variation-settings-fill">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Technections Card -->
+<div class="relative group cursor-pointer">
+<div class="absolute inset-0 bg-tertiary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="glass-panel p-8 border-l-2 border-[#00FFFF] h-[450px] flex flex-col justify-between transition-transform duration-300 group-hover:-translate-y-2 pixel-leak-v">
+<div>
+<div class="font-mono text-[10px] text-[#ADAAAA] mb-8 tracking-[0.2em] uppercase">MODULE_03 // LOGIC</div>
+<h2 class="font-headline text-4xl font-bold tracking-tighter text-on-surface mb-4">Technections</h2>
+<p class="text-[#ADAAAA] font-mono text-xs leading-relaxed max-w-[200px]">Find four groups of four technologies that share a hidden link.</p>
+</div>
+<div class="flex flex-col gap-4">
+<img class="w-full h-32 object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Server rack with glowing cyan blue led lights and complex network cabling in a high-tech data center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPPtA6Pko_Ef0AVrTnBqJyn_puqFeHyrxTfACf11xaVn1qttNpxpXZPvWqwtOV_IZ2rM3F8xiHFIzN7toRUKWECtKpIGGLbJ38oXX1xEZQjMto21ONIxq2F4axR4z2XPVb3gg_AUuCnBbDhBuhp0RwNTCPCC81Qtf8_UFoKFr0w49MxNxhLQMy6OirMSDSN-sNTQhCW2FOcrULdjkYWQT6-XtESnO4p7QdplZieiMZDGDM1SaYL9I-0wfxfqyNuw4Ledg5WR_us6I"/>
+<div class="flex justify-between items-center">
+<span class="font-mono text-[10px] text-tertiary">STATUS: OPEN</span>
+<span class="material-symbols-outlined text-tertiary group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Metadata Footer -->
+<footer class="w-full max-w-6xl mt-24 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-[#484847]/20 pt-8 pb-12">
+<div class="flex flex-col gap-2">
+<div class="font-mono text-[10px] text-[#ADAAAA] tracking-widest uppercase">System Uptime: 99.99%</div>
+<div class="font-mono text-[10px] text-[#ADAAAA] tracking-widest uppercase">Current Latency: 12ms</div>
+</div>
+<div class="flex gap-6">
+<a class="font-mono text-[10px] text-[#ADAAAA] hover:text-[#FF7CF5] transition-colors tracking-widest uppercase" href="#">GitHub</a>
+<a class="font-mono text-[10px] text-[#ADAAAA] hover:text-[#FF7CF5] transition-colors tracking-widest uppercase" href="#">Discord</a>
+<a class="font-mono text-[10px] text-[#ADAAAA] hover:text-[#FF7CF5] transition-colors tracking-widest uppercase" href="#">API_Docs</a>
+</div>
+<div class="text-[#484847] font-mono text-[10px] tracking-widest uppercase">
+                © 2024 DEVQUEST_SYSTEMS
+            </div>
+</footer>
+</main>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-[#0E0E0E]/90 backdrop-blur-xl border-t border-[#ADAAAA]/10 flex justify-around py-4 z-50">
+<a class="text-[#FF7CF5] flex flex-col items-center gap-1" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span class="font-mono text-[8px] uppercase">Techdle</span>
+</a>
+<a class="text-[#ADAAAA] flex flex-col items-center gap-1" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="font-mono text-[8px] uppercase">Logodle</span>
+</a>
+<a class="text-[#ADAAAA] flex flex-col items-center gap-1" href="#">
+<span class="material-symbols-outlined">extension</span>
+<span class="font-mono text-[8px] uppercase">Technections</span>
+</a>
+<a class="text-[#ADAAAA] flex flex-col items-center gap-1" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-mono text-[8px] uppercase">Stats</span>
+</a>
+</nav>
+</body></html>
