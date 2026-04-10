@@ -33,14 +33,14 @@ jobs:
       run: dotnet restore Techdle.sln
 
     - name: Build
-      run: dotnet build Techdle.sln --no-restore --configuration Debug
+      run: dotnet build Techdle.sln --no-restore
 
     - name: Test
-      timeout-minutes: 25
+      timeout-minutes: 10
       env:
         ASPNETCORE_ENVIRONMENT: Testing
         DOTNET_ENVIRONMENT: Testing
-      run: dotnet test Tests/Techdle.Tests.csproj --no-restore --configuration Debug --verbosity normal --blame-hang --blame-hang-timeout 10m
+      run: dotnet test Tests/Techdle.Tests.csproj --verbosity minimal --logger "console;verbosity=detailed" --blame-hang --blame-hang-timeout 10m
 
   publish:
     name: Publish to GHCR
