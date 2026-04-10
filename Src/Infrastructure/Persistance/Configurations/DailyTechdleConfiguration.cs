@@ -9,7 +9,6 @@ public class DailyTechdleConfiguration : IEntityTypeConfiguration<DailyTechdle>
     public void Configure(EntityTypeBuilder<DailyTechdle> builder)
     {
         builder.HasKey(dt => dt.Id);
-
         builder
             .HasIndex(dt => dt.PuzzleDate)
             .IsUnique();

@@ -37,6 +37,14 @@ public class LogodleTargetRepository(AppDbContext dbContext) : ILogodleTargetRep
             .AnyAsync(lt => lt.Name.ToLower() == name.ToLower(), cancellationToken);
     }
 
+    public async Task<LogodleTarget?> GetRandomAsync(CancellationToken cancellationToken)
+    {
+        return await _dbContext.LogodleTargets
+            .AsNoTracking()
+            .OrderBy(lt => EF.Functions.Random())
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task AddAsync(LogodleTarget target, CancellationToken cancellationToken)
     {
         await _dbContext.LogodleTargets.AddAsync(target, cancellationToken);

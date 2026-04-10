@@ -7,11 +7,19 @@ namespace Application.Constants.Successes;
 
 public static class TechdlePlayerSuccesses
 {
-    public static Result<SuccessApiResponse<TechdleLoadDto>> PuzzleFetched(TechdleLoadDto dto) =>
-        Result<SuccessApiResponse<TechdleLoadDto>>.Success(new SuccessApiResponse<TechdleLoadDto>
+    public static Result<SuccessApiResponse<TechdleGameDto>> GameFetched(TechdleGameDto dto) =>
+        Result<SuccessApiResponse<TechdleGameDto>>.Success(new SuccessApiResponse<TechdleGameDto>
         {
             StatusCode = StatusCodes.Status200OK,
-            Message = "Today's puzzle fetched successfully.",
+            Message = "Puzzle fetched successfully.",
+            Data = dto
+        });
+
+    public static Result<SuccessApiResponse<CreateTechdleGameResponseDto>> PuzzleFetched(CreateTechdleGameResponseDto dto) =>
+        Result<SuccessApiResponse<CreateTechdleGameResponseDto>>.Success(new SuccessApiResponse<CreateTechdleGameResponseDto>
+        {
+            StatusCode = StatusCodes.Status200OK,
+            Message = "Puzzle fetched successfully.",
             Data = dto
         });
 

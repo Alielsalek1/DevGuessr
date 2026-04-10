@@ -8,7 +8,7 @@ public static class TechdlePlayerErrors
 {
     public static readonly Error PuzzleNotGenerated = new(
         TechdlePlayerErrorCodes.PuzzleNotGenerated,
-        "Today's puzzle has not been generated yet.",
+        "Puzzle has not been generated yet.",
         [],
         string.Empty,
         StatusCodes.Status404NotFound
@@ -20,6 +20,14 @@ public static class TechdlePlayerErrors
         [],
         string.Empty,
         StatusCodes.Status400BadRequest
+    );
+
+    public static readonly Error GameNotFoundForDate = new(
+        TechdlePlayerErrorCodes.GameNotFoundForDate,
+        "Puzzle not found for the provided date.",
+        [],
+        string.Empty,
+        StatusCodes.Status404NotFound
     );
 
     public static readonly Error GuessedLanguageNotFound = new(

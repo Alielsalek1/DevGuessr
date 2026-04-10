@@ -51,6 +51,9 @@ public static class ContainerFactory
     public static RabbitMqContainer CreateRabbitMqContainer()
     {
         return new RabbitMqBuilder("rabbitmq:3-management-alpine")
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilInternalTcpPortIsAvailable(5672)
+                .UntilInternalTcpPortIsAvailable(15672))
             .WithReuse(true)
             .Build();
     }

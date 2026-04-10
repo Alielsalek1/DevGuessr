@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Application.DTOs.Auth;
 using Application.DTOs.LogodlePlayer;
 using Application.Utils;
@@ -52,7 +53,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		return Client;
 	}
 
-	private async Task<(Guid PuzzleId, string TargetName, string ClearImage, string MostBlurred, string LeastBlurred)> SeedPuzzleAsync(string targetName)
+	private async Task<(Guid PuzzleId, string TargetName, string ClearImage, string MostBlurred, string LeastBlurred)> SeedPuzzleAsync(string targetName, DateOnly? puzzleDate = null)
 	{
 		using var scope = Factory.Services.CreateScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -60,7 +61,8 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		var target = CreateTarget(targetName);
 		dbContext.LogodleTargets.Add(target);
 
-		var puzzle = new DailyLogodle(DateOnly.FromDateTime(DateTime.UtcNow), target.Id);
+		var resolvedPuzzleDate = puzzleDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
+		var puzzle = new DailyLogodle(resolvedPuzzleDate, target.Id);
 		dbContext.DailyLogodles.Add(puzzle);
 
 		await dbContext.SaveChangesAsync();
@@ -161,6 +163,59 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	}
 
 	[Fact]
+	public async Task GetGameByDate_WithExistingPuzzle_Returns200OkWithInitialImage()
+	{
+		var puzzleDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-2);
+		var (puzzleId, _, _, mostBlurred, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}", puzzleDate);
+
+		var response = await Client.GetAsync($"/api/v1/logodle/games/by-date?date={puzzleDate:yyyy-MM-dd}");
+		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<LogodleGameDto>>();
+
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(content);
+		Assert.Equal(puzzleId, content!.Data.PuzzleId);
+		Assert.Equal(puzzleDate, content.Data.PuzzleDate);
+		Assert.Equal(mostBlurred, content.Data.InitialImageUrl);
+	}
+
+	[Fact]
+	public async Task GetGameByDate_WithoutPuzzleForDate_Returns404NotFound()
+	{
+		var missingDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-30);
+
+		var response = await Client.GetAsync($"/api/v1/logodle/games/by-date?date={missingDate:yyyy-MM-dd}");
+		var content = await response.Content.ReadFromJsonAsync<FailApiResponse>();
+
+		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+		Assert.NotNull(content);
+		Assert.Equal("ERR_LOGODLE_PUZZLE_NOT_FOUND_FOR_DATE", content!.ErrorCode);
+	}
+
+	[Fact]
+	public async Task Guess_WithHistoricalPuzzleId_Returns200Ok()
+	{
+		var client = await GetAuthenticatedClientAsync("LogHistUser");
+		var historicalDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1);
+		var (puzzleId, targetName, clearImage, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}", historicalDate);
+
+		var request = new LogodleGuessRequestDto
+		{
+			PuzzleId = puzzleId,
+			GuessedTargetName = targetName,
+			AttemptNumber = 2
+		};
+
+		var (response, content, _) = await LogodlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<LogodleGuessResultDto>>(client, request);
+
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(content);
+		Assert.True(content!.Data.IsCorrect);
+		Assert.True(content.Data.IsGameOver);
+		Assert.Equal(clearImage, content.Data.RevealedImageUrl);
+		Assert.Equal(targetName, content.Data.TargetName);
+	}
+
+	[Fact]
 	public async Task Guess_WithInvalidPuzzleId_Returns400BadRequest()
 	{
 		var client = await GetAuthenticatedClientAsync("LogodleInvalidPuzzleUser");
@@ -182,7 +237,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	}
 
 	[Fact]
-	public async Task Guess_WhenPuzzleNotGenerated_Returns404NotFound()
+	public async Task Guess_WhenPuzzleNotGenerated_Returns400BadRequest()
 	{
 		var client = await GetAuthenticatedClientAsync("LogodleNoPuzzleUser");
 
@@ -195,10 +250,10 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 
 		var (response, content, _) = await LogodlePlayerTestHelpers.PostGuessAsync<FailApiResponse>(client, request);
 
-		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 		Assert.NotNull(content);
 		Assert.False(content!.Success);
-		Assert.Equal("ERR_LOGODLE_PUZZLE_NOT_GENERATED", content.ErrorCode);
+		Assert.Equal("ERR_LOGODLE_INVALID_PUZZLE_ID", content.ErrorCode);
 	}
 
 	[Fact]

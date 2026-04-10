@@ -7,11 +7,11 @@ namespace Application.Constants.Successes;
 
 public static class AdminTechdleSuccesses
 {
-    public static Result<SuccessApiResponse<TechdleLoadDto>> PuzzleGenerated(TechdleLoadDto dto) =>
-        Result<SuccessApiResponse<TechdleLoadDto>>.Success(new SuccessApiResponse<TechdleLoadDto>
+    public static Result<SuccessApiResponse<CreateTechdleGameResponseDto>> PuzzleGenerated(CreateTechdleGameResponseDto dto) =>
+        Result<SuccessApiResponse<CreateTechdleGameResponseDto>>.Success(new SuccessApiResponse<CreateTechdleGameResponseDto>
         {
             StatusCode = StatusCodes.Status201Created,
-            Message = "Today's puzzle generated successfully.",
+            Message = "Techdle puzzle generated successfully.",
             Data = dto
         });
 }

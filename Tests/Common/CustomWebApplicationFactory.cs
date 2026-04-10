@@ -47,7 +47,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     private async Task WaitForHealthyAsync()
     {
         var client = CreateClient();
-        var maxRetries = 30;
+        var maxRetries = 90;
         var delay = TimeSpan.FromSeconds(1);
 
         for (int i = 0; i < maxRetries; i++)

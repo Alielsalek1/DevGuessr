@@ -1,63 +1,47 @@
-using System.Text.Json;
 using Application.Constants.Errors;
 using Application.Constants.Successes;
 using Application.DTOs.TechdlePlayer;
-using Application.Models;
 using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
 using Application.Utils;
+using Domain.Models.DailyTechdle;
 using Domain.Enums;
 using Domain.Shared;
-using Domain.Models.DailyTechdle;
-using Domain.Models.ProgrammingLanguage;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace Application.Services.Implementations;
 
 public class TechdlePlayerService(
-    IDistributedCache cache,
-    IDailyTechdleRepository dailyTechdleRepository,
+    ITechdleGameRepository techdleGameRepository,
     IProgrammingLanguageRepository programmingLanguageRepository) : ITechdlePlayerService
 {
-    private readonly IDistributedCache _cache = cache;
-    private readonly IDailyTechdleRepository _dailyTechdleRepository = dailyTechdleRepository;
+    private readonly ITechdleGameRepository _techdleGameRepository = techdleGameRepository;
     private readonly IProgrammingLanguageRepository _programmingLanguageRepository = programmingLanguageRepository;
- 
-    private static string GetCacheKey(DateOnly date) => $"Techdle_{date:yyyy-MM-dd}";
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
+    public async Task<Result<SuccessApiResponse<TechdleGameDto>>> GetGameByDateAsync(DateOnly puzzleDate, CancellationToken cancellationToken)
+    {
+        var puzzle = await _techdleGameRepository.GetByDateAsync(puzzleDate, cancellationToken);
+        if (puzzle == null)
+        {
+            return Result<SuccessApiResponse<TechdleGameDto>>.Failure(TechdlePlayerErrors.GameNotFoundForDate);
+        }
+
+        return TechdlePlayerSuccesses.GameFetched(new TechdleGameDto
+        {
+            PuzzleId = puzzle.Id,
+            PuzzleDate = puzzle.PuzzleDate
+        });
+    }
 
     public async Task<Result<SuccessApiResponse<TechdleGuessResultDto>>> EvaluateGuessAsync(TechdleGuessRequestDto request, CancellationToken cancellationToken)
     {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var cacheKey = GetCacheKey(today);
-        
-        // 1. Try Cache First
-        var cachedData = await _cache.GetStringAsync(cacheKey, cancellationToken);
-        if (!string.IsNullOrWhiteSpace(cachedData))
-        {
-            var cacheModel = JsonSerializer.Deserialize<TechdlePuzzleCacheModel>(cachedData, JsonOptions);
-            if (cacheModel != null && cacheModel.PuzzleId == request.PuzzleId)
-            {
-                return await EvaluateInternalAsync(request.GuessedLanguageId, 
-                    cacheModel.TargetId, 
-                    cacheModel.TargetYearFirstAppeared, 
-                    cacheModel.TargetTypingDiscipline, 
-                    cacheModel.TargetTypeStrength, 
-                    cacheModel.TargetTags, 
-                    cancellationToken);
-            }
-        }
-
-        // 2. Fallback to Database
-        var puzzle = await _dailyTechdleRepository.GetByDateAsync(today, cancellationToken);
-
-        if (puzzle == null || puzzle.Id != request.PuzzleId)
+        var puzzle = await _techdleGameRepository.GetByIdAsync(request.PuzzleId, cancellationToken);
+        if (puzzle == null)
         {
             return Result<SuccessApiResponse<TechdleGuessResultDto>>.Failure(TechdlePlayerErrors.InvalidPuzzleId);
         }
 
         var target = puzzle.TargetLanguage;
-        return await EvaluateInternalAsync(request.GuessedLanguageId, 
+        return await EvaluateInternalAsync(request.GuessedLanguageName,
             target.Id, 
             target.YearFirstAppeared, 
             target.TypingDiscipline, 
@@ -66,8 +50,37 @@ public class TechdlePlayerService(
             cancellationToken);
     }
 
+    public async Task<Result<SuccessApiResponse<CreateTechdleGameResponseDto>>> CreateGameAsync(CancellationToken cancellationToken)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var latestPuzzleDate = await _techdleGameRepository.GetLatestPuzzleDateAsync(cancellationToken);
+        var puzzleDate = latestPuzzleDate.HasValue && latestPuzzleDate.Value > today
+            ? latestPuzzleDate.Value
+            : today;
+
+        var randomLanguage = await _programmingLanguageRepository.GetRandomAsync(cancellationToken);
+        if (randomLanguage is null)
+        {
+            return Result<SuccessApiResponse<CreateTechdleGameResponseDto>>.Failure(AdminTechdleErrors.NoLanguagesFound);
+        }
+
+        var puzzle = new DailyTechdle(puzzleDate, randomLanguage.Id);
+        var created = await _techdleGameRepository.TryAddAsync(puzzle, cancellationToken);
+        if (!created)
+        {
+            return Result<SuccessApiResponse<CreateTechdleGameResponseDto>>.Failure(AdminTechdleErrors.PuzzleAlreadyExists);
+        }
+
+        return AdminTechdleSuccesses.PuzzleGenerated(new CreateTechdleGameResponseDto
+        {
+            PuzzleId = puzzle.Id,
+            TargetId = randomLanguage.Id,
+            TargetName = randomLanguage.Name
+        });
+    }
+
     private async Task<Result<SuccessApiResponse<TechdleGuessResultDto>>> EvaluateInternalAsync(
-        Guid guessedLanguageId,
+        string guessedLanguageName,
         Guid targetId,
         int targetYear,
         TypingDiscipline targetTyping,
@@ -75,7 +88,7 @@ public class TechdlePlayerService(
         List<string> targetTags,
         CancellationToken cancellationToken)
     {
-        var guessed = await _programmingLanguageRepository.GetByIdAsync(guessedLanguageId, cancellationToken);
+        var guessed = await _programmingLanguageRepository.GetByNameAsync(guessedLanguageName, cancellationToken);
         if (guessed == null)
         {
             return Result<SuccessApiResponse<TechdleGuessResultDto>>.Failure(TechdlePlayerErrors.GuessedLanguageNotFound);

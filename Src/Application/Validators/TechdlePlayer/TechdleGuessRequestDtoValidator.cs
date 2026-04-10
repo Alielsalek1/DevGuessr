@@ -10,7 +10,7 @@ public class TechdleGuessRequestDtoValidator : AbstractValidator<TechdleGuessReq
         RuleFor(x => x.PuzzleId)
             .NotEmpty().WithMessage("PuzzleId is required.");
 
-        RuleFor(x => x.GuessedLanguageId)
-            .NotEmpty().WithMessage("GuessedLanguageId is required.");
+        RuleFor(x => x.GuessedLanguageName)
+            .NotEmpty().WithMessage("GuessedLanguageName is required.");
     }
 }

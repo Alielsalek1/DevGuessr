@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Application.DTOs.Auth;
 using Application.DTOs.TechdlePlayer;
 using Application.Utils;
@@ -36,7 +37,7 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		});
 	}
 
-	private async Task<Guid> SeedPuzzleAsync(ProgrammingLanguage target, params ProgrammingLanguage[] guesses)
+	private async Task<Guid> SeedPuzzleAsync(ProgrammingLanguage target, DateOnly? puzzleDate = null, params ProgrammingLanguage[] guesses)
 	{
 		using var scope = Factory.Services.CreateScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -47,7 +48,8 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 			dbContext.ProgrammingLanguages.AddRange(guesses);
 		}
 
-		var puzzle = new DailyTechdle(DateOnly.FromDateTime(DateTime.UtcNow), target.Id);
+		var resolvedPuzzleDate = puzzleDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
+		var puzzle = new DailyTechdle(resolvedPuzzleDate, target.Id);
 		dbContext.DailyTechdles.Add(puzzle);
 
 		await dbContext.SaveChangesAsync();
@@ -70,7 +72,7 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		return Client;
 	}
 
-	private async Task<(Guid PuzzleId, Guid TargetLanguageId, Guid OtherLanguageId)> SeedPuzzleAndLanguagesAsync()
+	private async Task<(Guid PuzzleId, string TargetLanguageName, string OtherLanguageName)> SeedPuzzleAndLanguagesAsync(DateOnly? puzzleDate = null)
 	{
 		using var scope = Factory.Services.CreateScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -99,24 +101,25 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 
 		dbContext.ProgrammingLanguages.AddRange(targetLanguage, otherLanguage);
 
-		var puzzle = new DailyTechdle(DateOnly.FromDateTime(DateTime.UtcNow), targetLanguage.Id);
+		var resolvedPuzzleDate = puzzleDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
+		var puzzle = new DailyTechdle(resolvedPuzzleDate, targetLanguage.Id);
 		dbContext.DailyTechdles.Add(puzzle);
 
 		await dbContext.SaveChangesAsync();
 
-		return (puzzle.Id, targetLanguage.Id, otherLanguage.Id);
+		return (puzzle.Id, targetLanguage.Name, otherLanguage.Name);
 	}
 
 	[Fact]
 	public async Task Guess_WithValidPuzzleAndGuess_Returns200OkWithFeedback()
 	{
 		var client = await GetAuthenticatedClientAsync("TechdleValidUser");
-		var (puzzleId, _, otherLanguageId) = await SeedPuzzleAndLanguagesAsync();
+		var (puzzleId, _, otherLanguageName) = await SeedPuzzleAndLanguagesAsync();
 
 		var request = new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = otherLanguageId
+			GuessedLanguageName = otherLanguageName
 		};
 
 		var (response, content, json) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, request);
@@ -135,12 +138,79 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_WithCorrectLanguage_ReturnsIsCorrectTrue()
 	{
 		var client = await GetAuthenticatedClientAsync("TechdleCorrectUser");
-		var (puzzleId, targetLanguageId, _) = await SeedPuzzleAndLanguagesAsync();
+		var (puzzleId, targetLanguageName, _) = await SeedPuzzleAndLanguagesAsync();
 
 		var request = new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = targetLanguageId
+			GuessedLanguageName = targetLanguageName
+		};
+
+		var (response, content, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, request);
+
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(content);
+		Assert.True(content!.Data.IsCorrect);
+	}
+
+	[Fact]
+	public async Task Guess_WithDifferentLanguageNameCase_ReturnsIsCorrectTrue()
+	{
+		var client = await GetAuthenticatedClientAsync("TechCaseUser");
+		var (puzzleId, targetLanguageName, _) = await SeedPuzzleAndLanguagesAsync();
+
+		var request = new TechdleGuessRequestDto
+		{
+			PuzzleId = puzzleId,
+			GuessedLanguageName = targetLanguageName.ToUpperInvariant()
+		};
+
+		var (response, content, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, request);
+
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(content);
+		Assert.True(content!.Data.IsCorrect);
+	}
+
+	[Fact]
+	public async Task GetGameByDate_WithExistingPuzzle_Returns200OkWithPuzzleId()
+	{
+		var puzzleDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-2);
+		var (puzzleId, _, _) = await SeedPuzzleAndLanguagesAsync(puzzleDate);
+
+		var response = await Client.GetAsync($"/api/v1/techdle/games/by-date?date={puzzleDate:yyyy-MM-dd}");
+		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<TechdleGameDto>>();
+
+		Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+		Assert.NotNull(content);
+		Assert.Equal(puzzleId, content!.Data.PuzzleId);
+		Assert.Equal(puzzleDate, content.Data.PuzzleDate);
+	}
+
+	[Fact]
+	public async Task GetGameByDate_WithoutPuzzleForDate_Returns404NotFound()
+	{
+		var missingDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-30);
+
+		var response = await Client.GetAsync($"/api/v1/techdle/games/by-date?date={missingDate:yyyy-MM-dd}");
+		var content = await response.Content.ReadFromJsonAsync<FailApiResponse>();
+
+		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+		Assert.NotNull(content);
+		Assert.Equal("ERR_PUZZLE_NOT_FOUND_FOR_DATE", content!.ErrorCode);
+	}
+
+	[Fact]
+	public async Task Guess_WithHistoricalPuzzleId_Returns200Ok()
+	{
+		var client = await GetAuthenticatedClientAsync("TechHistUser");
+		var historicalDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1);
+		var (puzzleId, targetLanguageName, _) = await SeedPuzzleAndLanguagesAsync(historicalDate);
+
+		var request = new TechdleGuessRequestDto
+		{
+			PuzzleId = puzzleId,
+			GuessedLanguageName = targetLanguageName
 		};
 
 		var (response, content, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, request);
@@ -154,12 +224,12 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_WithInvalidPuzzleId_Returns400BadRequest()
 	{
 		var client = await GetAuthenticatedClientAsync("TechdleInvalidPuzzleUser");
-		var (_, _, otherLanguageId) = await SeedPuzzleAndLanguagesAsync();
+		var (_, _, otherLanguageName) = await SeedPuzzleAndLanguagesAsync();
 
 		var request = new TechdleGuessRequestDto
 		{
 			PuzzleId = Guid.NewGuid(),
-			GuessedLanguageId = otherLanguageId
+			GuessedLanguageName = otherLanguageName
 		};
 
 		var (response, content, _) = await TechdlePlayerTestHelpers.PostGuessAsync<FailApiResponse>(client, request);
@@ -179,7 +249,7 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		var request = new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = Guid.NewGuid()
+			GuessedLanguageName = $"UnknownLang_{Guid.NewGuid():N}"
 		};
 
 		var (response, content, _) = await TechdlePlayerTestHelpers.PostGuessAsync<FailApiResponse>(client, request);
@@ -193,12 +263,12 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	[Fact]
 	public async Task Guess_WithoutAccessToken_AllowsAnonymousGuess()
 	{
-		var (puzzleId, _, otherLanguageId) = await SeedPuzzleAndLanguagesAsync();
+		var (puzzleId, _, otherLanguageName) = await SeedPuzzleAndLanguagesAsync();
 
 		var request = new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = otherLanguageId
+			GuessedLanguageName = otherLanguageName
 		};
 
 		var (response, content, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(Client, request);
@@ -216,24 +286,24 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		var lowerGuess = CreateLanguage(1990, TypingDiscipline.Static, TypeStrength.Strong, ["a", "b"]);
 		var higherGuess = CreateLanguage(2010, TypingDiscipline.Static, TypeStrength.Strong, ["a", "b"]);
 
-		var puzzleId = await SeedPuzzleAsync(target, lowerGuess, higherGuess);
+		var puzzleId = await SeedPuzzleAsync(target, null, lowerGuess, higherGuess);
 
 		var (_, lowerContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = lowerGuess.Id
+			GuessedLanguageName = lowerGuess.Name
 		});
 
 		var (_, higherContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = higherGuess.Id
+			GuessedLanguageName = higherGuess.Name
 		});
 
 		var (_, matchContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = target.Id
+			GuessedLanguageName = target.Name
 		});
 
 		Assert.NotNull(lowerContent);
@@ -252,24 +322,24 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		var partialGuess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Weak, ["a"]);
 		var missGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Weak, ["a"]);
 
-		var puzzleId = await SeedPuzzleAsync(target, partialGuess, missGuess);
+		var puzzleId = await SeedPuzzleAsync(target, null, partialGuess, missGuess);
 
 		var (_, partialContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = partialGuess.Id
+			GuessedLanguageName = partialGuess.Name
 		});
 
 		var (_, missContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = missGuess.Id
+			GuessedLanguageName = missGuess.Name
 		});
 
 		var (_, greenContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = target.Id
+			GuessedLanguageName = target.Name
 		});
 
 		Assert.NotNull(partialContent);
@@ -288,24 +358,24 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		var partialGuess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a", "c"]);
 		var missGuess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["x", "y"]);
 
-		var puzzleId = await SeedPuzzleAsync(target, partialGuess, missGuess);
+		var puzzleId = await SeedPuzzleAsync(target, null, partialGuess, missGuess);
 
 		var (_, partialContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = partialGuess.Id
+			GuessedLanguageName = partialGuess.Name
 		});
 
 		var (_, missContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = missGuess.Id
+			GuessedLanguageName = missGuess.Name
 		});
 
 		var (_, greenContent, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = target.Id
+			GuessedLanguageName = target.Name
 		});
 
 		Assert.NotNull(partialContent);
@@ -323,12 +393,12 @@ public class TechdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, []);
 		var guess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, []);
 
-		var puzzleId = await SeedPuzzleAsync(target, guess);
+		var puzzleId = await SeedPuzzleAsync(target, null, guess);
 
 		var (_, content, _) = await TechdlePlayerTestHelpers.PostGuessAsync<SuccessApiResponse<TechdleGuessResultDto>>(client, new TechdleGuessRequestDto
 		{
 			PuzzleId = puzzleId,
-			GuessedLanguageId = guess.Id
+			GuessedLanguageName = guess.Name
 		});
 
 		Assert.NotNull(content);

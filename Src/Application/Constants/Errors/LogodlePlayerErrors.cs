@@ -7,7 +7,7 @@ public static class LogodlePlayerErrors
 {
 	public static readonly Error PuzzleNotGenerated = new(
 		LogodlePlayerErrorCodes.PuzzleNotGenerated,
-		"Today's logodle puzzle has not been generated yet.",
+		"Logodle puzzle has not been generated yet.",
 		[],
 		string.Empty,
 		StatusCodes.Status404NotFound
@@ -19,5 +19,13 @@ public static class LogodlePlayerErrors
 		[],
 		string.Empty,
 		StatusCodes.Status400BadRequest
+	);
+
+	public static readonly Error GameNotFoundForDate = new(
+		LogodlePlayerErrorCodes.GameNotFoundForDate,
+		"Logodle puzzle not found for the provided date.",
+		[],
+		string.Empty,
+		StatusCodes.Status404NotFound
 	);
 }

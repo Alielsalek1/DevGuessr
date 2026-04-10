@@ -1,6 +1,6 @@
 namespace Application.DTOs.TechdlePlayer;
 
-public class TechdleLoadDto
+public class CreateTechdleGameResponseDto
 {
     public Guid PuzzleId { get; set; }
     public Guid TargetId { get; set; }
