@@ -1,7 +1,7 @@
 using Application.Constants.ApiErrors;
 using Microsoft.AspNetCore.Http;
 
-namespace Techdle.Application.Constants.Errors;
+namespace DevGuessr.Application.Constants.Errors;
 
 public static class ProgrammingLanguageErrors
 {

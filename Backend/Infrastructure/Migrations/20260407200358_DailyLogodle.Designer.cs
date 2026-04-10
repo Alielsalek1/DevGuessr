@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Techdle.Infrastructure.Migrations
+namespace DevGuessr.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260407200358_DailyLogodle")]
@@ -54,7 +54,7 @@ namespace Techdle.Infrastructure.Migrations
                     b.ToTable("daily_logodles", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.DailyTechdle.DailyTechdle", b =>
+            modelBuilder.Entity("Domain.Models.DailyDevGuessr.DailyDevGuessr", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -327,7 +327,7 @@ namespace Techdle.Infrastructure.Migrations
                     b.Navigation("Target");
                 });
 
-            modelBuilder.Entity("Domain.Models.DailyTechdle.DailyTechdle", b =>
+            modelBuilder.Entity("Domain.Models.DailyDevGuessr.DailyDevGuessr", b =>
                 {
                     b.HasOne("Domain.Models.ProgrammingLanguage.ProgrammingLanguage", "TargetLanguage")
                         .WithMany()

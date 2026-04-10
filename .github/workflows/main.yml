@@ -30,17 +30,17 @@ jobs:
         sudo sysctl -p
 
     - name: Restore dependencies
-      run: dotnet restore Techdle.sln
+      run: dotnet restore DevGuessr.sln
 
     - name: Build
-      run: dotnet build Techdle.sln --no-restore
+      run: dotnet build DevGuessr.sln --no-restore
 
     - name: Test
       timeout-minutes: 10
       env:
         ASPNETCORE_ENVIRONMENT: Testing
         DOTNET_ENVIRONMENT: Testing
-      run: dotnet test Tests/Techdle.Tests.csproj --verbosity minimal --logger "console;verbosity=detailed" --blame-hang --blame-hang-timeout 10m
+      run: dotnet test Tests/DevGuessr.Tests.csproj --verbosity minimal --logger "console;verbosity=detailed" --blame-hang --blame-hang-timeout 10m
 
   publish:
     name: Publish to GHCR

@@ -40,7 +40,7 @@ public static class OptionsExtensions
         services.Configure<RedisOptions>(options =>
         {
             options.ConnectionString = EnvironmentVariableLoader.GetRequired("REDIS_CONNECTION_STRING");
-            var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "Techdle";
+            var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "DevGuessr";
             options.InstanceName = projectName.EndsWith("_") ? projectName : $"{projectName}_";
         });
 

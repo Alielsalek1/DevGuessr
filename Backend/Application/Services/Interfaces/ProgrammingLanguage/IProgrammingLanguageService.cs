@@ -2,7 +2,7 @@ using Application.DTOs.ProgrammingLanguage;
 using Application.Utils;
 using Domain.Shared;
 
-namespace Techdle.Application.Services.Interfaces.ProgrammingLanguage;
+namespace DevGuessr.Application.Services.Interfaces.ProgrammingLanguage;
 
 public interface IProgrammingLanguageService
 {

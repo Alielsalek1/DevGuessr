@@ -5,7 +5,7 @@ using Domain.Models.UserDevice;
 using Domain.Models.ProgrammingLanguage;
 using Domain.Models.LogodleTarget;
 using Domain.Models.TechnectionCategory;
-using Domain.Models.DailyTechdle;
+using Domain.Models.DailyDevGuessr;
 using Domain.Models.DailyLogodle;
 
 namespace Infrastructure.Persistance;
@@ -17,7 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ProgrammingLanguage> ProgrammingLanguages => Set<ProgrammingLanguage>();
     public DbSet<LogodleTarget> LogodleTargets => Set<LogodleTarget>();
     public DbSet<TechnectionCategory> TechnectionCategories => Set<TechnectionCategory>();
-    public DbSet<DailyTechdle> DailyTechdles => Set<DailyTechdle>();
+    public DbSet<DailyDevGuessr> DailyDevGuessrs => Set<DailyDevGuessr>();
     public DbSet<DailyLogodle> DailyLogodles => Set<DailyLogodle>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

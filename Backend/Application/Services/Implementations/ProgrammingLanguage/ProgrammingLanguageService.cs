@@ -1,12 +1,12 @@
 using Application.Constants.Successes;
 using Application.DTOs.ProgrammingLanguage;
 using Application.Repositories.Interfaces;
-using Techdle.Application.Services.Interfaces.ProgrammingLanguage;
+using DevGuessr.Application.Services.Interfaces.ProgrammingLanguage;
 using Application.Utils;
 using Domain.Enums;
 using Domain.Shared;
 using Microsoft.Extensions.Logging;
-using Techdle.Application.Constants.Errors;
+using DevGuessr.Application.Constants.Errors;
 using Domain.Models.ProgrammingLanguage;
 
 namespace Application.Services.Implementations.ProgrammingLanguage;

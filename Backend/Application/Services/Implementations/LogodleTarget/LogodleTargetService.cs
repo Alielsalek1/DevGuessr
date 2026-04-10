@@ -1,11 +1,11 @@
 using Application.Constants.Successes;
 using Application.DTOs.LogodleTarget;
 using Application.Repositories.Interfaces;
-using Techdle.Application.Services.Interfaces.LogodleTarget;
+using DevGuessr.Application.Services.Interfaces.LogodleTarget;
 using Application.Utils;
 using Domain.Shared;
 using Microsoft.Extensions.Logging;
-using Techdle.Application.Constants.Errors;
+using DevGuessr.Application.Constants.Errors;
 using Domain.Models.LogodleTarget;
 using Application.Services.Interfaces.Misc;
 

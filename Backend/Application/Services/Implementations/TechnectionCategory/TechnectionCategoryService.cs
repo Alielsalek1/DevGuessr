@@ -1,11 +1,11 @@
 using Application.Constants.Successes;
 using Application.DTOs.TechnectionCategory;
 using Application.Repositories.Interfaces;
-using Techdle.Application.Services.Interfaces.TechnectionCategory;
+using DevGuessr.Application.Services.Interfaces.TechnectionCategory;
 using Application.Utils;
 using Domain.Shared;
 using Microsoft.Extensions.Logging;
-using Techdle.Application.Constants.Errors;
+using DevGuessr.Application.Constants.Errors;
 using Domain.Models.TechnectionCategory;
 
 namespace Application.Services.Implementations.TechnectionCategory;

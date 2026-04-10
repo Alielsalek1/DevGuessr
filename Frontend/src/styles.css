@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+	--color-bg: #0e0e0e;
+	--color-text: #f5f2f2;
+	--color-primary: #ff7cf5;
+	--color-secondary: #d078ff;
+	--color-system: #00ffff;
+	--color-muted: #adaaaa;
+	--color-layer-1: #131313;
+	--color-layer-2: #262626;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	min-height: 100%;
+	background: radial-gradient(circle at 10% 10%, #1f1f1f 0%, var(--color-bg) 45%);
+	color: var(--color-text);
+	font-family: "Space Grotesk", "Segoe UI", sans-serif;
+}
+
+.font-headline {
+	font-family: "Space Grotesk", sans-serif;
+}
+
+.font-mono {
+	font-family: "JetBrains Mono", monospace;
+}
+
+::selection {
+	background: rgba(255, 124, 245, 0.24);
+	color: #ffffff;
+}
+/* You can add global styles to this file, and also import other style files */

@@ -1,4 +1,4 @@
-using Application.DTOs.TechdlePlayer;
+using Application.DTOs.DevGuessrPlayer;
 using Domain.Models.ProgrammingLanguage;
 
 namespace Application.Repositories.Interfaces;

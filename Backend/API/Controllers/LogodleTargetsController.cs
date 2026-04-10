@@ -5,7 +5,7 @@ using Asp.Versioning;
 using Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Techdle.Application.Services.Interfaces.LogodleTarget;
+using DevGuessr.Application.Services.Interfaces.LogodleTarget;
 
 namespace API.Controllers;
 

@@ -5,7 +5,7 @@ using Asp.Versioning;
 using Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Techdle.Application.Services.Interfaces.TechnectionCategory;
+using DevGuessr.Application.Services.Interfaces.TechnectionCategory;
 
 namespace API.Controllers;
 

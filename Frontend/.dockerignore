@@ -1,0 +1,24 @@
+node_modules
+dist
+.angular
+coverage
+test-results
+
+# VCS and editor metadata
+.git
+.gitignore
+.vscode
+.idea
+
+# Local env and logs
+.env
+.env.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# CI/docs/reference artifacts not needed in image
+README.md
+templates
+he5o he5o

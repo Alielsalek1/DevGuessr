@@ -10,11 +10,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Techdle.Infrastructure.Migrations
+namespace DevGuessr.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260407182816_DailyTechdle")]
-    partial class DailyTechdle
+    [Migration("20260407182816_DailyDevGuessr")]
+    partial class DailyDevGuessr
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ namespace Techdle.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.DailyTechdle.DailyTechdle", b =>
+            modelBuilder.Entity("Domain.Models.DailyDevGuessr.DailyDevGuessr", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -287,7 +287,7 @@ namespace Techdle.Infrastructure.Migrations
                     b.ToTable("user_refresh_tokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.DailyTechdle.DailyTechdle", b =>
+            modelBuilder.Entity("Domain.Models.DailyDevGuessr.DailyDevGuessr", b =>
                 {
                     b.HasOne("Domain.Models.ProgrammingLanguage.ProgrammingLanguage", "TargetLanguage")
                         .WithMany()

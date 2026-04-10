@@ -1,4 +1,4 @@
-# Techdle Backend System Reference
+# DevGuessr Backend System Reference
 
 Last updated: 2026-04-07
 
@@ -104,7 +104,7 @@ Note: Controllers are globally protected by default auth policy in API DI, with 
 - email sender stack (`FluentEmail` + SMTP via options)
 - OTP service strategy registrations
 - auth services (internal/external/session/password reset/etc.)
-- domain feature services (users, programming languages, logodle targets, technection categories, techdle player)
+- domain feature services (users, programming languages, logodle targets, technection categories, devguessr player)
 
 ## 3.3 Infrastructure Layer Registration
 `Src/Infrastructure/DependencyInjection.cs` wires:
@@ -199,11 +199,11 @@ Endpoints:
 - `DELETE /technection-categories/{groupName}/words`
 - `DELETE /technection-categories/{groupName}`
 
-### 4.7 TechdleController
-File: `Src/API/Controllers/TechdleController.cs`
+### 4.7 DevGuessrController
+File: `Src/API/Controllers/DevGuessrController.cs`
 
 Endpoints:
-- `POST /techdle/guess`
+- `POST /devguessr/guess`
 
 ---
 
@@ -318,20 +318,20 @@ Infrastructure:
 Domain:
 - `TechnectionCategory`
 
-## 5.7 Techdle Guess Evaluation
+## 5.7 DevGuessr Guess Evaluation
 API:
-- `TechdleController`
+- `DevGuessrController`
 
 Application:
-- `TechdlePlayerService`
+- `DevGuessrPlayerService`
 
 Infrastructure:
-- `DailyTechdleRepository` (loads puzzle with target language)
+- `DailyDevGuessrRepository` (loads puzzle with target language)
 - `ProgrammingLanguageRepository` (guessed language lookup)
 - Redis cache for same-day puzzle target data
 
 Domain:
-- `DailyTechdle`
+- `DailyDevGuessr`
 - `ProgrammingLanguage`
 - enums like `TypingDiscipline`, `TypeStrength`, `MatchStatus`
 
@@ -414,7 +414,7 @@ DbSets:
 - `ProgrammingLanguages`
 - `LogodleTargets`
 - `TechnectionCategories`
-- `DailyTechdles`
+- `DailyDevGuessrs`
 
 ## 7.2 Entity Configuration Highlights
 Files under:
@@ -427,7 +427,7 @@ Important mappings:
 - `ProgrammingLanguage.Tags`: `jsonb`.
 - `LogodleTarget.BlurredImageUrls`: `jsonb`.
 - `TechnectionCategory.Words`: `jsonb`.
-- `DailyTechdle.PuzzleDate`: unique index; FK to `ProgrammingLanguage` with restrict delete.
+- `DailyDevGuessr.PuzzleDate`: unique index; FK to `ProgrammingLanguage` with restrict delete.
 
 ## 7.3 Domain Entities
 Core entities in `Src/Domain/Models/**`:
@@ -437,7 +437,7 @@ Core entities in `Src/Domain/Models/**`:
 - `ProgrammingLanguage`
 - `LogodleTarget`
 - `TechnectionCategory`
-- `DailyTechdle`
+- `DailyDevGuessr`
 
 Design style:
 - private setters + guarded mutation methods.
@@ -451,7 +451,7 @@ Observed migration history includes:
 - initial schema
 - logodle additions
 - technection categories
-- daily techdle
+- daily devguessr
 
 ---
 
@@ -534,7 +534,7 @@ Options classes configured from env:
 ## 10. Testing Architecture
 
 ## 10.1 Test Setup
-- Project: `Tests/Techdle.Tests.csproj`
+- Project: `Tests/DevGuessr.Tests.csproj`
 - Test framework: xUnit
 - Integration host factory: `Tests/Common/CustomWebApplicationFactory.cs`
 - Base class: `Tests/Common/BaseIntegrationTest.cs`
@@ -558,7 +558,7 @@ Folders under `Tests/IntergrationTests/`:
 - `ProgrammingLanguages/`
 - `LogodleTargets/`
 - `TechnectionCategories/`
-- `TechdlePlayer/`
+- `DevGuessrPlayer/`
 
 ## 10.4 Stress Tests
 - `Tests/StressTests/ApiStressTests.cs`
@@ -589,7 +589,7 @@ Implemented controls:
 3. MassTransit/RabbitMQ is configured, but no consumers/producers were found in this codebase path scan.
 4. Hangfire is configured and used for fire-and-forget email jobs, but no recurring jobs were identified.
 5. Hangfire dashboard is mapped at `/hangfire`; access control is via global auth policy (no explicit admin-only policy in `Program.cs`).
-6. `TechdlePlayerService` reads from cache but does not write puzzle data back to cache in current implementation.
+6. `DevGuessrPlayerService` reads from cache but does not write puzzle data back to cache in current implementation.
 7. API package list includes `AspNetCoreRateLimit`, while active implementation uses built-in `AddRateLimiter`.
 
 ---
@@ -626,7 +626,7 @@ API endpoints:
 - `Src/API/Controllers/ProgrammingLanguagesController.cs`
 - `Src/API/Controllers/LogodleTargetsController.cs`
 - `Src/API/Controllers/TechnectionCategoriesController.cs`
-- `Src/API/Controllers/TechdleController.cs`
+- `Src/API/Controllers/DevGuessrController.cs`
 
 Cross-cutting API:
 - `Src/API/ActionFilters/IdempotencyFilter.cs`
@@ -644,7 +644,7 @@ Application core services:
 - `Src/Application/Services/Implementations/ProgrammingLanguage/**`
 - `Src/Application/Services/Implementations/LogodleTarget/**`
 - `Src/Application/Services/Implementations/TechnectionCategory/**`
-- `Src/Application/Services/Implementations/TechdlePlayerService.cs`
+- `Src/Application/Services/Implementations/DevGuessrPlayerService.cs`
 
 Infrastructure:
 - `Src/Infrastructure/DependencyInjection.cs`

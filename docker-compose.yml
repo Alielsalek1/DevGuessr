@@ -5,7 +5,7 @@ networks:
 services:
   postgres:
     image: docker.io/postgres:16-alpine
-    container_name: techdle-db
+    container_name: devguessr-db
     restart: unless-stopped
     networks:
       - backend
@@ -23,7 +23,7 @@ services:
 
   redis:
     image: docker.io/redis:7-alpine
-    container_name: techdle-redis
+    container_name: devguessr-redis
     restart: unless-stopped
     networks:
       - backend
@@ -37,7 +37,7 @@ services:
     build:
       context: .
       dockerfile: Backend/API/Dockerfile
-    container_name: techdle-api
+    container_name: devguessr-api
     restart: unless-stopped
     networks:
       - backend
@@ -53,9 +53,26 @@ services:
     volumes:
       - uploads_data:/app/uploads
 
+  frontend:
+    build:
+      context: .
+      dockerfile: Frontend/Dockerfile
+    container_name: devguessr-frontend
+    restart: unless-stopped
+    networks:
+      - backend
+    expose:
+      - "80"
+    env_file:
+      - .env
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME}
+      PROJECT_DESCRIPTION: ${PROJECT_DESCRIPTION}
+      FRONTEND_API_BASE_URL: ${FRONTEND_API_BASE_URL:-/api/v1}
+
   nginx:
     image: nginx:latest
-    container_name: techdle-nginx
+    container_name: devguessr-nginx
     restart: unless-stopped
     networks:
       - backend
@@ -69,10 +86,11 @@ services:
       - ./Tests/test_oauth:/usr/share/nginx/html/test_oauth:ro,Z
     depends_on:
       - api
+      - frontend
 
   seq:
     image: datalust/seq:latest
-    container_name: techdle-seq
+    container_name: devguessr-seq
     restart: unless-stopped
     networks:
       - backend
@@ -84,7 +102,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: techdle-rabbitmq
+    container_name: devguessr-rabbitmq
     restart: unless-stopped
     networks:
       - backend

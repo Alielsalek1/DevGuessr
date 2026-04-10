@@ -1,0 +1,48 @@
+# Frontend build outputs
+/dist/
+/tmp/
+/out-tsc/
+/bazel-out/
+
+# Dependencies
+/node_modules/
+
+# Angular cache
+/.angular/
+
+# Test and coverage outputs
+/coverage/
+/test-results/
+testem.log
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# IDE/editor settings
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Keep shared VS Code workspace settings, ignore transient history
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,4 +1,4 @@
-using Techdle.API.Middlewares;
+using DevGuessr.API.Middlewares;
 using Npgsql;
 using DotNetEnv;
 using Serilog;

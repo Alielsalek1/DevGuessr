@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Application.DTOs.TechdlePlayer;
+namespace Application.DTOs.DevGuessrPlayer;
 
 public class AttributeFeedback
 {

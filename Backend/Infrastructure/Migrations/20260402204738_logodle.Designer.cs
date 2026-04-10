@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Techdle.Infrastructure.Migrations
+namespace DevGuessr.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260402204738_logodle")]

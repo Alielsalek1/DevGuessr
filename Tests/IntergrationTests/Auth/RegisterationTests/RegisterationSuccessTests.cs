@@ -94,7 +94,7 @@ public class RegisterationSuccessTests(CustomWebApplicationFactory factory) : Ba
         Assert.NotNull(storedUserId);
         
         // Use Redis provider only for TTL or low-level checks if needed, but with correct key
-        var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "Techdle";
+        var projectName = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "DevGuessr";
         var redisPrefix = projectName.EndsWith("_") ? projectName : $"{projectName}_";
         var redisKey = $"{redisPrefix}new_user:{token}";
         var ttl = await Redis.GetTTLAsync(redisKey);

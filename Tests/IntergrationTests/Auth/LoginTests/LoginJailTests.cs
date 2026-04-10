@@ -13,7 +13,7 @@ public class LoginJailTests(CustomWebApplicationFactory factory) : BaseIntegrati
 {
     private static string GetRedisPrefix()
     {
-        var name = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "Techdle";
+        var name = Environment.GetEnvironmentVariable("PROJECT_NAME") ?? "DevGuessr";
         return name.EndsWith("_") ? name : $"{name}_";
     }
     private readonly string RedisPrefix = GetRedisPrefix();

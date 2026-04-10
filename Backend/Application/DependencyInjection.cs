@@ -9,11 +9,11 @@ using Application.Services.Interfaces.Auth;
 using Application.Services.Interfaces.Auth.InternalAuth;
 using Application.Services.Implementations.Misc;
 using Application.Services.Implementations.ProgrammingLanguage;
-using Techdle.Application.Services.Interfaces.ProgrammingLanguage;
+using DevGuessr.Application.Services.Interfaces.ProgrammingLanguage;
 using Application.Services.Implementations.LogodleTarget;
-using Techdle.Application.Services.Interfaces.LogodleTarget;
+using DevGuessr.Application.Services.Interfaces.LogodleTarget;
 using Application.Services.Implementations.TechnectionCategory;
-using Techdle.Application.Services.Interfaces.TechnectionCategory;
+using DevGuessr.Application.Services.Interfaces.TechnectionCategory;
 using Application.DTOs.Auth.InternalAuth;
 using FluentEmail.Smtp;
 using FluentEmail.Core.Interfaces;
@@ -108,8 +108,8 @@ public static class DependencyInjection
         // TechnectionCategory Services
         services.AddScoped<ITechnectionCategoryService, TechnectionCategoryService>();
 
-        // TechdlePlayer Services
-        services.AddScoped<ITechdlePlayerService, TechdlePlayerService>();
+        // DevGuessrPlayer Services
+        services.AddScoped<IDevGuessrPlayerService, DevGuessrPlayerService>();
 
         // LogodlePlayer Services
         services.AddScoped<ILogodlePlayerService, LogodlePlayerService>();

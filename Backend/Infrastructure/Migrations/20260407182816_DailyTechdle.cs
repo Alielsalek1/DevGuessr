@@ -2,10 +2,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Techdle.Infrastructure.Migrations
+namespace DevGuessr.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class DailyTechdle : Migration
+    public partial class DailyDevGuessr : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -2,7 +2,7 @@ using Application.DTOs.TechnectionCategory;
 using Application.Utils;
 using Domain.Shared;
 
-namespace Techdle.Application.Services.Interfaces.TechnectionCategory;
+namespace DevGuessr.Application.Services.Interfaces.TechnectionCategory;
 
 public interface ITechnectionCategoryService
 {
