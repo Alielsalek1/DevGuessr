@@ -5,6 +5,7 @@ namespace Application.Repositories.Interfaces;
 public interface ILogodleTargetRepository
 {
     Task<(List<LogodleTarget> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
+    Task<List<LogodleTarget>> GetAllAsync(CancellationToken cancellationToken);
     Task<LogodleTarget?> GetByNameAsync(string name, CancellationToken cancellationToken);
     Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken);
     Task<LogodleTarget?> GetRandomAsync(CancellationToken cancellationToken);

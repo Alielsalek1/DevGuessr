@@ -23,6 +23,14 @@ public class LogodleTargetRepository(AppDbContext dbContext) : ILogodleTargetRep
         return (items, totalCount);
     }
 
+    public async Task<List<LogodleTarget>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _dbContext.LogodleTargets
+            .AsNoTracking()
+            .OrderBy(lt => lt.Name)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<LogodleTarget?> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
         return await _dbContext.LogodleTargets

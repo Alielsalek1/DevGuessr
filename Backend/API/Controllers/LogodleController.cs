@@ -38,12 +38,12 @@ public class LogodleController(ILogodlePlayerService logodlePlayerService) : Con
 
     [HttpPost("games")]
     [Authorize(Roles = "Admin")]
-    [ProducesResponseType(typeof(SuccessApiResponse<CreateLogodleGameResponseDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(SuccessApiResponse<CreateLogodleGamesResponseDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(FailApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(FailApiResponse), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateGame(CancellationToken ct)
     {
-        var result = await _logodlePlayerService.CreateGameAsync(ct);
+        var result = await _logodlePlayerService.CreateGamesAsync(ct);
         return this.ToActionResult(result);
     }
 }

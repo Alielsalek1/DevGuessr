@@ -62,7 +62,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		dbContext.LogodleTargets.Add(target);
 
 		var resolvedPuzzleDate = puzzleDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
-		var puzzle = new DailyLogodle(resolvedPuzzleDate, target.Id);
+		var puzzle = new DailyLogodle(resolvedPuzzleDate, target.Name);
 		dbContext.DailyLogodles.Add(puzzle);
 
 		await dbContext.SaveChangesAsync();
@@ -296,10 +296,10 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 			"[]");
 
 		await dbContext.Database.ExecuteSqlRawAsync(
-			"INSERT INTO daily_logodles (id, puzzle_date, logodle_target_id) VALUES ({0}, {1}, {2})",
+			"INSERT INTO daily_logodles (id, puzzle_date, logodle_target_name) VALUES ({0}, {1}, {2})",
 			puzzleId,
 			DateOnly.FromDateTime(DateTime.UtcNow),
-			targetId);
+			targetName);
 
 		var request = new LogodleGuessRequestDto
 		{

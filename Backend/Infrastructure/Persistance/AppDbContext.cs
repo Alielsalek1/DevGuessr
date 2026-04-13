@@ -2,10 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Models.UserRefreshTokens;
 using Domain.Models.User;
 using Domain.Models.UserDevice;
-using Domain.Models.ProgrammingLanguage;
+using LangdleModel = Domain.Models.Langdle.Langdle;
 using Domain.Models.LogodleTarget;
-using Domain.Models.TechnectionCategory;
-using Domain.Models.DailyDevGuessr;
+using Domain.Models.Clusterdle;
+using Domain.Models.DailyLangdle;
 using Domain.Models.DailyLogodle;
 
 namespace Infrastructure.Persistance;
@@ -14,10 +14,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<User> Users => Set<User>();
     public DbSet<UserDevice> UserDevices => Set<UserDevice>();
     public DbSet<UserRefreshToken> UserRefreshTokens => Set<UserRefreshToken>();
-    public DbSet<ProgrammingLanguage> ProgrammingLanguages => Set<ProgrammingLanguage>();
+    public DbSet<LangdleModel> LangdleTargets => Set<LangdleModel>();
     public DbSet<LogodleTarget> LogodleTargets => Set<LogodleTarget>();
-    public DbSet<TechnectionCategory> TechnectionCategories => Set<TechnectionCategory>();
-    public DbSet<DailyDevGuessr> DailyDevGuessrs => Set<DailyDevGuessr>();
+    public DbSet<Clusterdle> ClusterdleTargets => Set<Clusterdle>();
+    public DbSet<DailyLangdle> DailyLangdles => Set<DailyLangdle>();
     public DbSet<DailyLogodle> DailyLogodles => Set<DailyLogodle>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

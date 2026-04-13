@@ -49,4 +49,24 @@ public class LogodleGameRepository(AppDbContext dbContext) : ILogodleGameReposit
 			return false;
 		}
 	}
+
+	public async Task<bool> TryAddRangeAsync(IReadOnlyCollection<DailyLogodle> puzzles, CancellationToken cancellationToken)
+	{
+		if (puzzles.Count == 0)
+		{
+			return true;
+		}
+
+		try
+		{
+			await _dbContext.DailyLogodles.AddRangeAsync(puzzles, cancellationToken);
+			await _dbContext.SaveChangesAsync(cancellationToken);
+			return true;
+		}
+		catch (DbUpdateException ex) when (ex.InnerException is PostgresException postgresException &&
+		                                   postgresException.SqlState == PostgresErrorCodes.UniqueViolation)
+		{
+			return false;
+		}
+	}
 }

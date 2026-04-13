@@ -8,12 +8,12 @@ using Application.Services.Implementations.Auth.InternalAuth;
 using Application.Services.Interfaces.Auth;
 using Application.Services.Interfaces.Auth.InternalAuth;
 using Application.Services.Implementations.Misc;
-using Application.Services.Implementations.ProgrammingLanguage;
-using DevGuessr.Application.Services.Interfaces.ProgrammingLanguage;
+using Application.Services.Implementations.Langdle;
+using Application.Services.Interfaces.Langdle;
 using Application.Services.Implementations.LogodleTarget;
-using DevGuessr.Application.Services.Interfaces.LogodleTarget;
-using Application.Services.Implementations.TechnectionCategory;
-using DevGuessr.Application.Services.Interfaces.TechnectionCategory;
+using Application.Services.Interfaces.LogodleTarget;
+using Application.Services.Implementations.Clusterdle;
+using Application.Services.Interfaces.Clusterdle;
 using Application.DTOs.Auth.InternalAuth;
 using FluentEmail.Smtp;
 using FluentEmail.Core.Interfaces;
@@ -99,17 +99,17 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserFacadeService, UserFacadeService>();
 
-        // ProgrammingLanguage Services
-        services.AddScoped<IProgrammingLanguageService, ProgrammingLanguageService>();
+        // Langdle Services
+        services.AddScoped<ILangdleService, LangdleService>();
 
         // LogodleTarget Services
         services.AddScoped<ILogodleTargetService, LogodleTargetService>();
 
-        // TechnectionCategory Services
-        services.AddScoped<ITechnectionCategoryService, TechnectionCategoryService>();
+        // Clusterdle Services
+        services.AddScoped<IClusterdleService, ClusterdleService>();
 
-        // DevGuessrPlayer Services
-        services.AddScoped<IDevGuessrPlayerService, DevGuessrPlayerService>();
+        // Langdle Player Services
+        services.AddScoped<ILangdlePlayerService, LangdlePlayerService>();
 
         // LogodlePlayer Services
         services.AddScoped<ILogodlePlayerService, LogodlePlayerService>();

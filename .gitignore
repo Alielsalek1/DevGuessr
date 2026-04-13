@@ -434,3 +434,4 @@ remember.txt
 *.crt
 
 docker-compose.override.yml
+Scripts/

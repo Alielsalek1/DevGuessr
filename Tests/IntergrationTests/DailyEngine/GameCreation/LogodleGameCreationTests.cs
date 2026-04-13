@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Application.Constants.ApiErrors;
 using Application.DTOs.Auth;
 using Application.DTOs.LogodlePlayer;
 using Application.Utils;
@@ -20,263 +21,252 @@ namespace Tests.IntergrationTests.DailyEngine.GameCreation;
 [Collection("Integration Tests")]
 public class LogodleGameCreationTests(CustomWebApplicationFactory factory) : BaseIntegrationTest(factory)
 {
-	private static LogodleTarget CreateTarget(string name)
-	{
-		return new LogodleTarget(new LogodleTargetCreationParams
-		{
-			Name = name,
-			ImagePath = $"/uploads/{name}/original.png",
-			BlurredImageUrls =
-			[
-				$"/uploads/{name}/blur_1.png",
-				$"/uploads/{name}/blur_2.png",
-				$"/uploads/{name}/blur_3.png",
-				$"/uploads/{name}/blur_4.png",
-				$"/uploads/{name}/blur_5.png"
-			]
-		});
-	}
+    private static LogodleTarget CreateTarget(string name)
+    {
+        return new LogodleTarget(new LogodleTargetCreationParams
+        {
+            Name = name,
+            ImagePath = $"/uploads/{name}/original.png",
+            BlurredImageUrls =
+            [
+                $"/uploads/{name}/blur_1.png",
+                $"/uploads/{name}/blur_2.png",
+                $"/uploads/{name}/blur_3.png",
+                $"/uploads/{name}/blur_4.png",
+                $"/uploads/{name}/blur_5.png"
+            ]
+        });
+    }
 
-	private async Task<HttpClient> GetAdminClientAsync()
-	{
-		var username = $"la{Guid.NewGuid():N}".Substring(0, 25);
-		var email = $"{username.ToLower()}@example.com";
-		var (_, password, _, _) = await AuthBackdoor.CreateVerifiedUserAsync(username, email, "Pass123", Roles.Admin);
-		var loginRequest = new LoginRequestDto { UsernameOrEmail = email, Password = password };
-		var (_, loginContent, _) = await LoginTestHelpers.PostLoginAsync<SuccessApiResponse<LoginResponseDto>>(Client, loginRequest);
+    private async Task<HttpClient> GetAdminClientAsync()
+    {
+        var username = $"la{Guid.NewGuid():N}".Substring(0, 25);
+        var email = $"{username.ToLower()}@example.com";
+        var (_, password, _, _) = await AuthBackdoor.CreateVerifiedUserAsync(username, email, "Pass123", Roles.Admin);
+        var loginRequest = new LoginRequestDto { UsernameOrEmail = email, Password = password };
+        var (_, loginContent, _) = await LoginTestHelpers.PostLoginAsync<SuccessApiResponse<LoginResponseDto>>(Client, loginRequest);
 
-		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginContent!.Data.AccessToken);
-		return Client;
-	}
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginContent!.Data.AccessToken);
+        return Client;
+    }
 
-	private async Task<HttpClient> GetUserClientAsync()
-	{
-		var username = $"lu{Guid.NewGuid():N}".Substring(0, 25);
-		var email = $"{username.ToLower()}@example.com";
-		var (_, password, _, _) = await AuthBackdoor.CreateVerifiedUserAsync(username, email, "Pass123", Roles.User);
-		var loginRequest = new LoginRequestDto { UsernameOrEmail = email, Password = password };
-		var (_, loginContent, _) = await LoginTestHelpers.PostLoginAsync<SuccessApiResponse<LoginResponseDto>>(Client, loginRequest);
+    private async Task<HttpClient> GetUserClientAsync()
+    {
+        var username = $"lu{Guid.NewGuid():N}".Substring(0, 25);
+        var email = $"{username.ToLower()}@example.com";
+        var (_, password, _, _) = await AuthBackdoor.CreateVerifiedUserAsync(username, email, "Pass123", Roles.User);
+        var loginRequest = new LoginRequestDto { UsernameOrEmail = email, Password = password };
+        var (_, loginContent, _) = await LoginTestHelpers.PostLoginAsync<SuccessApiResponse<LoginResponseDto>>(Client, loginRequest);
 
-		var userClient = new HttpClient(factory.Server.CreateHandler())
-		{
-			BaseAddress = factory.Server.BaseAddress
-		};
-		userClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginContent!.Data.AccessToken);
-		return userClient;
-	}
+        var userClient = new HttpClient(Factory.Server.CreateHandler())
+        {
+            BaseAddress = Factory.Server.BaseAddress
+        };
+        userClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginContent!.Data.AccessToken);
+        return userClient;
+    }
 
-	private async Task SeedTargetsAsync(params LogodleTarget[] targets)
-	{
-		using var scope = Factory.Services.CreateScope();
-		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-		dbContext.LogodleTargets.AddRange(targets);
-		await dbContext.SaveChangesAsync();
-	}
+    private async Task SeedTargetsAsync(params LogodleTarget[] targets)
+    {
+        using var scope = Factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.LogodleTargets.AddRange(targets);
+        await dbContext.SaveChangesAsync();
+    }
 
-	private async Task SeedPuzzleAsync(DateOnly date, Guid targetId)
-	{
-		using var scope = Factory.Services.CreateScope();
-		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-		var puzzle = new DailyLogodle(date, targetId);
-		dbContext.DailyLogodles.Add(puzzle);
-		await dbContext.SaveChangesAsync();
-	}
+    private async Task SeedPuzzleAsync(DateOnly date, string targetName)
+    {
+        using var scope = Factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var puzzle = new DailyLogodle(date, targetName);
+        dbContext.DailyLogodles.Add(puzzle);
+        await dbContext.SaveChangesAsync();
+    }
 
-	private async Task<DateOnly?> GetLatestPuzzleDateAsync()
-	{
-		using var scope = Factory.Services.CreateScope();
-		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-		return await dbContext.DailyLogodles
-			.AsNoTracking()
-			.OrderByDescending(d => d.PuzzleDate)
-			.Select(d => (DateOnly?)d.PuzzleDate)
-			.FirstOrDefaultAsync();
-	}
+    private async Task<List<DailyLogodle>> GetAllPuzzlesAsync()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        return await dbContext.DailyLogodles
+            .AsNoTracking()
+            .OrderBy(d => d.PuzzleDate)
+            .ToListAsync();
+    }
 
-	private async Task<DailyLogodle?> GetPuzzleAsync(Guid puzzleId)
-	{
-		using var scope = Factory.Services.CreateScope();
-		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-		return await dbContext.DailyLogodles
-			.AsNoTracking()
-			.FirstOrDefaultAsync(d => d.Id == puzzleId);
-	}
+    [Fact]
+    public async Task CreateGames_AdminWithTargets_Returns201CreatedWithBatchData()
+    {
+        var adminClient = await GetAdminClientAsync();
+        var target1 = CreateTarget($"Target1_{Guid.NewGuid():N}");
+        var target2 = CreateTarget($"Target2_{Guid.NewGuid():N}");
+        await SeedTargetsAsync(target1, target2);
 
-	[Fact]
-	public async Task CreateGame_AdminWithTargets_Returns201CreatedWithPuzzleData()
-	{
-		var adminClient = await GetAdminClientAsync();
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+        var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
+        var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGamesResponseDto>>();
 
-		var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
-		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGameResponseDto>>();
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.NotNull(content);
+        Assert.True(content!.Success);
+        Assert.Equal("Logodle puzzles generated successfully.", content.Message);
+        Assert.Equal(2, content.Data.CreatedCount);
 
-		Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-		Assert.NotNull(content);
-		Assert.True(content!.Success);
-		Assert.Equal("Logodle puzzle generated successfully.", content.Message);
-		Assert.NotEqual(Guid.Empty, content.Data.PuzzleId);
-		Assert.Equal(target.Id, content.Data.TargetId);
-		Assert.Equal(target.Name, content.Data.TargetName);
-	}
+        var ids = content.Data.Items.Select(i => i.TargetId).ToHashSet();
+        Assert.Contains(target1.Id, ids);
+        Assert.Contains(target2.Id, ids);
+    }
 
-	[Fact]
-	public async Task CreateGame_NonAdminUser_Returns403Forbidden()
-	{
-		var userClient = await GetUserClientAsync();
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+    [Fact]
+    public async Task CreateGames_NonAdminUser_Returns403Forbidden()
+    {
+        var userClient = await GetUserClientAsync();
+        var target = CreateTarget($"Target_{Guid.NewGuid():N}");
+        await SeedTargetsAsync(target);
 
-		var response = await userClient.PostAsync("/api/v1/logodle/games", null);
+        var response = await userClient.PostAsync("/api/v1/logodle/games", null);
 
-		Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-	}
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
 
-	[Fact]
-	public async Task CreateGame_AnonymousUser_Returns401Unauthorized()
-	{
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+    [Fact]
+    public async Task CreateGames_AnonymousUser_Returns401Unauthorized()
+    {
+        var target = CreateTarget($"Target_{Guid.NewGuid():N}");
+        await SeedTargetsAsync(target);
 
-		var response = await Client.PostAsync("/api/v1/logodle/games", null);
+        var response = await Client.PostAsync("/api/v1/logodle/games", null);
 
-		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-	}
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
 
-	[Fact]
-	public async Task CreateGame_EmptyTable_CreatesForUTCToday()
-	{
-		var adminClient = await GetAdminClientAsync();
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+    [Fact]
+    public async Task CreateGames_EmptyTable_StartsAtUTCTodayAndCreatesOnePerTarget()
+    {
+        var adminClient = await GetAdminClientAsync();
+        var targets = new[]
+        {
+            CreateTarget($"TargetA_{Guid.NewGuid():N}"),
+            CreateTarget($"TargetB_{Guid.NewGuid():N}"),
+            CreateTarget($"TargetC_{Guid.NewGuid():N}")
+        };
+        await SeedTargetsAsync(targets);
 
-		var utcToday = DateOnly.FromDateTime(DateTime.UtcNow);
-		var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
-		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGameResponseDto>>();
+        var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
+        var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGamesResponseDto>>();
 
-		var puzzle = await GetPuzzleAsync(content!.Data.PuzzleId);
-		Assert.NotNull(puzzle);
-		Assert.Equal(utcToday, puzzle.PuzzleDate);
-	}
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.NotNull(content);
+        Assert.Equal(targets.Length, content!.Data.CreatedCount);
 
-	[Fact]
-	public async Task CreateGame_WithExistingPuzzle_CreatesAtMaxOfDatePlusOne()
-	{
-		var adminClient = await GetAdminClientAsync();
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var expectedDates = Enumerable.Range(0, targets.Length).Select(i => today.AddDays(i)).ToHashSet();
+        var actualDates = content.Data.Items.Select(i => i.PuzzleDate).ToHashSet();
+        Assert.Equal(expectedDates, actualDates);
 
-		var existingDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-5);
-		await SeedPuzzleAsync(existingDate, target.Id);
+        var stored = await GetAllPuzzlesAsync();
+        Assert.Equal(targets.Length, stored.Count);
+    }
 
-		var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
-		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGameResponseDto>>();
+    [Fact]
+    public async Task CreateGames_WithFutureLatestPuzzle_StartsFromLatestPlusOne()
+    {
+        var adminClient = await GetAdminClientAsync();
+        var target1 = CreateTarget($"Target1_{Guid.NewGuid():N}");
+        var target2 = CreateTarget($"Target2_{Guid.NewGuid():N}");
+        await SeedTargetsAsync(target1, target2);
 
-		var puzzle = await GetPuzzleAsync(content!.Data.PuzzleId);
-		var utcToday = DateOnly.FromDateTime(DateTime.UtcNow);
-		var expectedDate = utcToday > existingDate.AddDays(1) ? utcToday : existingDate.AddDays(1);
-		Assert.Equal(expectedDate, puzzle.PuzzleDate);
-	}
+        var futureLatest = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(8);
+        await SeedPuzzleAsync(futureLatest, target1.Name);
 
-	[Fact]
-	public async Task CreateGame_NoTargets_Returns400BadRequest()
-	{
-		var adminClient = await GetAdminClientAsync();
+        var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
+        var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGamesResponseDto>>();
 
-		var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
-		var content = await response.Content.ReadFromJsonAsync<FailApiResponse>();
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.NotNull(content);
 
-		Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-		Assert.NotNull(content);
-		Assert.False(content!.Success);
-		Assert.Equal("ERR_LOGODLE_NO_TARGETS_FOUND", content.ErrorCode);
-	}
+        var createdDates = content!.Data.Items.Select(i => i.PuzzleDate).OrderBy(d => d).ToList();
+        Assert.Equal(futureLatest.AddDays(1), createdDates.First());
+        Assert.Equal(futureLatest.AddDays(2), createdDates.Last());
+    }
 
-	[Fact]
-	public async Task CreateGame_DuplicateDateConcurrentRequest_FirstSucceeds_SecondConflicts()
-	{
-		var adminClient1 = await GetAdminClientAsync();
-		var adminClient2 = await GetAdminClientAsync();
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+    [Fact]
+    public async Task CreateGames_NoTargets_Returns400BadRequest()
+    {
+        var adminClient = await GetAdminClientAsync();
 
-		var task1 = adminClient1.PostAsync("/api/v1/logodle/games", null);
-		var task2 = adminClient2.PostAsync("/api/v1/logodle/games", null);
+        var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
+        var content = await response.Content.ReadFromJsonAsync<FailApiResponse>();
 
-		var response1 = await task1;
-		var response2 = await task2;
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(content);
+        Assert.False(content!.Success);
+        Assert.Equal(AdminLogodleErrorCodes.NoTargetsFound, content.ErrorCode);
+    }
 
-		var successResponse = response1.StatusCode == HttpStatusCode.Created ? response1 : response2;
-		var conflictResponse = response1.StatusCode == HttpStatusCode.Conflict ? response1 : response2;
+    [Fact]
+    public async Task CreateGames_DuplicateDateConcurrentRequest_ReturnsCreatedOrConflict()
+    {
+        var adminClient1 = await GetAdminClientAsync();
+        var adminClient2 = await GetAdminClientAsync();
+        var target1 = CreateTarget($"Target1_{Guid.NewGuid():N}");
+        var target2 = CreateTarget($"Target2_{Guid.NewGuid():N}");
+        await SeedTargetsAsync(target1, target2);
 
-		if (response1.StatusCode == HttpStatusCode.Created && response2.StatusCode == HttpStatusCode.Created)
-		{
-			// Both could succeed if they used different dates; verify they're different
-			var content1 = await response1.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGameResponseDto>>();
-			var content2 = await response2.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGameResponseDto>>();
-			var puzzle1 = await GetPuzzleAsync(content1!.Data.PuzzleId);
-			var puzzle2 = await GetPuzzleAsync(content2!.Data.PuzzleId);
-			Assert.NotEqual(puzzle1.PuzzleDate, puzzle2.PuzzleDate);
-		}
-		else
-		{
-			// One should succeed, one should conflict
-			Assert.Equal(HttpStatusCode.Created, successResponse.StatusCode);
-			Assert.Equal(HttpStatusCode.Conflict, conflictResponse.StatusCode);
-		}
-	}
+        var task1 = adminClient1.PostAsync("/api/v1/logodle/games", null);
+        var task2 = adminClient2.PostAsync("/api/v1/logodle/games", null);
 
-	[Fact]
-	public async Task CreateGame_PuzzleInsertedInDatabase()
-	{
-		var adminClient = await GetAdminClientAsync();
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+        var responses = await Task.WhenAll(task1, task2);
 
-		var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
-		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGameResponseDto>>();
+        Assert.Contains(responses, r => r.StatusCode == HttpStatusCode.Created);
+        Assert.Contains(responses, r => r.StatusCode is HttpStatusCode.Created or HttpStatusCode.Conflict);
+    }
 
-		var puzzle = await GetPuzzleAsync(content!.Data.PuzzleId);
-		Assert.NotNull(puzzle);
-		Assert.Equal(content.Data.PuzzleId, puzzle.Id);
-		Assert.Equal(content.Data.TargetId, puzzle.LogodleTargetId);
-	}
+    [Fact]
+    public async Task CreateGames_ItemsMatchDatabaseRows()
+    {
+        var adminClient = await GetAdminClientAsync();
+        var targets = new[]
+        {
+            CreateTarget($"Target1_{Guid.NewGuid():N}"),
+            CreateTarget($"Target2_{Guid.NewGuid():N}"),
+            CreateTarget($"Target3_{Guid.NewGuid():N}"),
+            CreateTarget($"Target4_{Guid.NewGuid():N}")
+        };
+        await SeedTargetsAsync(targets);
 
-	[Fact]
-	public async Task CreateGame_RandomTargetSelected()
-	{
-		var adminClient = await GetAdminClientAsync();
-		var target1 = CreateTarget($"Target1_{Guid.NewGuid():N}");
-		var target2 = CreateTarget($"Target2_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target1, target2);
+        var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
+        var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGamesResponseDto>>();
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-		var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
-		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGameResponseDto>>();
+        var stored = await GetAllPuzzlesAsync();
+        var byId = stored.ToDictionary(s => s.Id);
 
-		Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-		Assert.NotNull(content);
-		Assert.True(
-			content!.Data.TargetId == target1.Id || content.Data.TargetId == target2.Id,
-			"Selected target must come from the seeded candidates.");
-	}
+        Assert.Equal(content!.Data.CreatedCount, stored.Count);
+        foreach (var item in content.Data.Items)
+        {
+            Assert.True(byId.TryGetValue(item.PuzzleId, out var puzzle));
+            var target = targets.Single(t => t.Name == puzzle!.LogodleTargetName);
+            Assert.Equal(item.TargetId, target.Id);
+            Assert.Equal(item.PuzzleDate, puzzle.PuzzleDate);
+        }
+    }
 
-	[Fact]
-	public async Task CreateGame_PuzzleAlreadyExistsForDate_Returns409Conflict()
-	{
-		var adminClient = await GetAdminClientAsync();
-		var target = CreateTarget($"Target_{Guid.NewGuid():N}");
-		await SeedTargetsAsync(target);
+    [Fact]
+    public async Task CreateGames_WithPastLatestPuzzle_StillStartsAtToday()
+    {
+        var adminClient = await GetAdminClientAsync();
+        var target1 = CreateTarget($"Target1_{Guid.NewGuid():N}");
+        var target2 = CreateTarget($"Target2_{Guid.NewGuid():N}");
+        await SeedTargetsAsync(target1, target2);
 
-		var utcToday = DateOnly.FromDateTime(DateTime.UtcNow);
-		await SeedPuzzleAsync(utcToday, target.Id);
+        var pastLatest = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-5);
+        await SeedPuzzleAsync(pastLatest, target1.Name);
 
-		var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
-		var content = await response.Content.ReadFromJsonAsync<FailApiResponse>();
+        var response = await adminClient.PostAsync("/api/v1/logodle/games", null);
+        var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateLogodleGamesResponseDto>>();
 
-		Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
-		Assert.NotNull(content);
-		Assert.False(content!.Success);
-		Assert.Equal("ERR_LOGODLE_PUZZLE_ALREADY_EXISTS", content.ErrorCode);
-	}
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var createdDates = content!.Data.Items.Select(i => i.PuzzleDate).OrderBy(d => d).ToList();
+
+        Assert.Equal(DateOnly.FromDateTime(DateTime.UtcNow), createdDates.First());
+    }
 }

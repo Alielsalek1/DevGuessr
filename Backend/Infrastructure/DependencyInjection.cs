@@ -55,10 +55,10 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserDevicesRepository, UserDevicesRepository>();
         services.AddScoped<IUserRefreshTokensRepository, UserRefreshTokensRepository>();
-        services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
+        services.AddScoped<ILangdleRepository, LangdleRepository>();
         services.AddScoped<ILogodleTargetRepository, LogodleTargetRepository>();
-        services.AddScoped<ITechnectionCategoryRepository, TechnectionCategoryRepository>();
-        services.AddScoped<IDevGuessrGameRepository, DevGuessrGameRepository>();
+        services.AddScoped<IClusterdleRepository, ClusterdleRepository>();
+        services.AddScoped<ILangdleGameRepository, LangdleGameRepository>();
         services.AddScoped<ILogodleGameRepository, LogodleGameRepository>();
         return services;
     }

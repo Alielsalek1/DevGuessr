@@ -23,6 +23,73 @@ namespace DevGuessr.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Models.Clusterdle.Clusterdle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("DifficultyLevel")
+                        .HasColumnType("integer")
+                        .HasColumnName("difficulty_level");
+
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("group_name");
+
+                    b.Property<string>("SuccessMessage")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("success_message");
+
+                    b.PrimitiveCollection<List<string>>("Words")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("words");
+
+                    b.HasKey("Id")
+                        .HasName("pk_clusterdle_targets");
+
+                    b.HasIndex("GroupName")
+                        .IsUnique()
+                        .HasDatabaseName("ix_clusterdle_targets_group_name");
+
+                    b.ToTable("clusterdle_targets", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Models.DailyLangdle.DailyLangdle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("LangdleName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("langdle_name");
+
+                    b.Property<DateOnly>("PuzzleDate")
+                        .HasColumnType("date")
+                        .HasColumnName("puzzle_date");
+
+                    b.HasKey("Id")
+                        .HasName("pk_daily_langdles");
+
+                    b.HasIndex("LangdleName")
+                        .HasDatabaseName("ix_daily_langdles_langdle_name");
+
+                    b.HasIndex("PuzzleDate")
+                        .HasDatabaseName("ix_daily_langdles_puzzle_date");
+
+                    b.ToTable("daily_langdles", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Models.DailyLogodle.DailyLogodle", b =>
                 {
                     b.Property<Guid>("Id")
@@ -30,9 +97,11 @@ namespace DevGuessr.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("LogodleTargetId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("logodle_target_id");
+                    b.Property<string>("LogodleTargetName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("logodle_target_name");
 
                     b.Property<DateOnly>("PuzzleDate")
                         .HasColumnType("date")
@@ -41,79 +110,16 @@ namespace DevGuessr.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_daily_logodles");
 
-                    b.HasIndex("LogodleTargetId")
-                        .HasDatabaseName("ix_daily_logodles_logodle_target_id");
+                    b.HasIndex("LogodleTargetName")
+                        .HasDatabaseName("ix_daily_logodles_logodle_target_name");
 
                     b.HasIndex("PuzzleDate")
-                        .IsUnique()
                         .HasDatabaseName("ix_daily_logodles_puzzle_date");
 
                     b.ToTable("daily_logodles", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.DailyDevGuessr.DailyDevGuessr", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("ProgrammingLanguageId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("programming_language_id");
-
-                    b.Property<DateOnly>("PuzzleDate")
-                        .HasColumnType("date")
-                        .HasColumnName("puzzle_date");
-
-                    b.HasKey("Id")
-                        .HasName("pk_daily_techdles");
-
-                    b.HasIndex("ProgrammingLanguageId")
-                        .HasDatabaseName("ix_daily_techdles_programming_language_id");
-
-                    b.HasIndex("PuzzleDate")
-                        .IsUnique()
-                        .HasDatabaseName("ix_daily_techdles_puzzle_date");
-
-                    b.ToTable("daily_techdles", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.LogodleTarget.LogodleTarget", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.PrimitiveCollection<List<string>>("BlurredImageUrls")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("blurred_image_urls");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("image_path");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_logodle_targets");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_logodle_targets_name");
-
-                    b.ToTable("logodle_targets", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.ProgrammingLanguage.ProgrammingLanguage", b =>
+            modelBuilder.Entity("Domain.Models.Langdle.Langdle", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -152,51 +158,53 @@ namespace DevGuessr.Infrastructure.Migrations
                         .HasColumnName("year_first_appeared");
 
                     b.HasKey("Id")
-                        .HasName("pk_programming_languages");
+                        .HasName("pk_langdle_targets");
+
+                    b.HasAlternateKey("Name")
+                        .HasName("ak_langdle_targets_name");
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("ix_programming_languages_name");
+                        .HasDatabaseName("ix_langdle_targets_name");
 
-                    b.ToTable("programming_languages", (string)null);
+                    b.ToTable("langdle_targets", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.TechnectionCategory.TechnectionCategory", b =>
+            modelBuilder.Entity("Domain.Models.LogodleTarget.LogodleTarget", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<int>("DifficultyLevel")
-                        .HasColumnType("integer")
-                        .HasColumnName("difficulty_level");
-
-                    b.Property<string>("GroupName")
+                    b.PrimitiveCollection<List<string>>("BlurredImageUrls")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("group_name");
+                        .HasColumnType("jsonb")
+                        .HasColumnName("blurred_image_urls");
 
-                    b.Property<string>("SuccessMessage")
+                    b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
-                        .HasColumnName("success_message");
+                        .HasColumnName("image_path");
 
-                    b.PrimitiveCollection<List<string>>("Words")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("words");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_technection_categories");
+                        .HasName("pk_logodle_targets");
 
-                    b.HasIndex("GroupName")
+                    b.HasAlternateKey("Name")
+                        .HasName("ak_logodle_targets_name");
+
+                    b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("ix_technection_categories_group_name");
+                        .HasDatabaseName("ix_logodle_targets_name");
 
-                    b.ToTable("technection_categories", (string)null);
+                    b.ToTable("logodle_targets", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.User.User", b =>
@@ -312,28 +320,30 @@ namespace DevGuessr.Infrastructure.Migrations
                     b.ToTable("user_refresh_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Models.DailyLangdle.DailyLangdle", b =>
+                {
+                    b.HasOne("Domain.Models.Langdle.Langdle", "TargetLanguage")
+                        .WithMany()
+                        .HasForeignKey("LangdleName")
+                        .HasPrincipalKey("Name")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_daily_langdles_langdle_targets_langdle_name");
+
+                    b.Navigation("TargetLanguage");
+                });
+
             modelBuilder.Entity("Domain.Models.DailyLogodle.DailyLogodle", b =>
                 {
                     b.HasOne("Domain.Models.LogodleTarget.LogodleTarget", "Target")
                         .WithMany()
-                        .HasForeignKey("LogodleTargetId")
+                        .HasForeignKey("LogodleTargetName")
+                        .HasPrincipalKey("Name")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_daily_logodles_logodle_targets_logodle_target_id");
+                        .HasConstraintName("fk_daily_logodles_logodle_targets_logodle_target_name");
 
                     b.Navigation("Target");
-                });
-
-            modelBuilder.Entity("Domain.Models.DailyDevGuessr.DailyDevGuessr", b =>
-                {
-                    b.HasOne("Domain.Models.ProgrammingLanguage.ProgrammingLanguage", "TargetLanguage")
-                        .WithMany()
-                        .HasForeignKey("ProgrammingLanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_daily_techdles_programming_languages_programming_language_id");
-
-                    b.Navigation("TargetLanguage");
                 });
 
             modelBuilder.Entity("Domain.Models.UserDevice.UserDevice", b =>

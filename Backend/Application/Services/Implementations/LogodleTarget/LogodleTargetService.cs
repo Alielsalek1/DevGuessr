@@ -1,11 +1,11 @@
 using Application.Constants.Successes;
 using Application.DTOs.LogodleTarget;
 using Application.Repositories.Interfaces;
-using DevGuessr.Application.Services.Interfaces.LogodleTarget;
+using Application.Services.Interfaces.LogodleTarget;
 using Application.Utils;
 using Domain.Shared;
 using Microsoft.Extensions.Logging;
-using DevGuessr.Application.Constants.Errors;
+using Application.Constants.Errors;
 using Domain.Models.LogodleTarget;
 using Application.Services.Interfaces.Misc;
 

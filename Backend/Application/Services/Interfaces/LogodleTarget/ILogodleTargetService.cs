@@ -2,7 +2,7 @@ using Application.DTOs.LogodleTarget;
 using Application.Utils;
 using Domain.Shared;
 
-namespace DevGuessr.Application.Services.Interfaces.LogodleTarget;
+namespace Application.Services.Interfaces.LogodleTarget;
 
 public interface ILogodleTargetService
 {

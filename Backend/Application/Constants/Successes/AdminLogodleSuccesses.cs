@@ -7,11 +7,11 @@ namespace Application.Constants.Successes;
 
 public static class AdminLogodleSuccesses
 {
-    public static Result<SuccessApiResponse<CreateLogodleGameResponseDto>> PuzzleGenerated(CreateLogodleGameResponseDto dto) =>
-        Result<SuccessApiResponse<CreateLogodleGameResponseDto>>.Success(new SuccessApiResponse<CreateLogodleGameResponseDto>
+    public static Result<SuccessApiResponse<CreateLogodleGamesResponseDto>> PuzzlesGenerated(CreateLogodleGamesResponseDto dto) =>
+        Result<SuccessApiResponse<CreateLogodleGamesResponseDto>>.Success(new SuccessApiResponse<CreateLogodleGamesResponseDto>
         {
             StatusCode = StatusCodes.Status201Created,
-            Message = "Logodle puzzle generated successfully.",
+            Message = "Logodle puzzles generated successfully.",
             Data = dto
         });
 }

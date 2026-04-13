@@ -1,11 +1,11 @@
 using API.Extensions;
 using Application.DTOs.LogodleTarget;
+using Application.Services.Interfaces.LogodleTarget;
 using Application.Utils;
 using Asp.Versioning;
 using Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DevGuessr.Application.Services.Interfaces.LogodleTarget;
 
 namespace API.Controllers;
 

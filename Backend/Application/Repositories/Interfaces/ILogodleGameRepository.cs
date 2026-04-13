@@ -8,4 +8,5 @@ public interface ILogodleGameRepository
 	Task<DailyLogodle?> GetByIdAsync(Guid puzzleId, CancellationToken cancellationToken);
 	Task<DateOnly?> GetLatestPuzzleDateAsync(CancellationToken cancellationToken);
 	Task<bool> TryAddAsync(DailyLogodle puzzle, CancellationToken cancellationToken);
+	Task<bool> TryAddRangeAsync(IReadOnlyCollection<DailyLogodle> puzzles, CancellationToken cancellationToken);
 }

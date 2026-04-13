@@ -1,7 +1,7 @@
 using Application.Constants.ApiErrors;
 using Microsoft.AspNetCore.Http;
 
-namespace DevGuessr.Application.Constants.Errors;
+namespace Application.Constants.Errors;
 
 public static class LogodleTargetErrors
 {

@@ -61,33 +61,60 @@ public class LogodlePlayerService(
 		});
 	}
 
-	public async Task<Result<SuccessApiResponse<CreateLogodleGameResponseDto>>> CreateGameAsync(CancellationToken cancellationToken)
+	public async Task<Result<SuccessApiResponse<CreateLogodleGamesResponseDto>>> CreateGamesAsync(CancellationToken cancellationToken)
 	{
 		var today = DateOnly.FromDateTime(DateTime.UtcNow);
 		var latestPuzzleDate = await _logodleGameRepository.GetLatestPuzzleDateAsync(cancellationToken);
-		var puzzleDate = latestPuzzleDate.HasValue && latestPuzzleDate.Value > today
-			? latestPuzzleDate.Value
+		var startPuzzleDate = latestPuzzleDate.HasValue && latestPuzzleDate.Value >= today
+			? latestPuzzleDate.Value.AddDays(1)
 			: today;
 
-		var randomTarget = await _logodleTargetRepository.GetRandomAsync(cancellationToken);
-		if (randomTarget is null)
+		var targets = await _logodleTargetRepository.GetAllAsync(cancellationToken);
+		if (targets.Count == 0)
 		{
-			return Result<SuccessApiResponse<CreateLogodleGameResponseDto>>.Failure(AdminLogodleErrors.NoTargetsFound);
+			return Result<SuccessApiResponse<CreateLogodleGamesResponseDto>>.Failure(AdminLogodleErrors.NoTargetsFound);
 		}
 
-		var puzzle = new DailyLogodle(puzzleDate, randomTarget.Id);
-		var created = await _logodleGameRepository.TryAddAsync(puzzle, cancellationToken);
+		Shuffle(targets);
+
+		var puzzles = new List<DailyLogodle>(targets.Count);
+		var responseItems = new List<CreateLogodleGameResponseDto>(targets.Count);
+
+		for (var index = 0; index < targets.Count; index++)
+		{
+			var puzzleDate = startPuzzleDate.AddDays(index);
+			var target = targets[index];
+			var puzzle = new DailyLogodle(puzzleDate, target.Name);
+			puzzles.Add(puzzle);
+
+			responseItems.Add(new CreateLogodleGameResponseDto
+			{
+				PuzzleId = puzzle.Id,
+				PuzzleDate = puzzleDate,
+				TargetId = target.Id,
+				TargetName = target.Name
+			});
+		}
+
+		var created = await _logodleGameRepository.TryAddRangeAsync(puzzles, cancellationToken);
 		if (!created)
 		{
-			return Result<SuccessApiResponse<CreateLogodleGameResponseDto>>.Failure(AdminLogodleErrors.PuzzleAlreadyExists);
+			return Result<SuccessApiResponse<CreateLogodleGamesResponseDto>>.Failure(AdminLogodleErrors.PuzzleAlreadyExists);
 		}
 
-		return AdminLogodleSuccesses.PuzzleGenerated(new CreateLogodleGameResponseDto
+		return AdminLogodleSuccesses.PuzzlesGenerated(new CreateLogodleGamesResponseDto
 		{
-			PuzzleId = puzzle.Id,
-			TargetId = randomTarget.Id,
-			TargetName = randomTarget.Name
+			Items = responseItems
 		});
+	}
+
+	private static void Shuffle<T>(IList<T> items)
+	{
+		for (var index = items.Count - 1; index > 0; index--)
+		{
+			var swapIndex = Random.Shared.Next(index + 1);
+			(items[index], items[swapIndex]) = (items[swapIndex], items[index]);
+		}
 	}
 
 	private static string GetBlurredImageForAttempt(IReadOnlyList<string> blurredImageUrls, int attemptNumber, string fallback)
