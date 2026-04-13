@@ -1,0 +1,50 @@
+@if (history.length > 0) {
+  <div class="max-w-5xl space-y-2">
+    <div class="overflow-hidden pb-1">
+      <div class="min-w-0">
+        <div
+          class="grid gap-1 px-1 font-mono text-xs tracking-[0.08em] text-[var(--color-muted)] sm:gap-1.5 sm:px-2 sm:text-sm md:text-base"
+          [style.grid-template-columns]="gridTemplateColumns()"
+        >
+          <div class="break-words pr-1 leading-4">Language</div>
+          @for (column of guessColumns(); track column) {
+            <div class="break-words text-center leading-4">{{ column.label }}</div>
+          }
+        </div>
+
+        <div class="mb-2 mt-1 h-px w-full bg-white/20"></div>
+
+        <div class="rounded-lg border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] px-2 py-2 sm:px-3">
+          @for (entry of newestHistory(); track $index; let first = $first) {
+            <article class="space-y-1.5 py-1.5" [class.border-t]="!first" [class.border-white/10]="!first">
+              <div class="grid gap-1 sm:gap-1.5" [style.grid-template-columns]="gridTemplateColumns()">
+                <div class="flex min-h-11 items-center border-l-2 border-white/30 bg-black/25 px-1.5 py-1 md:px-3">
+                  <p class="font-headline text-[10px] font-bold tracking-tight text-white break-words sm:text-sm md:text-base">{{ entry.guess }}</p>
+                </div>
+
+                @for (column of guessColumns(); track column) {
+                  @let cell = cellForColumn(entry, column.key);
+                  <div
+                    class="flex min-h-11 flex-col items-center justify-center rounded border px-1 py-1 text-center"
+                    [class]="cellClass(cell.status, column.key)"
+                  >
+                    @if (column.key === 'Year') {
+                      <div class="flex w-full items-center justify-center gap-1 px-0.5">
+                        <p class="text-[9px] font-semibold leading-3 text-white break-words sm:text-[11px] sm:leading-4">{{ cell.value }}</p>
+                        @if (yearIndicator(cell.status); as indicator) {
+                          <p class="text-base font-bold leading-none sm:text-lg" [class]="indicator.className">{{ indicator.icon }}</p>
+                        }
+                      </div>
+                    } @else {
+                      <p class="w-full px-0.5 text-[9px] font-semibold leading-3 text-white break-words sm:px-1 sm:text-[11px] sm:leading-4">{{ cell.value }}</p>
+                    }
+                  </div>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
