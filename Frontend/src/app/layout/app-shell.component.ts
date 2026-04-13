@@ -44,21 +44,21 @@ import { APP_ENV } from '../core/config/app-env.token';
         </div>
 
         <nav class="flex flex-1 flex-col gap-1 px-4 pt-5">
-          <a routerLink="/devguessr" routerLinkActive="bg-[#131313] border-r-4 border-[var(--color-primary)] text-[var(--color-primary)]" class="flex items-center gap-3 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[var(--color-muted)] transition-colors duration-150 hover:bg-[#131313]/50 hover:text-[#00FFFF]">
+          <a routerLink="/langdle" routerLinkActive="bg-[#131313] border-r-4 border-[var(--color-primary)] text-[var(--color-primary)]" class="flex items-center gap-3 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[var(--color-muted)] transition-colors duration-150 hover:bg-[#131313]/50 hover:text-[#00FFFF]">
             <span class="material-symbols-outlined text-base leading-none">terminal</span>
-            <span>DevGuessr</span>
+            <span>Langdle</span>
           </a>
           <a routerLink="/logodle" routerLinkActive="bg-[#131313] border-r-4 border-[var(--color-primary)] text-[var(--color-primary)]" class="flex items-center gap-3 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[var(--color-muted)] transition-colors duration-150 hover:bg-[#131313]/50 hover:text-[#00FFFF]">
             <span class="material-symbols-outlined text-base leading-none">category</span>
             <span>Logodle</span>
           </a>
-          <a routerLink="/technections" routerLinkActive="bg-[#131313] border-r-4 border-[var(--color-primary)] text-[var(--color-primary)]" class="flex items-center gap-3 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[var(--color-muted)] transition-colors duration-150 hover:bg-[#131313]/50 hover:text-[#00FFFF]">
+          <a routerLink="/clusterdle" routerLinkActive="bg-[#131313] border-r-4 border-[var(--color-primary)] text-[var(--color-primary)]" class="flex items-center gap-3 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[var(--color-muted)] transition-colors duration-150 hover:bg-[#131313]/50 hover:text-[#00FFFF]">
             <span class="material-symbols-outlined text-base leading-none">extension</span>
-            <span>Technections</span>
+            <span>Clusterdle</span>
           </a>
 
           <div class="mt-auto pb-8 px-4">
-            <a routerLink="/devguessr" class="block w-full border border-[var(--color-primary)] bg-[var(--color-primary)]/10 py-3 text-center font-mono text-xs uppercase tracking-widest text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)]/20">
+            <a routerLink="/langdle" class="block w-full border border-[var(--color-primary)] bg-[var(--color-primary)]/10 py-3 text-center font-mono text-xs uppercase tracking-widest text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)]/20">
               Play Daily
             </a>
           </div>
@@ -71,9 +71,9 @@ import { APP_ENV } from '../core/config/app-env.token';
 
       <nav class="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 gap-0 border-t border-white/10 bg-[#0E0E0E]/95 px-1 py-2 backdrop-blur-xl md:hidden">
         <a routerLink="/" routerLinkActive="text-[var(--color-primary)]" [routerLinkActiveOptions]="{ exact: true }" class="flex flex-col items-center justify-center gap-0.5 px-1 text-center font-mono text-[8px] uppercase tracking-[0.18em] text-[var(--color-muted)]"><span class="material-symbols-outlined text-[12px] leading-none">home</span><span>Home</span></a>
-        <a routerLink="/devguessr" routerLinkActive="text-[var(--color-primary)]" class="flex flex-col items-center justify-center gap-0.5 px-1 text-center font-mono text-[8px] uppercase tracking-[0.18em] text-[var(--color-muted)]"><span class="material-symbols-outlined text-[12px] leading-none">terminal</span><span>DevGuessr</span></a>
+        <a routerLink="/langdle" routerLinkActive="text-[var(--color-primary)]" class="flex flex-col items-center justify-center gap-0.5 px-1 text-center font-mono text-[8px] uppercase tracking-[0.18em] text-[var(--color-muted)]"><span class="material-symbols-outlined text-[12px] leading-none">terminal</span><span>Langdle</span></a>
         <a routerLink="/logodle" routerLinkActive="text-[var(--color-primary)]" class="flex flex-col items-center justify-center gap-0.5 px-1 text-center font-mono text-[8px] uppercase tracking-[0.18em] text-[var(--color-muted)]"><span class="material-symbols-outlined text-[12px] leading-none">category</span><span>Logodle</span></a>
-        <a routerLink="/technections" routerLinkActive="text-[var(--color-primary)]" class="flex flex-col items-center justify-center gap-0.5 px-1 text-center font-mono text-[8px] uppercase tracking-[0.18em] text-[var(--color-muted)]"><span class="material-symbols-outlined text-[12px] leading-none">extension</span><span>Technections</span></a>
+        <a routerLink="/clusterdle" routerLinkActive="text-[var(--color-primary)]" class="flex flex-col items-center justify-center gap-0.5 px-1 text-center font-mono text-[8px] uppercase tracking-[0.18em] text-[var(--color-muted)]"><span class="material-symbols-outlined text-[12px] leading-none">extension</span><span>Clusterdle</span></a>
       </nav>
     </div>
   `

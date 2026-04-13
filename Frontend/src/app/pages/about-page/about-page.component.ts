@@ -46,7 +46,7 @@ import { Component } from '@angular/core';
             <p class="text-sm text-white/70 mb-6">
               DevGuessr is an open-source project. If you're interested in the technical stack, the underlying engine, or want to contribute new puzzles, check out our repository.
             </p>
-            <a href="https://github.com/Alielsalek1/techdle" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded bg-white/5 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-white transition-colors hover:bg-white/10">
+            <a href="https://github.com/Alielsalek1/devguessr" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded bg-white/5 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-white transition-colors hover:bg-white/10">
               <span class="material-symbols-outlined text-sm">terminal</span>
               Access Repository
             </a>

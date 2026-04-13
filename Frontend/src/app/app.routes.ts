@@ -8,9 +8,9 @@ export const routes: Routes = [
 			import('./pages/home-page/home-page.component').then((m) => m.HomePageComponent)
 	},
 	{
-		path: 'devguessr',
+		path: 'langdle',
 		loadComponent: () =>
-			import('./features/devguessr/pages/devguessr-page.component').then((m) => m.DevGuessrPageComponent)
+			import('./features/langdle/pages/langdle-page.component').then((m) => m.LangdlePageComponent)
 	},
 	{
 		path: 'logodle',
@@ -18,10 +18,10 @@ export const routes: Routes = [
 			import('./features/logodle/pages/logodle-page.component').then((m) => m.LogodlePageComponent)
 	},
 	{
-		path: 'technections',
+		path: 'clusterdle',
 		loadComponent: () =>
-			import('./features/technections/pages/technections-page.component').then(
-				(m) => m.TechnectionsPageComponent
+			import('./features/clusterdle/pages/clusterdle-page.component').then(
+				(m) => m.ClusterdlePageComponent
 			)
 	},
 	{

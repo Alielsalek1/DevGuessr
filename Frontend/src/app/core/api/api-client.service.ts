@@ -11,4 +11,8 @@ export class ApiClientService {
   get<T>(path: string) {
     return this.http.get<T>(`${this.env.apiBaseUrl}${path}`);
   }
+
+  post<TRequest, TResponse>(path: string, body: TRequest) {
+    return this.http.post<TResponse>(`${this.env.apiBaseUrl}${path}`, body);
+  }
 }

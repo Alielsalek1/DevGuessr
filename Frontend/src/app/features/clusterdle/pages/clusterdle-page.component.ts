@@ -1,18 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { TECHNECTIONS_DUMMY_BOARD } from '../models/technections-board.model';
-import { TechnectionsService } from '../services/technections.service';
+import { CLUSTERDLE_DUMMY_BOARD } from '../models/clusterdle-board.model';
+import { ClusterdleService } from '../services/clusterdle.service';
 
 @Component({
-  selector: 'app-technections-page',
+  selector: 'app-clusterdle-page',
   standalone: true,
   imports: [RouterLink],
   template: `
     <section class="space-y-6">
       <div class="space-y-2">
-        <p class="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">system id: technections-v1</p>
-        <h1 class="text-4xl font-black tracking-[-0.02em] text-white font-headline">Technections</h1>
+        <p class="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">system id: clusterdle-v1</p>
+        <h1 class="text-4xl font-black tracking-[-0.02em] text-white font-headline">Clusterdle</h1>
       </div>
 
       <p class="max-w-2xl text-sm leading-7 text-[var(--color-muted)]">{{ statusMessage }}</p>
@@ -30,11 +30,11 @@ import { TechnectionsService } from '../services/technections.service';
       </a>
     </section>
   `,
-  providers: [TechnectionsService]
+  providers: [ClusterdleService]
 })
-export class TechnectionsPageComponent {
-  private readonly technectionsService = inject(TechnectionsService);
+export class ClusterdlePageComponent {
+  private readonly clusterdleService = inject(ClusterdleService);
 
-  protected readonly board = TECHNECTIONS_DUMMY_BOARD;
-  protected readonly statusMessage = this.technectionsService.getStatusMessage();
+  protected readonly board = CLUSTERDLE_DUMMY_BOARD;
+  protected readonly statusMessage = this.clusterdleService.getStatusMessage();
 }

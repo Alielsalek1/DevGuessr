@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { APP_ENV } from '../../core/config/app-env.token';
@@ -16,67 +16,106 @@ type GameCard = {
   standalone: true,
   imports: [RouterLink],
   template: `
-    <section class="mx-auto w-full max-w-[1400px] space-y-16">
-      <div class="mx-auto w-full max-w-6xl text-center md:text-left">
-        <div class="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-[var(--color-system)] md:text-base">
+    <section class="min-h-screen w-full pt-12">
+      <div class="mx-auto w-full max-w-6xl px-6 md:px-8">
+        <div class="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-[var(--color-system)] md:text-base text-center md:text-left">
           SYSTEM_READY // {{ env.projectName.toUpperCase() }}
         </div>
-        <div>
+        <div class="text-center md:text-left">
           <h1 class="mx-auto max-w-4xl text-5xl font-black leading-[0.92] tracking-[-0.03em] text-white md:mx-0 md:text-7xl font-headline">
             SELECT YOUR <span class="text-[var(--color-primary)] italic">TERMINAL</span>
           </h1>
+
+          <div class="mt-8 max-w-md mx-auto md:mx-0">
+            <div class="mb-2 flex items-end justify-between">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-muted)]">Daily Quest Progress</span>
+              <span class="font-mono text-xs font-bold uppercase text-[var(--color-system)]">{{ completedGames }}/{{ totalGames }} Completed</span>
+            </div>
+            <div class="relative h-[2px] w-full bg-[#131313]">
+              <div
+                class="absolute left-0 top-0 h-full bg-[var(--color-system)] shadow-[0_0_8px_var(--color-system)]"
+                [style.width.%]="progressPercent"
+              ></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-3">
+      <div class="mt-16 mx-auto grid w-full max-w-6xl gap-6 px-6 md:grid-cols-3 md:px-8">
         @for (game of games; track game.route) {
+          @let isCompleted = isGameCompleted(game.route);
           <a
             [routerLink]="game.route"
-            class="group relative flex min-h-[360px] flex-col justify-between overflow-hidden border-l-2 border-white/15 bg-[var(--color-layer-1)] p-6 transition-transform duration-300 hover:-translate-y-2 hover:shadow-[-2px_0_0_#ff00ff,2px_0_0_#00ffff]"
+            class="group relative flex min-h-[340px] w-full flex-col justify-between overflow-hidden border-l-2 p-6 transition-all duration-300 hover:-translate-y-2 {{ isCompleted ? 'border-emerald-400/40 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#10b981,2px_0_0_#10b981]' : 'border-white/15 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#ff00ff,2px_0_0_#00ffff]' }}"
           >
-            <div class="mb-8 flex items-start justify-between">
-              <div>
-                <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted)]">{{ game.tag }}</p>
-                <h2 class="mt-3 text-3xl font-bold tracking-[-0.02em] text-white font-headline">{{ game.title }}</h2>
+            @if (isCompleted) {
+              <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rotate-45 bg-gradient-to-b from-emerald-400/20 via-emerald-400/10 to-transparent blur-2xl"></div>
+            }
+            
+            <div class="relative z-10 mb-8 flex items-start justify-between">
+              <div class="min-w-0 pr-4">
+                <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted)] truncate">{{ game.tag }}</p>
+                <h2 class="mt-3 text-2xl font-bold tracking-[-0.02em] text-white font-headline break-words">{{ game.title }}</h2>
               </div>
-              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-system)]">Launch</span>
+              <div class="flex-shrink-0">
+                @if (isCompleted) {
+                  <div class="flex flex-col items-end gap-1">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300">Completed</span>
+                    <span class="text-lg text-emerald-300">✓</span>
+                  </div>
+                } @else {
+                  <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-system)]">Launch</span>
+                }
+              </div>
             </div>
 
-            <p class="max-w-sm text-sm leading-7 text-[var(--color-muted)]">
+            <p class="relative z-10 max-w-sm text-sm leading-relaxed text-[var(--color-muted)]">
               {{ game.description }}
             </p>
 
-            <div class="mt-8 flex items-center justify-between border-t border-white/10 pt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted)]">
-              <span>Status</span>
-              <span [style.color]="game.accent">Ready</span>
+            <div class="relative z-10 mt-8 flex items-center justify-between border-t border-white/10 pt-4 font-mono text-[10px] uppercase tracking-[0.25em]" [class]="isCompleted ? 'text-emerald-300/70' : 'text-[var(--color-muted)]'">
+              <span class="truncate">Status</span>
+              <span class="truncate" [style.color]="isCompleted ? '#10b981' : game.accent">{{ isCompleted ? 'Resolved' : 'Ready' }}</span>
             </div>
           </a>
         }
       </div>
 
-      <footer class="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-6 border-t border-white/10 pt-10 text-center md:block md:text-left">
-        <div class="space-y-2 text-center md:absolute md:left-0 md:top-10 md:text-left">
-          <div class="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">System Uptime: 99.99%</div>
-          <div class="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)]">Current Latency: 12ms</div>
+      <footer class="mx-auto mt-20 flex w-full max-w-6xl flex-col items-center gap-8 border-t border-white/10 px-6 py-10 md:flex-row md:justify-between md:px-8">
+        <div class="flex flex-col gap-2 text-center md:text-left">
+          <div class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)]">System Uptime: 99.99%</div>
+          <div class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)]">Current Latency: 12ms</div>
         </div>
-        <div class="flex items-center gap-6 md:absolute md:left-1/2 md:top-10 md:-translate-x-1/2">
-          <a href="https://github.com" target="_blank" rel="noreferrer" class="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">GitHub</a>
-          <a routerLink="/about" class="font-mono text-xs uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">About</a>
+        
+        <div class="flex items-center gap-10">
+          <a href="https://github.com" target="_blank" rel="noreferrer" class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">GitHub</a>
+          <a routerLink="/about" class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">About</a>
         </div>
-        <p class="font-mono text-sm uppercase tracking-[0.35em] text-[var(--color-muted)] md:absolute md:right-0 md:top-10 md:text-right">
+        
+        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--color-muted)]">
           © {{ env.projectName.toUpperCase() }}
         </p>
       </footer>
     </section>
   `
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
   protected readonly env = inject(APP_ENV);
+  protected readonly totalGames = 3;
+  protected completedGames = 0;
+
+  protected get progressPercent(): number {
+    return (this.completedGames / this.totalGames) * 100;
+  }
+
+  ngOnInit(): void {
+    this.completedGames = this.getCompletedCount();
+  }
 
   protected readonly games: GameCard[] = [
     {
-      title: 'DevGuessr',
-      route: '/devguessr',
+      title: 'Langdle',
+      route: '/langdle',
       tag: 'Module_01 // Definition',
       description: 'Decode the daily technical term from a cryptic clue and build the chain of evidence.',
       accent: '#FF7CF5'
@@ -89,11 +128,63 @@ export class HomePageComponent {
       accent: '#D078FF'
     },
     {
-      title: 'Technections',
-      route: '/technections',
+      title: 'Clusterdle',
+      route: '/clusterdle',
       tag: 'Module_03 // Logic',
       description: 'Group technologies into hidden sets and prove the structure behind the noise.',
       accent: '#00FFFF'
     }
   ];
+
+  private getCompletedCount(): number {
+    const today = this.todayAsDateOnly();
+    const completionChecks = [
+      this.isLangdleSolved(today),
+      this.readBooleanState(`logodle:state:${today}`, 'solved'),
+      this.readBooleanState(`clusterdle:state:${today}`, 'solved')
+    ];
+
+    return completionChecks.filter(Boolean).length;
+  }
+
+  private isLangdleSolved(today: string): boolean {
+    return this.readBooleanState(`langdle:state:${today}`, 'solved');
+  }
+
+  protected isGameCompleted(route: string): boolean {
+    const today = this.todayAsDateOnly();
+    
+    switch (route) {
+      case '/langdle':
+        return this.readBooleanState(`langdle:state:${today}`, 'solved');
+      case '/logodle':
+        return this.readBooleanState(`logodle:state:${today}`, 'solved');
+      case '/clusterdle':
+        return this.readBooleanState(`clusterdle:state:${today}`, 'solved');
+      default:
+        return false;
+    }
+  }
+
+  private readBooleanState(storageKey: string, fieldName: string): boolean {
+    const raw = localStorage.getItem(storageKey) ?? sessionStorage.getItem(storageKey);
+    if (!raw) {
+      return false;
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as Record<string, unknown>;
+      return parsed[fieldName] === true;
+    } catch {
+      return false;
+    }
+  }
+
+  private todayAsDateOnly(): string {
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 }

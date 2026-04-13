@@ -6,7 +6,7 @@ escape_js_string() {
 }
 
 if [ -f /usr/share/nginx/html/env.template.js ]; then
-  project_name=$(escape_js_string "${PROJECT_NAME:-DevGuessr}")
+  project_name=$(escape_js_string "${PROJECT_NAME:-Techdle}")
   project_description=$(escape_js_string "${PROJECT_DESCRIPTION:-The Architect's Forge - A high-performance, resilient backend template with Clean Architecture}")
   api_base_url=$(escape_js_string "${FRONTEND_API_BASE_URL:-/api/v1}")
 

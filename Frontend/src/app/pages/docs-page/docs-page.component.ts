@@ -17,7 +17,7 @@ import { Component } from '@angular/core';
         <div class="space-y-6">
           <div class="flex items-center gap-3">
             <span class="material-symbols-outlined text-[var(--color-system)]">terminal</span>
-            <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">DEVGUESSR</h2>
+            <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">LANGDLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
             Identify the daily programming language. Each guess provides feedback through illuminated cells for Paradigm, Typing, and Release Year.

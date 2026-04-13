@@ -36,4 +36,99 @@ body {
 	background: rgba(255, 124, 245, 0.24);
 	color: #ffffff;
 }
+
+.langdle-victory-particle {
+	animation-name: langdle-victory-particle-fall;
+	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+	animation-fill-mode: both;
+	will-change: transform, opacity;
+}
+
+.langdle-victory-overlay {
+	animation: langdle-victory-overlay-fade 260ms ease-out both;
+}
+
+.langdle-victory-card {
+	animation: langdle-victory-card-pulse 2.2s ease-in-out infinite;
+}
+
+.langdle-victory-beam {
+	animation: langdle-victory-beam-sweep 2.6s ease-in-out infinite;
+}
+
+.langdle-victory-ring {
+	animation: langdle-victory-ring-pulse 2.4s ease-out infinite;
+}
+
+.langdle-victory-ring-delay {
+	animation-delay: 0.8s;
+}
+
+@keyframes langdle-victory-overlay-fade {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes langdle-victory-card-pulse {
+	0%,
+	100% {
+		box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(111, 225, 255, 0.15), 0 0 45px rgba(0, 200, 255, 0.2);
+	}
+
+	50% {
+		box-shadow: 0 30px 90px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(111, 225, 255, 0.35), 0 0 70px rgba(0, 200, 255, 0.35);
+	}
+}
+
+@keyframes langdle-victory-beam-sweep {
+	0%,
+	100% {
+		opacity: 0.25;
+		transform: translateX(-50%) scale(0.9);
+	}
+
+	50% {
+		opacity: 0.65;
+		transform: translateX(-50%) scale(1.05);
+	}
+}
+
+@keyframes langdle-victory-ring-pulse {
+	0% {
+		opacity: 0.3;
+		transform: translate(-50%, -50%) scale(0.88);
+	}
+
+	70% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(1.1);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(1.1);
+	}
+}
+
+@keyframes langdle-victory-particle-fall {
+	0% {
+		opacity: 0;
+		transform: translate3d(0, 0, 0) rotate(0deg) scale(0.35);
+	}
+
+	12% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+		transform: translate3d(var(--langdle-drift, 0), -20rem, 0) rotate(560deg) scale(1.08);
+	}
+}
+
 /* You can add global styles to this file, and also import other style files */

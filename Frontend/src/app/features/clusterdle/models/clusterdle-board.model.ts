@@ -1,13 +1,13 @@
-export interface TechnectionsTile {
+export interface ClusterdleTile {
   id: string;
   label: string;
 }
 
-export interface TechnectionsBoard {
-  tiles: TechnectionsTile[];
+export interface ClusterdleBoard {
+  tiles: ClusterdleTile[];
 }
 
-export const TECHNECTIONS_DUMMY_BOARD: TechnectionsBoard = {
+export const CLUSTERDLE_DUMMY_BOARD: ClusterdleBoard = {
   tiles: [
     { id: '1', label: 'Angular' },
     { id: '2', label: 'Docker' },
