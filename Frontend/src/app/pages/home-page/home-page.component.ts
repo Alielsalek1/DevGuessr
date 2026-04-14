@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { APP_ENV } from '../../core/config/app-env.token';
@@ -20,6 +20,8 @@ type GameCard = {
 export class HomePageComponent implements OnInit {
   protected readonly env = inject(APP_ENV);
   protected readonly totalGames = 3;
+  private readonly cdr = inject(ChangeDetectorRef);
+
   protected completedGames = 0;
 
   protected get progressPercent(): number {
@@ -27,7 +29,19 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.completedGames = this.getCompletedCount();
+    this.refreshQuestProgress();
+  }
+
+  @HostListener('window:focus')
+  @HostListener('window:pageshow')
+  protected handleWindowVisible(): void {
+    this.refreshQuestProgress();
+  }
+
+  @HostListener('window:storage')
+  @HostListener('window:techdle-state-changed')
+  protected handleQuestStateChanged(): void {
+    this.refreshQuestProgress();
   }
 
   protected readonly games: GameCard[] = [
@@ -63,6 +77,11 @@ export class HomePageComponent implements OnInit {
     ];
 
     return completionChecks.filter(Boolean).length;
+  }
+
+  private refreshQuestProgress(): void {
+    this.completedGames = this.getCompletedCount();
+    this.cdr.detectChanges();
   }
 
   private isLangdleSolved(today: string): boolean {

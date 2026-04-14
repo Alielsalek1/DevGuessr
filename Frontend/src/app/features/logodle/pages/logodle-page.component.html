@@ -1,0 +1,80 @@
+<section class="space-y-8">
+  <app-logodle-victory-screen
+    [victoryScreenActive]="victoryScreenActive"
+    [victoryScreenVisible]="victoryScreenVisible"
+    [victoryStats]="victoryStats"
+    [victoryParticles]="victoryParticles"
+    (closeEvent)="closeVictoryScreen()"
+  ></app-logodle-victory-screen>
+
+  @if (loadingGame) {
+    <div class="max-w-5xl rounded-lg border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-4 text-sm text-[var(--color-muted)]">
+      Loading today's logo puzzle...
+    </div>
+  }
+
+  @if (bannerMessage) {
+    <div class="max-w-5xl rounded-lg border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-4 text-sm text-white">
+      <p>{{ bannerMessage }}</p>
+      @if (canRetryLoading()) {
+        <button
+          type="button"
+          (click)="loadGame()"
+          class="mt-3 inline-flex rounded bg-[var(--color-primary)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-90"
+        >
+          Retry
+        </button>
+      }
+    </div>
+  }
+
+  @if (puzzle && !loadingGame) {
+    <div class="w-full space-y-6">
+      <!-- Main Content Grid: Logo on left, Input + History on right -->
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <!-- Left Column: System id + title + logo display -->
+        <div class="space-y-4">
+          <div class="w-full max-w-[28rem] mx-auto lg:mx-0">
+            <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--color-system)]">
+              system id: logodle-v1
+            </p>
+            <app-logodle-title></app-logodle-title>
+          </div>
+
+          <div class="w-full max-w-[28rem] mx-auto lg:mx-0">
+            <app-logodle-display [puzzle]="puzzle" [attemptCount]="history.length" [solved]="solved" [failed]="failed"></app-logodle-display>
+          </div>
+        </div>
+
+        <!-- Right Column: Guess panel styled like template2 -->
+        <div class="space-y-6 rounded border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-4 lg:p-4">
+          <app-logodle-guess-input
+            [solved]="solved"
+            [submittingGuess]="submittingGuess"
+            [history]="history"
+            [inputError]="inputError"
+            (guessSubmitted)="handleGuessSubmitted($event)"
+            (errorCleared)="clearInputError()"
+          ></app-logodle-guess-input>
+
+          <app-logodle-guess-history [history]="history"></app-logodle-guess-history>
+
+          @if (failed) {
+            <div class="rounded border border-[var(--color-layer-2)] bg-[var(--color-layer-2)]/55 p-4">
+              <p class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)]">
+                Today's Answer
+              </p>
+              <p class="mt-2 text-xl font-black tracking-tight text-[var(--color-primary)]">
+                {{ history[history.length - 1]?.result?.targetName || 'Unknown' }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <a routerLink="/" class="inline-flex font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-primary)]">
+    Back to hub
+  </a>
+</section>

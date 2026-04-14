@@ -13,6 +13,8 @@ public class LogodlePlayerService(
 	ILogodleGameRepository logodleGameRepository,
 	ILogodleTargetRepository logodleTargetRepository) : ILogodlePlayerService
 {
+	private const int MaxAttempts = 6;
+
 	private readonly ILogodleGameRepository _logodleGameRepository = logodleGameRepository;
 	private readonly ILogodleTargetRepository _logodleTargetRepository = logodleTargetRepository;
 
@@ -45,11 +47,11 @@ public class LogodlePlayerService(
 
 		var target = puzzle.Target;
 		var isCorrect = string.Equals(request.GuessedTargetName?.Trim(), target.Name, StringComparison.OrdinalIgnoreCase);
-		var isGameOver = isCorrect || request.AttemptNumber >= 6;
+		var isGameOver = isCorrect || request.AttemptNumber >= MaxAttempts;
 
 		var revealedImageUrl = isGameOver
 			? target.ImagePath
-			: GetBlurredImageForAttempt(target.BlurredImageUrls, request.AttemptNumber, target.ImagePath);
+			: GetBlurredImageForAttempt(target.BlurredImageUrls, Math.Clamp(request.AttemptNumber, 1, MaxAttempts), target.ImagePath);
 
 		return LogodlePlayerSuccesses.GuessEvaluated(new LogodleGuessResultDto
 		{

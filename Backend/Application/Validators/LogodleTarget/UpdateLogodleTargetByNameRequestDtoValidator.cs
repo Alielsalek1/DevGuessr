@@ -16,7 +16,7 @@ public class UpdateLogodleTargetByNameRequestDtoValidator : AbstractValidator<Up
             .When(x => x.ImagePath is not null);
 
         RuleFor(x => x.BlurredImageUrls)
-            .Must(urls => urls!.Count == 5).WithMessage("Exactly 5 blurred image URLs are required.")
+            .Must(urls => urls!.Count == 6).WithMessage("Exactly 6 blurred image URLs are required.")
             .When(x => x.BlurredImageUrls is not null);
 
         RuleForEach(x => x.BlurredImageUrls)

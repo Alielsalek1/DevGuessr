@@ -28,8 +28,8 @@ public static class LogodleTargetGuard
 
     public static void ValidateBlurredImageUrls(List<string> urls)
     {
-        if (urls is null || urls.Count != 5)
-            throw new DomainException("Exactly 5 blurred image URLs are required.", nameof(urls));
+        if (urls is null || urls.Count != 6)
+            throw new DomainException("Exactly 6 blurred image URLs are required.", nameof(urls));
 
         foreach (var url in urls)
         {
