@@ -24,18 +24,18 @@ import { APP_ENV } from '../core/config/app-env.token';
 
       </header>
 
-      <aside class="fixed left-0 top-0 z-60 hidden h-screen w-[17rem] flex-col border-r border-white/10 bg-[#0E0E0E] lg:flex">
-        <div class="flex h-[72px] items-center px-8">
-          <a routerLink="/" class="inline-flex items-center text-2xl font-black italic uppercase tracking-tighter text-[var(--color-primary)] md:text-3xl">
+      <aside class="fixed left-0 top-0 z-60 hidden h-screen w-[12rem] flex-col border-r border-white/10 bg-[#0E0E0E] md:flex">
+        <div class="flex h-[72px] items-center px-5">
+          <a routerLink="/" class="inline-flex items-center text-xl font-black italic uppercase tracking-tighter text-[var(--color-primary)] md:text-2xl">
             {{ env.projectName }}
           </a>
         </div>
 
-        <div class="px-8 pb-12 pt-8">
+        <div class="px-5 pb-8 pt-6">
           <div class="inline-flex items-center border border-white/10 bg-[#131313] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-system)]">
             System Hub
           </div>
-          <div class="mt-7 font-mono text-xs uppercase tracking-[0.16em] text-[var(--color-primary)]">
+          <div class="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-primary)]">
             ROOT_USER
           </div>
           <p class="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-muted)]">
@@ -43,7 +43,7 @@ import { APP_ENV } from '../core/config/app-env.token';
           </p>
         </div>
 
-        <nav class="flex flex-1 flex-col gap-1 px-4 pt-5">
+        <nav class="flex flex-1 flex-col gap-1 px-3 pt-4">
           <a routerLink="/langdle" routerLinkActive="bg-[#131313] border-r-4 border-[var(--color-primary)] text-[var(--color-primary)]" class="flex items-center gap-3 px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[var(--color-muted)] transition-colors duration-150 hover:bg-[#131313]/50 hover:text-[#00FFFF]">
             <span class="material-symbols-outlined text-base leading-none">terminal</span>
             <span>Langdle</span>
@@ -65,7 +65,7 @@ import { APP_ENV } from '../core/config/app-env.token';
         </nav>
       </aside>
 
-      <main class="min-h-screen px-6 pb-24 pt-[7.5rem] md:px-10 lg:ml-[17rem] lg:px-12">
+      <main class="min-h-screen px-6 pb-24 pt-[7.5rem] md:ml-[12rem] md:px-8 lg:px-12">
         <router-outlet></router-outlet>
       </main>
 

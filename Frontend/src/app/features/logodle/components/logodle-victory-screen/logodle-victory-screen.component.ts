@@ -10,13 +10,13 @@ import { VictoryParticle, VictoryStats } from '../../models/logodle-ui.models';
   template: `
     @if (victoryScreenActive) {
       <div
-        class="logodle-victory-overlay fixed inset-0 z-40 bg-[#06060d]/84 backdrop-blur-[10px] transition-opacity duration-300"
+        class="logodle-victory-overlay fixed inset-0 z-40 flex items-center justify-center bg-[#06060d]/84 px-3 py-4 backdrop-blur-[10px] transition-opacity duration-300 sm:px-4 sm:py-6 md:left-[12rem] md:right-0 md:top-[72px] md:bottom-0"
         [class.opacity-0]="!victoryScreenVisible"
         [class.pointer-events-none]="!victoryScreenVisible"
         (click)="closeVictory()"
       >
         <div
-          class="logodle-victory-card absolute inset-x-3 top-1/2 z-50 mx-auto w-full max-w-[min(94vw,46rem)] -translate-y-1/2 overflow-hidden rounded-3xl border border-[var(--color-primary)]/40 bg-[radial-gradient(circle_at_12%_15%,rgba(255,124,245,0.22)_0%,transparent_40%),radial-gradient(circle_at_85%_80%,rgba(0,255,255,0.17)_0%,transparent_42%),linear-gradient(155deg,#100d1c_0%,#150f24_54%,#111321_100%)] px-5 py-5 text-white shadow-[0_28px_90px_rgba(0,0,0,0.55)] transition-all duration-500 sm:px-6"
+          class="logodle-victory-card relative z-50 w-full max-w-[25rem] max-h-[80vh] overflow-y-auto rounded-3xl border border-[var(--color-primary)]/40 bg-[radial-gradient(circle_at_12%_15%,rgba(255,124,245,0.22)_0%,transparent_40%),radial-gradient(circle_at_85%_80%,rgba(0,255,255,0.17)_0%,transparent_42%),linear-gradient(155deg,#100d1c_0%,#150f24_54%,#111321_100%)] px-5 py-5 text-white shadow-[0_28px_90px_rgba(0,0,0,0.55)] transition-all duration-500 sm:max-w-[30rem] sm:max-h-[84vh] sm:px-6 md:max-w-[32rem] lg:max-w-[44rem] lg:max-h-[86vh]"
           [class.scale-100]="victoryScreenVisible"
           [class.scale-[0.96]]="!victoryScreenVisible"
           [class.opacity-100]="victoryScreenVisible"

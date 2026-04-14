@@ -9,12 +9,11 @@ export const LOGODLE_TARGETS: string[] = [
   'Django',
   'Spring',
   'Laravel',
-  'Flask',
+  'Slack',
   'Flutter',
   'Docker',
   'Kubernetes',
   'Git',
-  'GitHub',
   'VS Code',
   'PostgreSQL',
   'MongoDB',
@@ -29,6 +28,6 @@ export const LOGODLE_TARGETS: string[] = [
   'TensorFlow',
   'Figma',
   'Postman',
-  'Kafka',
+  'Jira',
   'Unity'
 ];

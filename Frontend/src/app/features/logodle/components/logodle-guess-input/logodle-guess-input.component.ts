@@ -52,9 +52,10 @@ import { LOGODLE_MAX_ATTEMPTS, LOGODLE_TARGETS } from '../../data/logodle.consta
                 type="button"
                 [id]="'logodle-suggestion-' + i"
                 (click)="selectLogo(logo)"
-                class="block w-full border-b border-white/5 px-3 py-2 text-left font-mono text-sm tracking-[0.1em] text-white transition-colors"
-                [class.bg-[var(--color-layer-1)]]="i === selectedIndex"
-                [class.hover:bg-[var(--color-layer-1)]]="i !== selectedIndex"
+                class="block w-full border-b border-white/5 px-3 py-2 text-left font-mono text-sm tracking-[0.1em] transition-colors"
+                [class.bg-white/15]="i === selectedIndex"
+                [class.text-white]="true"
+                [class.hover:bg-white/10]="i !== selectedIndex"
               >
                 {{ logo }}
               </button>

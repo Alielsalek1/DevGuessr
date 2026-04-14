@@ -33,7 +33,7 @@ export class LangdleGuessInputComponent {
     const isActive = this.activeSuggestionIndex === index;
     return (
       'block w-full border-b border-white/5 px-3 py-2 text-left text-sm text-white transition-colors ' +
-      (isActive ? 'bg-[var(--color-layer-1)]' : 'hover:bg-[var(--color-layer-1)]')
+      (isActive ? 'bg-white/15' : 'hover:bg-white/10')
     );
   }
 

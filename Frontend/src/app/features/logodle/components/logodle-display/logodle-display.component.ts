@@ -70,7 +70,6 @@ export class LogodleDisplayComponent {
   @Input() attemptCount = 0;
   @Input() solved = false;
   @Input() failed = false;
-  private readonly imageCacheBuster = Date.now().toString(36);
 
   protected getAttemptPillClass(index: number): string {
     if (this.attemptCount <= index) {
@@ -110,8 +109,10 @@ export class LogodleDisplayComponent {
       return '';
     }
 
+    const revealToken = `${this.attemptCount}-${this.solved ? 'solved' : 'active'}-${this.failed ? 'failed' : 'live'}`;
+
     return source.includes('?')
-      ? `${source}&v=${this.imageCacheBuster}`
-      : `${source}?v=${this.imageCacheBuster}`;
+      ? `${source}&reveal=${encodeURIComponent(revealToken)}`
+      : `${source}?reveal=${encodeURIComponent(revealToken)}`;
   }
 }

@@ -1,6 +1,32 @@
 @if (history.length > 0) {
   <div class="max-w-5xl space-y-2">
-    <div class="overflow-hidden pb-1">
+    <div class="space-y-3 lg:hidden">
+      @for (entry of newestHistory(); track $index) {
+        <article class="rounded-xl border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-3.5">
+          <div class="mb-3 border-l-2 border-white/30 bg-black/25 px-3 py-2">
+            <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)]">Guess</p>
+            <p class="mt-1 font-headline text-lg font-bold leading-tight text-white break-words">{{ entry.guess }}</p>
+          </div>
+
+          <div class="space-y-2">
+            @for (column of guessColumns(); track column) {
+              @let cell = cellForColumn(entry, column.key);
+              <div class="flex items-center justify-between gap-3 rounded border px-3 py-2" [class]="cellClass(cell.status, column.key)">
+                <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-white/90">{{ column.label }}</span>
+                <div class="flex items-center gap-1.5 text-right">
+                  <span class="text-sm font-semibold leading-5 text-white break-words">{{ cell.value }}</span>
+                  @if (column.key === 'Year' && yearIndicator(cell.status); as indicator) {
+                    <span class="text-base font-bold leading-none" [class]="indicator.className">{{ indicator.icon }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+
+    <div class="hidden overflow-hidden pb-1 lg:block">
       <div class="min-w-0">
         <div
           class="grid gap-1 px-1 font-mono text-xs tracking-[0.08em] text-[var(--color-muted)] sm:gap-1.5 sm:px-2 sm:text-sm md:text-base"

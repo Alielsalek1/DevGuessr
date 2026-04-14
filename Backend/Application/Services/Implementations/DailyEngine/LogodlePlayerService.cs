@@ -51,7 +51,7 @@ public class LogodlePlayerService(
 
 		var revealedImageUrl = isGameOver
 			? target.ImagePath
-			: GetBlurredImageForAttempt(target.BlurredImageUrls, Math.Clamp(request.AttemptNumber, 1, MaxAttempts), target.ImagePath);
+			: GetBlurredImageForAttempt(target.BlurredImageUrls, Math.Clamp(request.AttemptNumber + 1, 1, MaxAttempts), target.ImagePath);
 
 		return LogodlePlayerSuccesses.GuessEvaluated(new LogodleGuessResultDto
 		{
