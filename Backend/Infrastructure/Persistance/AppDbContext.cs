@@ -7,6 +7,8 @@ using Domain.Models.LogodleTarget;
 using Domain.Models.Clusterdle;
 using Domain.Models.DailyLangdle;
 using Domain.Models.DailyLogodle;
+using Domain.Models.DailyMythdle;
+using Domain.Models.MythdleTarget;
 
 namespace Infrastructure.Persistance;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
@@ -19,6 +21,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Clusterdle> ClusterdleTargets => Set<Clusterdle>();
     public DbSet<DailyLangdle> DailyLangdles => Set<DailyLangdle>();
     public DbSet<DailyLogodle> DailyLogodles => Set<DailyLogodle>();
+    public DbSet<DailyMythdle> DailyMythdles => Set<DailyMythdle>();
+    public DbSet<MythdleTarget> MythdleTargets => Set<MythdleTarget>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

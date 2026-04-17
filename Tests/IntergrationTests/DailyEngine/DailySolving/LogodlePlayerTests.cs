@@ -32,7 +32,8 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 				$"/uploads/{name}/blur_2.png",
 				$"/uploads/{name}/blur_3.png",
 				$"/uploads/{name}/blur_4.png",
-				$"/uploads/{name}/blur_5.png"
+				$"/uploads/{name}/blur_5.png",
+				$"/uploads/{name}/blur_6.png"
 			]
 		});
 	}
@@ -53,7 +54,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		return Client;
 	}
 
-	private async Task<(Guid PuzzleId, string TargetName, string ClearImage, string MostBlurred, string LeastBlurred)> SeedPuzzleAsync(string targetName, DateOnly? puzzleDate = null)
+	private async Task<(Guid PuzzleId, string TargetName, string ClearImage, string MostBlurred, string SecondMostBlurred, string LeastBlurred)> SeedPuzzleAsync(string targetName, DateOnly? puzzleDate = null)
 	{
 		using var scope = Factory.Services.CreateScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -67,14 +68,14 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 
 		await dbContext.SaveChangesAsync();
 
-		return (puzzle.Id, target.Name, target.ImagePath, target.BlurredImageUrls[4], target.BlurredImageUrls[0]);
+		return (puzzle.Id, target.Name, target.ImagePath, target.BlurredImageUrls[5], target.BlurredImageUrls[4], target.BlurredImageUrls[0]);
 	}
 
 	[Fact]
 	public async Task Guess_WrongAttemptOne_ReturnsMostBlurredAndNotGameOver()
 	{
 		var client = await GetAuthenticatedClientAsync("LogodleAttemptOneUser");
-		var (puzzleId, targetName, _, mostBlurred, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
+		var (puzzleId, targetName, _, _, secondMostBlurred, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
 
 		var request = new LogodleGuessRequestDto
 		{
@@ -89,7 +90,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		Assert.NotNull(content);
 		Assert.False(content!.Data.IsCorrect);
 		Assert.False(content.Data.IsGameOver);
-		Assert.Equal(mostBlurred, content.Data.RevealedImageUrl);
+		Assert.Equal(secondMostBlurred, content.Data.RevealedImageUrl);
 		Assert.Null(content.Data.TargetName);
 	}
 
@@ -97,7 +98,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_WrongAttemptFive_ReturnsLeastBlurredAndNotGameOver()
 	{
 		var client = await GetAuthenticatedClientAsync("LogodleAttemptFiveUser");
-		var (puzzleId, targetName, _, _, leastBlurred) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
+		var (puzzleId, targetName, _, _, _, leastBlurred) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
 
 		var request = new LogodleGuessRequestDto
 		{
@@ -120,7 +121,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_WrongAttemptSix_RevealsClearImageAndEndsGame()
 	{
 		var client = await GetAuthenticatedClientAsync("LogodleAttemptSixUser");
-		var (puzzleId, targetName, clearImage, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
+		var (puzzleId, targetName, clearImage, _, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
 
 		var request = new LogodleGuessRequestDto
 		{
@@ -143,7 +144,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_WithCorrectName_RevealsClearImageAndEndsGame()
 	{
 		var client = await GetAuthenticatedClientAsync("LogodleCorrectGuessUser");
-		var (puzzleId, targetName, clearImage, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
+		var (puzzleId, targetName, clearImage, _, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
 
 		var request = new LogodleGuessRequestDto
 		{
@@ -166,7 +167,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task GetGameByDate_WithExistingPuzzle_Returns200OkWithInitialImage()
 	{
 		var puzzleDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-2);
-		var (puzzleId, _, _, mostBlurred, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}", puzzleDate);
+		var (puzzleId, _, _, mostBlurred, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}", puzzleDate);
 
 		var response = await Client.GetAsync($"/api/v1/logodle/games/by-date?date={puzzleDate:yyyy-MM-dd}");
 		var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<LogodleGameDto>>();
@@ -196,7 +197,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	{
 		var client = await GetAuthenticatedClientAsync("LogHistUser");
 		var historicalDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1);
-		var (puzzleId, targetName, clearImage, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}", historicalDate);
+		var (puzzleId, targetName, clearImage, _, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}", historicalDate);
 
 		var request = new LogodleGuessRequestDto
 		{
@@ -219,7 +220,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_WithInvalidPuzzleId_Returns400BadRequest()
 	{
 		var client = await GetAuthenticatedClientAsync("LogodleInvalidPuzzleUser");
-		var (_, targetName, _, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
+		var (_, targetName, _, _, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
 
 		var request = new LogodleGuessRequestDto
 		{
@@ -259,7 +260,7 @@ public class LogodlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	[Fact]
 	public async Task Guess_WithoutAccessToken_AllowsAnonymousGuess()
 	{
-		var (puzzleId, targetName, clearImage, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
+		var (puzzleId, targetName, clearImage, _, _, _) = await SeedPuzzleAsync($"Target_{Guid.NewGuid():N}");
 
 		var request = new LogodleGuessRequestDto
 		{

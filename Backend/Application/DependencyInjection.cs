@@ -113,6 +113,11 @@ public static class DependencyInjection
 
         // LogodlePlayer Services
         services.AddScoped<ILogodlePlayerService, LogodlePlayerService>();
+
+        // Mythdle Services
+        services.AddScoped<Application.Services.Interfaces.IMythdleTargetService, Application.Services.Implementations.MythdleTarget.MythdleTargetService>();
+        services.AddScoped<IMythdlePlayerService, MythdlePlayerService>();
+        
         return services;
     }
 }

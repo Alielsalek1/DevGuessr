@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevGuessr.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260414193501_Mythdle")]
+    partial class Mythdle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,40 +120,6 @@ namespace DevGuessr.Infrastructure.Migrations
                         .HasDatabaseName("ix_daily_logodles_puzzle_date");
 
                     b.ToTable("daily_logodles", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.DailyMythdle.DailyMythdle", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("MythdleTargetName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("mythdle_target_name");
-
-                    b.Property<DateOnly>("PuzzleDate")
-                        .HasColumnType("date")
-                        .HasColumnName("puzzle_date");
-
-                    b.PrimitiveCollection<List<string>>("TargetNames")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("target_names");
-
-                    b.HasKey("Id")
-                        .HasName("pk_daily_mythdles");
-
-                    b.HasIndex("MythdleTargetName")
-                        .HasDatabaseName("ix_daily_mythdles_mythdle_target_name");
-
-                    b.HasIndex("PuzzleDate")
-                        .HasDatabaseName("ix_daily_mythdles_puzzle_date");
-
-                    b.ToTable("daily_mythdles", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Langdle.Langdle", b =>
@@ -272,9 +241,6 @@ namespace DevGuessr.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_mythdle_targets");
-
-                    b.HasAlternateKey("Name")
-                        .HasName("ak_mythdle_targets_name");
 
                     b.HasIndex("Name")
                         .IsUnique()
@@ -418,19 +384,6 @@ namespace DevGuessr.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_daily_logodles_logodle_targets_logodle_target_name");
-
-                    b.Navigation("Target");
-                });
-
-            modelBuilder.Entity("Domain.Models.DailyMythdle.DailyMythdle", b =>
-                {
-                    b.HasOne("Domain.Models.MythdleTarget.MythdleTarget", "Target")
-                        .WithMany()
-                        .HasForeignKey("MythdleTargetName")
-                        .HasPrincipalKey("Name")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_daily_mythdles_mythdle_targets_mythdle_target_name");
 
                     b.Navigation("Target");
                 });

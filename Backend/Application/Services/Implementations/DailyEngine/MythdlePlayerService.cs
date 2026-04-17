@@ -1,0 +1,148 @@
+using Application.Constants.Errors;
+using Application.Constants.Successes;
+using Application.DTOs.MythdlePlayer;
+using Application.DTOs.MythdleTarget;
+using Application.Repositories.Interfaces;
+using Application.Services.Interfaces;
+using Application.Utils;
+using Domain.Models.DailyMythdle;
+using Domain.Shared;
+using MythdleTargetModel = Domain.Models.MythdleTarget.MythdleTarget;
+
+namespace Application.Services.Implementations;
+
+public class MythdlePlayerService(
+    IMythdleGameRepository mythdleGameRepository,
+    IMythdleTargetRepository mythdleTargetRepository) : IMythdlePlayerService
+{
+    private readonly IMythdleGameRepository _mythdleGameRepository = mythdleGameRepository;
+    private readonly IMythdleTargetRepository _mythdleTargetRepository = mythdleTargetRepository;
+
+    public async Task<Result<SuccessApiResponse<MythdleGameDto>>> GetGameByDateAsync(DateOnly puzzleDate, CancellationToken cancellationToken)
+    {
+        var puzzle = await _mythdleGameRepository.GetByDateAsync(puzzleDate, cancellationToken);
+        if (puzzle is null)
+        {
+            return Result<SuccessApiResponse<MythdleGameDto>>.Failure(MythdlePlayerErrors.GameNotFoundForDate);
+        }
+
+        var targets = await GetTargetsByNamesAsync(puzzle.TargetNames, cancellationToken);
+
+        return MythdlePlayerSuccesses.GameFetched(new MythdleGameDto
+        {
+            PuzzleId = puzzle.Id,
+            PuzzleDate = puzzle.PuzzleDate,
+            Targets = targets
+        });
+    }
+
+    public async Task<Result<SuccessApiResponse<MythdleGuessResultDto>>> EvaluateGuessAsync(MythdleGuessRequestDto request, CancellationToken cancellationToken)
+    {
+        var puzzle = await _mythdleGameRepository.GetByIdAsync(request.PuzzleId, cancellationToken);
+        if (puzzle is null)
+        {
+            return Result<SuccessApiResponse<MythdleGuessResultDto>>.Failure(MythdlePlayerErrors.InvalidPuzzleId);
+        }
+
+        var targetName = puzzle.Target.Name;
+        var isCorrect = string.Equals(request.GuessedTargetName?.Trim(), targetName, StringComparison.OrdinalIgnoreCase);
+
+        return MythdlePlayerSuccesses.GuessEvaluated(new MythdleGuessResultDto
+        {
+            IsCorrect = isCorrect,
+            TargetName = isCorrect ? targetName : null
+        });
+    }
+
+    public async Task<Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>> CreateGamesAsync(CancellationToken cancellationToken)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var latestPuzzleDate = await _mythdleGameRepository.GetLatestPuzzleDateAsync(cancellationToken);
+        var startPuzzleDate = latestPuzzleDate.HasValue && latestPuzzleDate.Value >= today
+            ? latestPuzzleDate.Value.AddDays(1)
+            : today;
+
+        var allTargets = await _mythdleTargetRepository.GetAllAsync(cancellationToken);
+        var actualTargets = allTargets.Where(target => !target.IsFake).ToList();
+        var mythTargets = allTargets.Where(target => target.IsFake).ToList();
+
+        if (actualTargets.Count < 4 || mythTargets.Count == 0)
+        {
+            return Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>.Failure(AdminMythdleErrors.NoTargetsFound);
+        }
+
+        Shuffle(actualTargets);
+        Shuffle(mythTargets);
+
+        var gameCount = Math.Min(mythTargets.Count, actualTargets.Count / 4);
+        if (gameCount == 0)
+        {
+            return Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>.Failure(AdminMythdleErrors.NoTargetsFound);
+        }
+
+        var puzzles = new List<DailyMythdle>(gameCount);
+        var responseItems = new List<CreateMythdleGameResponseDto>(gameCount);
+
+        for (var index = 0; index < gameCount; index++)
+        {
+            var puzzleDate = startPuzzleDate.AddDays(index);
+            var mythTarget = mythTargets[index];
+            var actualSet = actualTargets.Skip(index * 4).Take(4).ToList();
+            var selectedTargets = actualSet
+                .Concat([mythTarget])
+                .ToList();
+
+            Shuffle(selectedTargets);
+
+            var puzzle = new DailyMythdle(puzzleDate, mythTarget.Name, selectedTargets.Select(target => target.Name).ToList());
+            puzzles.Add(puzzle);
+
+            responseItems.Add(new CreateMythdleGameResponseDto
+            {
+                PuzzleId = puzzle.Id,
+                PuzzleDate = puzzleDate,
+                Targets = selectedTargets.Select(MapTargetDto).ToList()
+            });
+        }
+
+        var created = await _mythdleGameRepository.TryAddRangeAsync(puzzles, cancellationToken);
+        if (!created)
+        {
+            return Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>.Failure(AdminMythdleErrors.PuzzleAlreadyExists);
+        }
+
+        return AdminMythdleSuccesses.PuzzlesGenerated(new CreateMythdleGamesResponseDto
+        {
+            Items = responseItems
+        });
+    }
+
+    private static void Shuffle<T>(IList<T> items)
+    {
+        for (var index = items.Count - 1; index > 0; index--)
+        {
+            var swapIndex = Random.Shared.Next(index + 1);
+            (items[index], items[swapIndex]) = (items[swapIndex], items[index]);
+        }
+    }
+
+    private async Task<List<MythdleTargetDto>> GetTargetsByNamesAsync(IEnumerable<string> targetNames, CancellationToken cancellationToken)
+    {
+        var targetOrder = targetNames.ToList();
+        var allTargets = await _mythdleTargetRepository.GetAllAsync(cancellationToken);
+        var targetsByName = allTargets.ToDictionary(target => target.Name, StringComparer.OrdinalIgnoreCase);
+
+        return targetOrder
+            .Where(targetName => targetsByName.ContainsKey(targetName))
+            .Select(targetName => MapTargetDto(targetsByName[targetName]))
+            .ToList();
+    }
+
+    private static MythdleTargetDto MapTargetDto(MythdleTargetModel target) => new()
+    {
+        Name = target.Name,
+        Category = target.Category,
+        IsFake = target.IsFake,
+        Description = target.Description
+    };
+}

@@ -70,6 +70,8 @@ public class FileStorageService(IOptions<FileStorageOptions> options) : IFileSto
         using var matte = new Image<Rgba32>(original.Width, original.Height, LogodleMatteColor.ToPixel<Rgba32>());
         matte.Mutate(ctx => ctx.DrawImage(original, 1f));
 
+        var maxSafeSigma = Math.Max(0.01f, Math.Min(matte.Width, matte.Height) / 8f);
+
         var blurredImageUrls = new List<string>(BlurSigmas.Length);
 
         for (var i = 0; i < BlurSigmas.Length; i++)
@@ -77,7 +79,8 @@ public class FileStorageService(IOptions<FileStorageOptions> options) : IFileSto
             var blurredFileName = $"blur_{i + 1}{ext}";
             var blurredDisk = Path.Combine(folder, blurredFileName);
 
-            using var blurred = matte.Clone(ctx => ctx.GaussianBlur(BlurSigmas[i]));
+            var sigma = Math.Min(BlurSigmas[i], maxSafeSigma);
+            using var blurred = matte.Clone(ctx => ctx.GaussianBlur(sigma));
 
             var pixelScale = PixelationScales[i];
             if (pixelScale < 1f)

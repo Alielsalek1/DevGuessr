@@ -60,6 +60,8 @@ public static class DependencyInjection
         services.AddScoped<IClusterdleRepository, ClusterdleRepository>();
         services.AddScoped<ILangdleGameRepository, LangdleGameRepository>();
         services.AddScoped<ILogodleGameRepository, LogodleGameRepository>();
+        services.AddScoped<IMythdleGameRepository, MythdleGameRepository>();
+        services.AddScoped<IMythdleTargetRepository, MythdleTargetRepository>();
         return services;
     }
 

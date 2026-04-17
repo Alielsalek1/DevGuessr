@@ -145,6 +145,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddActionFilters(this IServiceCollection services)
     {
+        services.AddTransient<ValidationFilter>();
         services.AddTransient<IdempotencyFilter>();
         return services;
     }

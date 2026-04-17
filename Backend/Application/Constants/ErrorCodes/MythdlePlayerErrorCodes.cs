@@ -1,0 +1,8 @@
+namespace Application.Constants.ApiErrors;
+
+public static class MythdlePlayerErrorCodes
+{
+    public const string PuzzleNotGenerated = "ERR_MYTHDLE_PUZZLE_NOT_GENERATED";
+    public const string InvalidPuzzleId = "ERR_MYTHDLE_INVALID_PUZZLE_ID";
+    public const string GameNotFoundForDate = "ERR_MYTHDLE_PUZZLE_NOT_FOUND_FOR_DATE";
+}
