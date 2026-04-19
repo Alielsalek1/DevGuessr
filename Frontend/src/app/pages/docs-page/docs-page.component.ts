@@ -20,12 +20,12 @@ import { Component } from '@angular/core';
             <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">LANGDLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
-            Identify the daily programming language. Each guess provides feedback through illuminated cells for Paradigm, Typing, and Release Year.
+            Identify the daily programming language. Each guess provides feedback through illuminated cells for Year, Type Checking, Memory, Scope Syntax, Semicolons, and Tags.
           </p>
           <ul class="space-y-3 font-mono text-[10px] tracking-wider text-white/50">
-            <li class="flex items-center gap-2"><span class="h-1 w-1 bg-green-500 rounded-full"></span> GREEN: MATCH FOUND</li>
-            <li class="flex items-center gap-2"><span class="h-1 w-1 bg-yellow-500 rounded-full"></span> YELLOW: PARTIAL MATCH (E.G. BOTH STATIC)</li>
-            <li class="flex items-center gap-2"><span class="h-1 w-1 bg-blue-500 rounded-full"></span> BLUE: NO RELATIONSHIP</li>
+            <li class="flex items-center gap-2"><span class="h-1 w-1 bg-emerald-500 rounded-full"></span> GREEN: EXACT MATCH</li>
+            <li class="flex items-center gap-2"><span class="h-1 w-1 bg-amber-500 rounded-full"></span> AMBER: PARTIAL MATCH (TAGS)</li>
+            <li class="flex items-center gap-2"><span class="h-1 w-1 bg-rose-500 rounded-full"></span> RED: MISMATCH / HIGHER-LOWER</li>
           </ul>
         </div>
 
@@ -36,7 +36,7 @@ import { Component } from '@angular/core';
             <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">LOGODLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
-            Identify the brand or service from a pixelated visual fragment. The logo gains resolution with every failed attempt.
+            Identify the brand or service from a pixelated visual fragment. The logo gains resolution with every failed attempt. Guess correctly within 6 attempts.
           </p>
           <div class="mt-4 p-4 rounded bg-white/5 font-mono text-[9px] uppercase tracking-widest text-white/40">
             Attempts remaining: <span class="text-white">6 / 6</span><br>
@@ -47,17 +47,15 @@ import { Component } from '@angular/core';
         <!-- Module 03 -->
         <div class="space-y-6">
           <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-cyan-500">extension</span>
-            <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">TECHNECTIONS</h2>
+            <span class="material-symbols-outlined text-cyan-500">auto_awesome</span>
+            <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">MYTHDLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
-            Assemble 16 items into 4 thematic clusters by selecting 4 related cells. Connect all categories without exhausting your limited error buffer.
+            Find the fabricated legend. One card is fake, five are real. You have exactly two attempts to identify the myth among the truths.
           </p>
           <div class="mt-4 flex gap-1">
-            <span class="h-4 w-4 bg-cyan-500/20 border border-cyan-500/40 rounded-sm"></span>
-            <span class="h-4 w-4 bg-cyan-500/20 border border-cyan-500/40 rounded-sm"></span>
-            <span class="h-4 w-4 bg-cyan-500/20 border border-cyan-500/40 rounded-sm"></span>
-            <span class="h-4 w-4 bg-cyan-500/20 border border-cyan-500/40 rounded-sm"></span>
+            <span class="h-1 w-8 bg-[var(--color-primary)] rounded-full"></span>
+            <span class="h-1 w-8 bg-[var(--color-layer-2)] rounded-full"></span>
           </div>
         </div>
       </div>

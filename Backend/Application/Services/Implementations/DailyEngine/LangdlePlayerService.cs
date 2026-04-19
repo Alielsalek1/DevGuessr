@@ -44,10 +44,10 @@ public class LangdlePlayerService(
         return await EvaluateInternalAsync(request.GuessedLanguageName,
             target.Id, 
             target.YearFirstAppeared, 
-            target.TypingDiscipline, 
-            target.TypeStrength, 
-            target.ExecutionModel,
-            target.MemoryManagement,
+            target.TypeChecking,
+            target.Memory,
+            target.ScopeSyntax,
+            target.Semicolons,
             target.Tags, 
             cancellationToken);
     }
@@ -112,10 +112,10 @@ public class LangdlePlayerService(
         string guessedLanguageName,
         Guid targetId,
         int targetYear,
-        TypingDiscipline targetTyping,
-        TypeStrength targetStrength,
-        ExecutionModel targetExecutionModel,
-        MemoryManagement targetMemoryManagement,
+        TypeChecking targetTypeChecking,
+        Memory targetMemory,
+        ScopeSyntax targetScopeSyntax,
+        Semicolons targetSemicolons,
         List<string> targetTags,
         CancellationToken cancellationToken)
     {
@@ -141,36 +141,36 @@ public class LangdlePlayerService(
             Status = yearStatus
         });
 
-        // 2. TypingDiscipline
+        // 2. TypeChecking
         result.AttributeFeedback.Add(new AttributeFeedback
         {
-            AttributeName = "TypingDiscipline",
-            GuessedValue = guessed.TypingDiscipline.ToString(),
-            Status = targetTyping == guessed.TypingDiscipline ? MatchStatus.Match : MatchStatus.Miss
+            AttributeName = "TypeChecking",
+            GuessedValue = guessed.TypeChecking.ToString(),
+            Status = targetTypeChecking == guessed.TypeChecking ? MatchStatus.Match : MatchStatus.Miss
         });
 
-        // 3. TypeStrength
+        // 3. Memory
         result.AttributeFeedback.Add(new AttributeFeedback
         {
-            AttributeName = "TypeStrength",
-            GuessedValue = guessed.TypeStrength.ToString(),
-            Status = targetStrength == guessed.TypeStrength ? MatchStatus.Match : MatchStatus.Miss
+            AttributeName = "Memory",
+            GuessedValue = guessed.Memory.ToString(),
+            Status = targetMemory == guessed.Memory ? MatchStatus.Match : MatchStatus.Miss
         });
 
-        // 4. ExecutionModel
+        // 4. ScopeSyntax
         result.AttributeFeedback.Add(new AttributeFeedback
         {
-            AttributeName = "ExecutionModel",
-            GuessedValue = guessed.ExecutionModel.ToString(),
-            Status = targetExecutionModel == guessed.ExecutionModel ? MatchStatus.Match : MatchStatus.Miss
+            AttributeName = "ScopeSyntax",
+            GuessedValue = guessed.ScopeSyntax.ToString(),
+            Status = targetScopeSyntax == guessed.ScopeSyntax ? MatchStatus.Match : MatchStatus.Miss
         });
 
-        // 5. MemoryManagement
+        // 5. Semicolons
         result.AttributeFeedback.Add(new AttributeFeedback
         {
-            AttributeName = "MemoryManagement",
-            GuessedValue = guessed.MemoryManagement.ToString(),
-            Status = targetMemoryManagement == guessed.MemoryManagement ? MatchStatus.Match : MatchStatus.Miss
+            AttributeName = "Semicolons",
+            GuessedValue = guessed.Semicolons.ToString(),
+            Status = targetSemicolons == guessed.Semicolons ? MatchStatus.Match : MatchStatus.Miss
         });
 
         // 6. Tags

@@ -38,34 +38,45 @@ export class LangdleApiService {
   }
 
   private normalizeGuessResult(result: LangdleGuessResultDto): LangdleGuessResultDto {
-    const normalizedFeedback: AttributeFeedback[] = [];
-
-    for (const feedback of result.attributeFeedback) {
-      if (feedback.attributeName === 'TypingType') {
-        const parts = feedback.guessedValue.split(',').map((part) => part.trim()).filter(Boolean);
-
-        normalizedFeedback.push({
-          attributeName: 'TypingDiscipline',
-          guessedValue: parts[0] || feedback.guessedValue,
-          status: feedback.status
-        });
-
-        normalizedFeedback.push({
-          attributeName: 'TypeStrength',
-          guessedValue: parts[1] || feedback.guessedValue,
-          status: feedback.status
-        });
-
-        continue;
-      }
-
-      normalizedFeedback.push(feedback);
-    }
+    const normalizedFeedback: AttributeFeedback[] = result.attributeFeedback.map((feedback) => ({
+      ...feedback,
+      attributeName: this.normalizeAttributeName(feedback.attributeName)
+    }));
 
     return {
       ...result,
       attributeFeedback: normalizedFeedback
     };
+  }
+
+  private normalizeAttributeName(attributeName: string): string {
+    const normalized = attributeName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+    if (['releaseyear', 'yearfirstappeared', 'year'].includes(normalized)) {
+      return 'ReleaseYear';
+    }
+
+    if (['typechecking', 'typingdiscipline', 'typingtype'].includes(normalized)) {
+      return 'TypeChecking';
+    }
+
+    if (['memory', 'memorymanagement'].includes(normalized)) {
+      return 'Memory';
+    }
+
+    if (['scopesyntax', 'scope'].includes(normalized)) {
+      return 'ScopeSyntax';
+    }
+
+    if (['semicolons', 'semicolon'].includes(normalized)) {
+      return 'Semicolons';
+    }
+
+    if (['tags', 'tag', 'paradigm', 'paradigms'].includes(normalized)) {
+      return 'Tags';
+    }
+
+    return attributeName;
   }
 
   private normalizeError(error: unknown): LangdleApiError {

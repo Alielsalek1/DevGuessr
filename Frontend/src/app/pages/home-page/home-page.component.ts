@@ -49,8 +49,8 @@ export class HomePageComponent implements OnInit {
       title: 'Langdle',
       route: '/langdle',
       tag: 'Module_01 // Definition',
-      description: 'Decode the daily technical term from a cryptic clue and build the chain of evidence.',
-      accent: '#FF7CF5'
+      description: 'Identify the language. Get feedback on year, typing, and syntax with every guess.',
+      accent: '#D078FF'
     },
     {
       title: 'Logodle',
@@ -60,11 +60,11 @@ export class HomePageComponent implements OnInit {
       accent: '#D078FF'
     },
     {
-      title: 'Clusterdle',
-      route: '/clusterdle',
-      tag: 'Module_03 // Logic',
-      description: 'Group technologies into hidden sets and prove the structure behind the noise.',
-      accent: '#00FFFF'
+      title: 'Mythdle',
+      route: '/mythdle',
+      tag: 'Module_03 // Lore',
+      description: 'Select the hidden myth from a curated set of legendary names before your attempts run out.',
+      accent: '#FF7CF5'
     }
   ];
 
@@ -73,7 +73,7 @@ export class HomePageComponent implements OnInit {
     const completionChecks = [
       this.isLangdleSolved(today),
       this.readBooleanState(`logodle:state:${today}`, 'solved'),
-      this.readBooleanState(`clusterdle:state:${today}`, 'solved')
+      this.readBooleanState(`mythdle:state:${today}`, 'solved')
     ];
 
     return completionChecks.filter(Boolean).length;
@@ -96,8 +96,8 @@ export class HomePageComponent implements OnInit {
         return this.readBooleanState(`langdle:state:${today}`, 'solved');
       case '/logodle':
         return this.readBooleanState(`logodle:state:${today}`, 'solved');
-      case '/clusterdle':
-        return this.readBooleanState(`clusterdle:state:${today}`, 'solved');
+      case '/mythdle':
+        return this.readBooleanState(`mythdle:state:${today}`, 'solved');
       default:
         return false;
     }

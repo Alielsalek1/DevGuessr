@@ -63,18 +63,29 @@ public class MythdlePlayerService(
             : today;
 
         var allTargets = await _mythdleTargetRepository.GetAllAsync(cancellationToken);
-        var actualTargets = allTargets.Where(target => !target.IsFake).ToList();
+        var easyTargets = allTargets.Where(target => target.Difficulty == Domain.Enums.MythdleDifficulty.Easy && !target.IsFake).ToList();
+        var mediumTargets = allTargets.Where(target => target.Difficulty == Domain.Enums.MythdleDifficulty.Medium && !target.IsFake).ToList();
+        var hardTargets = allTargets.Where(target => target.Difficulty == Domain.Enums.MythdleDifficulty.Hard && !target.IsFake).ToList();
         var mythTargets = allTargets.Where(target => target.IsFake).ToList();
 
-        if (actualTargets.Count < 4 || mythTargets.Count == 0)
+        if (easyTargets.Count < 2 || mediumTargets.Count < 2 || hardTargets.Count < 1 || mythTargets.Count < 1)
         {
             return Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>.Failure(AdminMythdleErrors.NoTargetsFound);
         }
 
-        Shuffle(actualTargets);
+        Shuffle(easyTargets);
+        Shuffle(mediumTargets);
+        Shuffle(hardTargets);
         Shuffle(mythTargets);
 
-        var gameCount = Math.Min(mythTargets.Count, actualTargets.Count / 4);
+        // Calculate potential games based on available pool
+        var gameCount = new[] {
+            easyTargets.Count / 2,
+            mediumTargets.Count / 2,
+            hardTargets.Count / 1,
+            mythTargets.Count / 1,
+        }.Min();
+
         if (gameCount == 0)
         {
             return Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>.Failure(AdminMythdleErrors.NoTargetsFound);
@@ -87,8 +98,13 @@ public class MythdlePlayerService(
         {
             var puzzleDate = startPuzzleDate.AddDays(index);
             var mythTarget = mythTargets[index];
-            var actualSet = actualTargets.Skip(index * 4).Take(4).ToList();
-            var selectedTargets = actualSet
+            
+            var selectedActuals = easyTargets.Skip(index * 2).Take(2)
+                .Concat(mediumTargets.Skip(index * 2).Take(2))
+                .Concat(hardTargets.Skip(index * 1).Take(1))
+                .ToList();
+
+            var selectedTargets = selectedActuals
                 .Concat([mythTarget])
                 .ToList();
 
@@ -143,6 +159,7 @@ public class MythdlePlayerService(
         Name = target.Name,
         Category = target.Category,
         IsFake = target.IsFake,
-        Description = target.Description
+        Description = target.Description,
+        Difficulty = target.Difficulty
     };
 }

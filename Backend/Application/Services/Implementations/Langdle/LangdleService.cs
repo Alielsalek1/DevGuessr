@@ -104,10 +104,10 @@ public class LangdleService(
         {
             Name = request.Name,
             YearFirstAppeared = request.YearFirstAppeared,
-            TypingDiscipline = Enum.Parse<TypingDiscipline>(request.TypingDiscipline, true),
-            TypeStrength = Enum.Parse<TypeStrength>(request.TypeStrength, true),
-            ExecutionModel = Enum.Parse<ExecutionModel>(request.ExecutionModel, true),
-            MemoryManagement = Enum.Parse<MemoryManagement>(request.MemoryManagement, true),
+            TypeChecking = Enum.Parse<TypeChecking>(request.TypeChecking, true),
+            Memory = Enum.Parse<Memory>(request.Memory, true),
+            ScopeSyntax = Enum.Parse<ScopeSyntax>(request.ScopeSyntax, true),
+            Semicolons = Enum.Parse<Semicolons>(request.Semicolons, true),
             Tags = request.Tags
         });
 
@@ -141,10 +141,10 @@ public class LangdleService(
         language.Update(
             request.Name,
             request.YearFirstAppeared,
-            request.TypingDiscipline != null ? Enum.Parse<TypingDiscipline>(request.TypingDiscipline, true) : null,
-            request.TypeStrength != null ? Enum.Parse<TypeStrength>(request.TypeStrength, true) : null,
-            request.ExecutionModel != null ? Enum.Parse<ExecutionModel>(request.ExecutionModel, true) : null,
-            request.MemoryManagement != null ? Enum.Parse<MemoryManagement>(request.MemoryManagement, true) : null
+            request.TypeChecking != null ? Enum.Parse<TypeChecking>(request.TypeChecking, true) : null,
+            request.Memory != null ? Enum.Parse<Memory>(request.Memory, true) : null,
+            request.ScopeSyntax != null ? Enum.Parse<ScopeSyntax>(request.ScopeSyntax, true) : null,
+            request.Semicolons != null ? Enum.Parse<Semicolons>(request.Semicolons, true) : null
         );
 
         await _repository.UpdateAsync(language, ct);
@@ -167,17 +167,17 @@ public class LangdleService(
     }
 
     private static GetLangdleByNameResponseDto MapToGetByNameDto(Domain.Models.Langdle.Langdle language) =>
-        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypingDiscipline = language.TypingDiscipline.ToString(), TypeStrength = language.TypeStrength.ToString(), ExecutionModel = language.ExecutionModel.ToString(), MemoryManagement = language.MemoryManagement.ToString(), Tags = language.Tags };
+        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypeChecking = language.TypeChecking.ToString(), Memory = language.Memory.ToString(), ScopeSyntax = language.ScopeSyntax.ToString(), Semicolons = language.Semicolons.ToString(), Tags = language.Tags };
 
     private static CreateLangdleResponseDto MapToCreateDto(Domain.Models.Langdle.Langdle language) =>
-        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypingDiscipline = language.TypingDiscipline.ToString(), TypeStrength = language.TypeStrength.ToString(), ExecutionModel = language.ExecutionModel.ToString(), MemoryManagement = language.MemoryManagement.ToString(), Tags = language.Tags };
+        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypeChecking = language.TypeChecking.ToString(), Memory = language.Memory.ToString(), ScopeSyntax = language.ScopeSyntax.ToString(), Semicolons = language.Semicolons.ToString(), Tags = language.Tags };
 
     private static UpdateLangdleByNameResponseDto MapToUpdateDto(Domain.Models.Langdle.Langdle language) =>
-        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypingDiscipline = language.TypingDiscipline.ToString(), TypeStrength = language.TypeStrength.ToString(), ExecutionModel = language.ExecutionModel.ToString(), MemoryManagement = language.MemoryManagement.ToString(), Tags = language.Tags };
+        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypeChecking = language.TypeChecking.ToString(), Memory = language.Memory.ToString(), ScopeSyntax = language.ScopeSyntax.ToString(), Semicolons = language.Semicolons.ToString(), Tags = language.Tags };
 
     private static AddLangdleTagByNameResponseDto MapToAddTagDto(Domain.Models.Langdle.Langdle language) =>
-        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypingDiscipline = language.TypingDiscipline.ToString(), TypeStrength = language.TypeStrength.ToString(), ExecutionModel = language.ExecutionModel.ToString(), MemoryManagement = language.MemoryManagement.ToString(), Tags = language.Tags };
+        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypeChecking = language.TypeChecking.ToString(), Memory = language.Memory.ToString(), ScopeSyntax = language.ScopeSyntax.ToString(), Semicolons = language.Semicolons.ToString(), Tags = language.Tags };
 
     private static RemoveLangdleTagByNameResponseDto MapToRemoveTagDto(Domain.Models.Langdle.Langdle language) =>
-        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypingDiscipline = language.TypingDiscipline.ToString(), TypeStrength = language.TypeStrength.ToString(), ExecutionModel = language.ExecutionModel.ToString(), MemoryManagement = language.MemoryManagement.ToString(), Tags = language.Tags };
+        new() { Id = language.Id, Name = language.Name, YearFirstAppeared = language.YearFirstAppeared, TypeChecking = language.TypeChecking.ToString(), Memory = language.Memory.ToString(), ScopeSyntax = language.ScopeSyntax.ToString(), Semicolons = language.Semicolons.ToString(), Tags = language.Tags };
 }

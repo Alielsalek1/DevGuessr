@@ -4,8 +4,8 @@ public record UpdateLangdleByNameRequestDto
 {
     public string? Name { get; init; }
     public int? YearFirstAppeared { get; init; }
-    public string? TypingDiscipline { get; init; }
-    public string? TypeStrength { get; init; }
-    public string? ExecutionModel { get; init; }
-    public string? MemoryManagement { get; init; }
+    public string? TypeChecking { get; init; }
+    public string? Memory { get; init; }
+    public string? ScopeSyntax { get; init; }
+    public string? Semicolons { get; init; }
 }

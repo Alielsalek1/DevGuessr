@@ -5,9 +5,7 @@ import { GuessHistoryEntry } from '../../models/langdle-ui.models';
 import { AttributeFeedback, MatchStatus } from '../../models/langdle-api.models';
 import {
   DisplayColumnKey,
-  LANGDLE_DISPLAY_COLUMNS,
-  LANGDLE_LANGUAGE_META,
-  LanguageModelMeta
+  LANGDLE_DISPLAY_COLUMNS
 } from '../../data/langdle.constants';
 
 @Component({
@@ -33,47 +31,46 @@ export class LangdleGuessGridComponent {
   }
 
   protected cellForColumn(entry: GuessHistoryEntry, column: DisplayColumnKey): { value: string; status: MatchStatus | null } {
-    const meta = this.metadataForGuess(entry.guess);
     const yearFeedback = this.findFeedback(entry, ['yearfirstappeared', 'releaseyear', 'year', 'release', 'firstappeared']);
-    const typingDisciplineFeedback = this.findFeedback(entry, ['typingdiscipline']);
-    const typeStrengthFeedback = this.findFeedback(entry, ['typestrength']);
-    const executionFeedback = this.findFeedback(entry, ['executionmodel', 'execution', 'runtime', 'compiledorinterpreted']);
-    const memoryFeedback = this.findFeedback(entry, ['memorymanagement', 'memory', 'garbagecollection', 'gc']);
+    const typeCheckingFeedback = this.findFeedback(entry, ['typechecking', 'typingdiscipline', 'typingtype']);
+    const memoryFeedback = this.findFeedback(entry, ['memory', 'memorymanagement', 'garbagecollection', 'gc']);
+    const scopeSyntaxFeedback = this.findFeedback(entry, ['scopesyntax', 'scope', 'syntax']);
+    const semicolonsFeedback = this.findFeedback(entry, ['semicolons', 'semicolon']);
     const tagsFeedback = this.findFeedback(entry, ['tags', 'tag', 'paradigm', 'paradigms']);
 
     if (column === 'Year') {
-      return { value: yearFeedback?.guessedValue || meta?.year || 'n/a', status: yearFeedback?.status || null };
+      return { value: yearFeedback?.guessedValue || 'n/a', status: yearFeedback?.status || null };
     }
 
-    if (column === 'Discipline') {
+    if (column === 'TypeChecking') {
       return {
-        value: typingDisciplineFeedback?.guessedValue || meta?.discipline || 'n/a',
-        status: typingDisciplineFeedback?.status || null
+        value: typeCheckingFeedback?.guessedValue || 'n/a',
+        status: typeCheckingFeedback?.status || null
       };
     }
 
-    if (column === 'Strength') {
+    if (column === 'Memory') {
       return {
-        value: typeStrengthFeedback?.guessedValue || meta?.strength || 'n/a',
-        status: typeStrengthFeedback?.status || null
-      };
-    }
-
-    if (column === 'ExecutionModel') {
-      return {
-        value: executionFeedback?.guessedValue || meta?.executionModel || 'n/a',
-        status: executionFeedback?.status || null
-      };
-    }
-
-    if (column === 'MemoryManagement') {
-      return {
-        value: memoryFeedback?.guessedValue || meta?.memoryManagement || 'n/a',
+        value: memoryFeedback?.guessedValue || 'n/a',
         status: memoryFeedback?.status || null
       };
     }
 
-    return { value: tagsFeedback?.guessedValue || meta?.tags || 'n/a', status: tagsFeedback?.status || null };
+    if (column === 'ScopeSyntax') {
+      return {
+        value: scopeSyntaxFeedback?.guessedValue || 'n/a',
+        status: scopeSyntaxFeedback?.status || null
+      };
+    }
+
+    if (column === 'Semicolons') {
+      return {
+        value: semicolonsFeedback?.guessedValue || 'n/a',
+        status: semicolonsFeedback?.status || null
+      };
+    }
+
+    return { value: tagsFeedback?.guessedValue || 'n/a', status: tagsFeedback?.status || null };
   }
 
   protected cellClass(status: MatchStatus | null, column: DisplayColumnKey): string {
@@ -126,10 +123,5 @@ export class LangdleGuessGridComponent {
         return aliases.some((alias) => feedbackName.includes(alias));
       }) || null
     );
-  }
-
-  private metadataForGuess(guess: string): LanguageModelMeta | null {
-    const normalized = guess.trim().toLowerCase();
-    return LANGDLE_LANGUAGE_META[normalized] || null;
   }
 }

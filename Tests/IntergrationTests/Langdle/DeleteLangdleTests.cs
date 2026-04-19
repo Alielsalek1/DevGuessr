@@ -32,10 +32,10 @@ public class DeleteLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "DeleteTargetLang",
             YearFirstAppeared = 1995,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["DeleteTag"]
         };
 

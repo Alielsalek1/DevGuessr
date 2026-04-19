@@ -15,7 +15,6 @@ export interface PersistedLangdleState {
 
 export interface VictoryStats {
   attempts: number;
-  wrongGuesses: number;
   elapsedLabel: string;
   puzzleDate: string;
   language: string;

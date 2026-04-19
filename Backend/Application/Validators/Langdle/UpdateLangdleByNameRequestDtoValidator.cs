@@ -17,24 +17,24 @@ public class UpdateLangdleByNameRequestDtoValidator : AbstractValidator<UpdateLa
             .LessThanOrEqualTo(DateTime.UtcNow.Year).WithMessage("Year must not be in the future.")
             .When(x => x.YearFirstAppeared is not null);
 
-        RuleFor(x => x.TypingDiscipline)
-            .Must(v => Enum.TryParse<TypingDiscipline>(v, true, out _))
-            .WithMessage("Typing discipline must be one of: Static, Dynamic.")
-            .When(x => x.TypingDiscipline is not null);
+        RuleFor(x => x.TypeChecking)
+            .Must(v => Enum.TryParse<TypeChecking>(v, true, out _))
+            .WithMessage("Type checking must be one of: STATIC, DYNAMIC, GRADUAL.")
+            .When(x => x.TypeChecking is not null);
 
-        RuleFor(x => x.TypeStrength)
-            .Must(v => Enum.TryParse<TypeStrength>(v, true, out _))
-            .WithMessage("Type strength must be one of: Strong, Weak.")
-            .When(x => x.TypeStrength is not null);
+        RuleFor(x => x.Memory)
+            .Must(v => Enum.TryParse<Memory>(v, true, out _))
+            .WithMessage("Memory must be one of: GC, MANUAL, OWNERSHIP, REFERENCE_COUNTED.")
+            .When(x => x.Memory is not null);
 
-        RuleFor(x => x.ExecutionModel)
-            .Must(v => Enum.TryParse<ExecutionModel>(v, true, out _))
-            .WithMessage("Execution model must be one of: Compiled, Interpreted, BytecodeJIT.")
-            .When(x => x.ExecutionModel is not null);
+        RuleFor(x => x.ScopeSyntax)
+            .Must(v => Enum.TryParse<ScopeSyntax>(v, true, out _))
+            .WithMessage("Scope syntax must be one of: BRACES, INDENTATION, KEYWORDS, MIXED.")
+            .When(x => x.ScopeSyntax is not null);
 
-        RuleFor(x => x.MemoryManagement)
-            .Must(v => Enum.TryParse<MemoryManagement>(v, true, out _))
-            .WithMessage("Memory management must be one of: GarbageCollected, Manual, OwnershipBorrowing, ARC.")
-            .When(x => x.MemoryManagement is not null);
+        RuleFor(x => x.Semicolons)
+            .Must(v => Enum.TryParse<Semicolons>(v, true, out _))
+            .WithMessage("Semicolons must be one of: REQUIRED, OPTIONAL, NONE.")
+            .When(x => x.Semicolons is not null);
     }
 }

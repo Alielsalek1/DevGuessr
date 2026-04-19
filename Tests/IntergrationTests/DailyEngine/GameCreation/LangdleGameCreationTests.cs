@@ -25,18 +25,18 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
 {
     private static LangdleModel CreateLanguage(
         int year,
-        TypingDiscipline typing,
-        TypeStrength strength,
+        TypeChecking typeChecking,
+        Memory memory,
         List<string> tags)
     {
         return new LangdleModel(new LangdleCreationParams
         {
             Name = $"Lang_{Guid.NewGuid():N}",
             YearFirstAppeared = year,
-            TypingDiscipline = typing,
-            TypeStrength = strength,
-            ExecutionModel = ExecutionModel.Compiled,
-            MemoryManagement = MemoryManagement.Manual,
+            TypeChecking = typeChecking,
+            Memory = memory,
+            ScopeSyntax = ScopeSyntax.BRACES,
+            Semicolons = Semicolons.REQUIRED,
             Tags = tags
         });
     }
@@ -100,8 +100,8 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     public async Task CreateGames_AdminWithLanguages_Returns201CreatedWithBatchData()
     {
         var adminClient = await GetAdminClientAsync();
-        var lang1 = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]);
-        var lang2 = CreateLanguage(1995, TypingDiscipline.Dynamic, TypeStrength.Weak, ["scripting"]);
+        var lang1 = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]);
+        var lang2 = CreateLanguage(1995, TypeChecking.DYNAMIC, Memory.GC, ["scripting"]);
         await SeedLanguagesAsync(lang1, lang2);
 
         var response = await adminClient.PostAsync("/api/v1/langdle/games", null);
@@ -122,7 +122,7 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     public async Task CreateGames_NonAdminUser_Returns403Forbidden()
     {
         var userClient = await GetUserClientAsync();
-        var language = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]);
+        var language = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]);
         await SeedLanguagesAsync(language);
 
         var response = await userClient.PostAsync("/api/v1/langdle/games", null);
@@ -133,7 +133,7 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     [Fact]
     public async Task CreateGames_AnonymousUser_Returns401Unauthorized()
     {
-        var language = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]);
+        var language = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]);
         await SeedLanguagesAsync(language);
 
         var response = await Client.PostAsync("/api/v1/langdle/games", null);
@@ -147,9 +147,9 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
         var adminClient = await GetAdminClientAsync();
         var languages = new[]
         {
-            CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]),
-            CreateLanguage(2001, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]),
-            CreateLanguage(2002, TypingDiscipline.Static, TypeStrength.Strong, ["systems"])
+            CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]),
+            CreateLanguage(2001, TypeChecking.STATIC, Memory.MANUAL, ["systems"]),
+            CreateLanguage(2002, TypeChecking.STATIC, Memory.MANUAL, ["systems"])
         };
         await SeedLanguagesAsync(languages);
 
@@ -173,8 +173,8 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     public async Task CreateGames_WithFutureLatestPuzzle_StartsFromLatestPlusOne()
     {
         var adminClient = await GetAdminClientAsync();
-        var lang1 = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]);
-        var lang2 = CreateLanguage(2001, TypingDiscipline.Dynamic, TypeStrength.Strong, ["systems"]);
+        var lang1 = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]);
+        var lang2 = CreateLanguage(2001, TypeChecking.DYNAMIC, Memory.GC, ["systems"]);
         await SeedLanguagesAsync(lang1, lang2);
 
         var futureLatest = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(10);
@@ -208,8 +208,8 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     [Fact]
     public async Task CreateGames_DuplicateDateConcurrentRequest_ReturnsCreatedOrConflict()
     {
-        var lang1 = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]);
-        var lang2 = CreateLanguage(2001, TypingDiscipline.Dynamic, TypeStrength.Strong, ["systems"]);
+        var lang1 = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]);
+        var lang2 = CreateLanguage(2001, TypeChecking.DYNAMIC, Memory.GC, ["systems"]);
         await SeedLanguagesAsync(lang1, lang2);
 
         var clients = new List<HttpClient>();
@@ -237,10 +237,10 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
         var adminClient = await GetAdminClientAsync();
         var languages = new[]
         {
-            CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]),
-            CreateLanguage(2001, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]),
-            CreateLanguage(2002, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]),
-            CreateLanguage(2003, TypingDiscipline.Static, TypeStrength.Strong, ["systems"])
+            CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]),
+            CreateLanguage(2001, TypeChecking.STATIC, Memory.MANUAL, ["systems"]),
+            CreateLanguage(2002, TypeChecking.STATIC, Memory.MANUAL, ["systems"]),
+            CreateLanguage(2003, TypeChecking.STATIC, Memory.MANUAL, ["systems"])
         };
         await SeedLanguagesAsync(languages);
 
@@ -265,8 +265,8 @@ public class LangdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     public async Task CreateGames_WithPastLatestPuzzle_StillStartsAtToday()
     {
         var adminClient = await GetAdminClientAsync();
-        var lang1 = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["systems"]);
-        var lang2 = CreateLanguage(2001, TypingDiscipline.Dynamic, TypeStrength.Strong, ["systems"]);
+        var lang1 = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["systems"]);
+        var lang2 = CreateLanguage(2001, TypeChecking.DYNAMIC, Memory.GC, ["systems"]);
         await SeedLanguagesAsync(lang1, lang2);
 
         var pastLatest = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-5);

@@ -12,9 +12,6 @@
     <h1 class="mt-2 text-5xl font-black tracking-tighter uppercase leading-none text-white font-headline sm:text-6xl md:text-7xl">
       Lang<span class="italic text-[var(--color-primary)]">dle</span>
     </h1>
-    <p class="mt-4 max-w-lg border-l-2 border-white/15 pl-4 font-mono text-xs leading-6 text-[var(--color-muted)] sm:text-sm sm:leading-7">
-      Probe the language. Each guess returns <span class="text-rose-300">year</span>, <span class="text-emerald-300">typing</span>, and <span class="text-sky-300">tags</span> signals in red, green, and yellow boxes.
-    </p>
   </div>
 
   @if (loadingGame) {
@@ -60,8 +57,4 @@
 
     <app-langdle-guess-grid [history]="history"></app-langdle-guess-grid>
   }
-
-  <a routerLink="/" class="inline-flex font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-primary)]">
-    Back to hub
-  </a>
 </section>

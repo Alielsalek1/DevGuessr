@@ -160,13 +160,9 @@ namespace DevGuessr.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<int>("ExecutionModel")
+                    b.Property<int>("Memory")
                         .HasColumnType("integer")
-                        .HasColumnName("execution_model");
-
-                    b.Property<int>("MemoryManagement")
-                        .HasColumnType("integer")
-                        .HasColumnName("memory_management");
+                        .HasColumnName("memory");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -174,18 +170,22 @@ namespace DevGuessr.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
+                    b.Property<int>("ScopeSyntax")
+                        .HasColumnType("integer")
+                        .HasColumnName("scope_syntax");
+
+                    b.Property<int>("Semicolons")
+                        .HasColumnType("integer")
+                        .HasColumnName("semicolons");
+
                     b.PrimitiveCollection<List<string>>("Tags")
                         .IsRequired()
                         .HasColumnType("jsonb")
                         .HasColumnName("tags");
 
-                    b.Property<int>("TypeStrength")
+                    b.Property<int>("TypeChecking")
                         .HasColumnType("integer")
-                        .HasColumnName("type_strength");
-
-                    b.Property<int>("TypingDiscipline")
-                        .HasColumnType("integer")
-                        .HasColumnName("typing_discipline");
+                        .HasColumnName("type_checking");
 
                     b.Property<int>("YearFirstAppeared")
                         .HasColumnType("integer")
@@ -259,6 +259,10 @@ namespace DevGuessr.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("description");
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("integer")
+                        .HasColumnName("difficulty");
 
                     b.Property<bool>("IsFake")
                         .HasColumnType("boolean")

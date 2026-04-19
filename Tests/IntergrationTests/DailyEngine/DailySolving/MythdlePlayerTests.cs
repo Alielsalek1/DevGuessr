@@ -27,7 +27,8 @@ public class MythdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
             Name = name,
             Category = "Creature",
             IsFake = isFake,
-            Description = $"Description for {name}"
+            Description = $"Description for {name}",
+            Difficulty = MythdleDifficulty.Easy
         });
     }
 

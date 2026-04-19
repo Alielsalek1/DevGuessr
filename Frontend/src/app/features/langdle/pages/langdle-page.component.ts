@@ -286,7 +286,6 @@ export class LangdlePageComponent implements OnInit {
 
     this.victoryStats = {
       attempts: this.history.length,
-      wrongGuesses: Math.max(0, this.history.length - 1),
       elapsedLabel,
       puzzleDate: this.puzzle.puzzleDate,
       language: finalGuess

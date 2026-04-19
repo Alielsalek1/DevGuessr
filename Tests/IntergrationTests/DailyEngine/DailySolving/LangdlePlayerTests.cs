@@ -23,18 +23,18 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 {
 	private static LangdleModel CreateLanguage(
 		int year,
-		TypingDiscipline typing,
-		TypeStrength strength,
+		TypeChecking typeChecking,
+		Memory memory,
 		List<string> tags)
 	{
 		return new LangdleModel(new LangdleCreationParams
 		{
 			Name = $"Lang_{Guid.NewGuid():N}",
 			YearFirstAppeared = year,
-			TypingDiscipline = typing,
-			TypeStrength = strength,
-			ExecutionModel = ExecutionModel.Compiled,
-			MemoryManagement = MemoryManagement.Manual,
+			TypeChecking = typeChecking,
+			Memory = memory,
+			ScopeSyntax = ScopeSyntax.BRACES,
+			Semicolons = Semicolons.REQUIRED,
 			Tags = tags
 		});
 	}
@@ -84,10 +84,10 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		{
 			Name = $"TargetLang_{Guid.NewGuid():N}",
 			YearFirstAppeared = 1991,
-			TypingDiscipline = TypingDiscipline.Static,
-			TypeStrength = TypeStrength.Strong,
-			ExecutionModel = ExecutionModel.Compiled,
-			MemoryManagement = MemoryManagement.Manual,
+			TypeChecking = TypeChecking.STATIC,
+			Memory = Memory.MANUAL,
+			ScopeSyntax = ScopeSyntax.BRACES,
+			Semicolons = Semicolons.REQUIRED,
 			Tags = ["systems", "performance"]
 		});
 
@@ -95,10 +95,10 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		{
 			Name = $"GuessLang_{Guid.NewGuid():N}",
 			YearFirstAppeared = 1995,
-			TypingDiscipline = TypingDiscipline.Static,
-			TypeStrength = TypeStrength.Weak,
-			ExecutionModel = ExecutionModel.Interpreted,
-			MemoryManagement = MemoryManagement.GarbageCollected,
+			TypeChecking = TypeChecking.STATIC,
+			Memory = Memory.GC,
+			ScopeSyntax = ScopeSyntax.KEYWORDS,
+			Semicolons = Semicolons.OPTIONAL,
 			Tags = ["scripting", "performance"]
 		});
 
@@ -133,10 +133,10 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		Assert.False(content.Data.IsCorrect);
  		Assert.Equal(6, content.Data.AttributeFeedback.Count);
 		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "ReleaseYear");
-		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "TypingDiscipline");
-		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "TypeStrength");
-		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "ExecutionModel");
-		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "MemoryManagement");
+		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "TypeChecking");
+		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "Memory");
+		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "ScopeSyntax");
+		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "Semicolons");
 		Assert.Contains(content.Data.AttributeFeedback, x => x.AttributeName == "Tags");
 	}
 
@@ -288,9 +288,9 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_ReleaseYearFeedback_CoversHigherLowerAndMatch()
 	{
 		var client = await GetAuthenticatedClientAsync("LangdleYearStatusUser");
-		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a", "b"]);
-		var lowerGuess = CreateLanguage(1990, TypingDiscipline.Static, TypeStrength.Strong, ["a", "b"]);
-		var higherGuess = CreateLanguage(2010, TypingDiscipline.Static, TypeStrength.Strong, ["a", "b"]);
+		var target = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["a", "b"]);
+		var lowerGuess = CreateLanguage(1990, TypeChecking.STATIC, Memory.MANUAL, ["a", "b"]);
+		var higherGuess = CreateLanguage(2010, TypeChecking.STATIC, Memory.MANUAL, ["a", "b"]);
 
 		var puzzleId = await SeedPuzzleAsync(target, null, lowerGuess, higherGuess);
 
@@ -321,12 +321,12 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	}
 
 	[Fact]
-	public async Task Guess_TypingDisciplineFeedback_CoversMatchAndMiss()
+	public async Task Guess_TypeCheckingFeedback_CoversMatchAndMiss()
 	{
-		var client = await GetAuthenticatedClientAsync("LangdleTypingDisciplineUser");
-		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a"]);
-		var matchingGuess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Weak, ["a"]);
-		var missGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Weak, ["a"]);
+		var client = await GetAuthenticatedClientAsync("LangdleTypeCheckingUser");
+		var target = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["a"]);
+		var matchingGuess = CreateLanguage(2000, TypeChecking.STATIC, Memory.GC, ["a"]);
+		var missGuess = CreateLanguage(2000, TypeChecking.DYNAMIC, Memory.GC, ["a"]);
 
 		var puzzleId = await SeedPuzzleAsync(target, null, matchingGuess, missGuess);
 
@@ -351,18 +351,18 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 		Assert.NotNull(matchContent);
 		Assert.NotNull(missContent);
 		Assert.NotNull(greenContent);
-		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "TypingDiscipline"));
-		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "TypingDiscipline"));
-		Assert.Equal(MatchStatus.Match, GetStatus(greenContent!, "TypingDiscipline"));
+		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "TypeChecking"));
+		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "TypeChecking"));
+		Assert.Equal(MatchStatus.Match, GetStatus(greenContent!, "TypeChecking"));
 	}
 
 	[Fact]
-	public async Task Guess_TypeStrengthFeedback_CoversMatchAndMiss()
+	public async Task Guess_MemoryFeedback_CoversMatchAndMiss()
 	{
-		var client = await GetAuthenticatedClientAsync("LangdleTypeStrengthUser");
-		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a"]);
-		var matchingGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Strong, ["a"]);
-		var missGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Weak, ["a"]);
+		var client = await GetAuthenticatedClientAsync("LangdleMemoryUser");
+		var target = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["a"]);
+		var matchingGuess = CreateLanguage(2000, TypeChecking.DYNAMIC, Memory.MANUAL, ["a"]);
+		var missGuess = CreateLanguage(2000, TypeChecking.DYNAMIC, Memory.GC, ["a"]);
 
 		var puzzleId = await SeedPuzzleAsync(target, null, matchingGuess, missGuess);
 
@@ -380,20 +380,20 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 
 		Assert.NotNull(matchContent);
 		Assert.NotNull(missContent);
-		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "TypeStrength"));
-		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "TypeStrength"));
+		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "Memory"));
+		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "Memory"));
 	}
 
 	[Fact]
-	public async Task Guess_ExecutionModelFeedback_CoversMatchAndMiss()
+	public async Task Guess_ScopeSyntaxFeedback_CoversMatchAndMiss()
 	{
-		var client = await GetAuthenticatedClientAsync("LangdleExecutionModelUser");
-		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a"]);
-		var matchingGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Weak, ["a"]);
-		var missGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Weak, ["a"]);
+		var client = await GetAuthenticatedClientAsync("LangdleScopeSyntaxUser");
+		var target = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["a"]);
+		var matchingGuess = CreateLanguage(2000, TypeChecking.DYNAMIC, Memory.GC, ["a"]);
+		var missGuess = CreateLanguage(2000, TypeChecking.DYNAMIC, Memory.GC, ["a"]);
 
-		matchingGuess.Update(executionModel: ExecutionModel.Compiled);
-		missGuess.Update(executionModel: ExecutionModel.Interpreted);
+		matchingGuess.Update(scopeSyntax: ScopeSyntax.BRACES);
+		missGuess.Update(scopeSyntax: ScopeSyntax.KEYWORDS);
 
 		var puzzleId = await SeedPuzzleAsync(target, null, matchingGuess, missGuess);
 
@@ -411,20 +411,20 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 
 		Assert.NotNull(matchContent);
 		Assert.NotNull(missContent);
-		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "ExecutionModel"));
-		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "ExecutionModel"));
+		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "ScopeSyntax"));
+		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "ScopeSyntax"));
 	}
 
 	[Fact]
-	public async Task Guess_MemoryManagementFeedback_CoversMatchAndMiss()
+	public async Task Guess_SemicolonsFeedback_CoversMatchAndMiss()
 	{
-		var client = await GetAuthenticatedClientAsync("LangdleMemoryManagementUser");
-		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a"]);
-		var matchingGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Weak, ["a"]);
-		var missGuess = CreateLanguage(2000, TypingDiscipline.Dynamic, TypeStrength.Weak, ["a"]);
+		var client = await GetAuthenticatedClientAsync("LangdleSemicolonsUser");
+		var target = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["a"]);
+		var matchingGuess = CreateLanguage(2000, TypeChecking.DYNAMIC, Memory.GC, ["a"]);
+		var missGuess = CreateLanguage(2000, TypeChecking.DYNAMIC, Memory.GC, ["a"]);
 
-		matchingGuess.Update(memoryManagement: MemoryManagement.Manual);
-		missGuess.Update(memoryManagement: MemoryManagement.GarbageCollected);
+		matchingGuess.Update(semicolons: Semicolons.REQUIRED);
+		missGuess.Update(semicolons: Semicolons.OPTIONAL);
 
 		var puzzleId = await SeedPuzzleAsync(target, null, matchingGuess, missGuess);
 
@@ -442,17 +442,17 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 
 		Assert.NotNull(matchContent);
 		Assert.NotNull(missContent);
-		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "MemoryManagement"));
-		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "MemoryManagement"));
+		Assert.Equal(MatchStatus.Match, GetStatus(matchContent!, "Semicolons"));
+		Assert.Equal(MatchStatus.Miss, GetStatus(missContent!, "Semicolons"));
 	}
 
 	[Fact]
 	public async Task Guess_TagsFeedback_CoversGreenYellowAndMiss()
 	{
 		var client = await GetAuthenticatedClientAsync("LangdleTagsStatusUser");
-		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a", "b"]);
-		var partialGuess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["a", "c"]);
-		var missGuess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, ["x", "y"]);
+		var target = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["a", "b"]);
+		var partialGuess = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["a", "c"]);
+		var missGuess = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, ["x", "y"]);
 
 		var puzzleId = await SeedPuzzleAsync(target, null, partialGuess, missGuess);
 
@@ -486,8 +486,8 @@ public class LangdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
 	public async Task Guess_TagsFeedback_WhenBothTagListsEmpty_ReturnsMatch()
 	{
 		var client = await GetAuthenticatedClientAsync("LangdleEmptyTagsUser");
-		var target = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, []);
-		var guess = CreateLanguage(2000, TypingDiscipline.Static, TypeStrength.Strong, []);
+		var target = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, []);
+		var guess = CreateLanguage(2000, TypeChecking.STATIC, Memory.MANUAL, []);
 
 		var puzzleId = await SeedPuzzleAsync(target, null, guess);
 

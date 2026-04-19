@@ -32,10 +32,10 @@ public class CreateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "ValidLang",
             YearFirstAppeared = 2025,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["System", "Fast"]
         };
 
@@ -55,10 +55,10 @@ public class CreateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "DuplicateLang",
             YearFirstAppeared = 2025,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["DuplicateTest"]
         };
 
@@ -78,10 +78,10 @@ public class CreateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "", // Invalid
             YearFirstAppeared = -10, // Invalid
-            TypingDiscipline = "InvalidEnum",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "InvalidEnum",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = []
         };
 

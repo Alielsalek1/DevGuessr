@@ -16,25 +16,25 @@ public class CreateLangdleRequestDtoValidator : AbstractValidator<CreateLangdleR
             .GreaterThan(1940).WithMessage("Year must be greater than 1940.")
             .LessThanOrEqualTo(DateTime.UtcNow.Year).WithMessage("Year must not be in the future.");
 
-        RuleFor(x => x.TypingDiscipline)
-            .NotEmpty().WithMessage("Typing discipline is required.")
-            .Must(v => Enum.TryParse<TypingDiscipline>(v, true, out _))
-            .WithMessage("Typing discipline must be one of: Static, Dynamic.");
+        RuleFor(x => x.TypeChecking)
+            .NotEmpty().WithMessage("Type checking is required.")
+            .Must(v => Enum.TryParse<TypeChecking>(v, true, out _))
+            .WithMessage("Type checking must be one of: STATIC, DYNAMIC, GRADUAL.");
 
-        RuleFor(x => x.TypeStrength)
-            .NotEmpty().WithMessage("Type strength is required.")
-            .Must(v => Enum.TryParse<TypeStrength>(v, true, out _))
-            .WithMessage("Type strength must be one of: Strong, Weak.");
+        RuleFor(x => x.Memory)
+            .NotEmpty().WithMessage("Memory is required.")
+            .Must(v => Enum.TryParse<Memory>(v, true, out _))
+            .WithMessage("Memory must be one of: GC, MANUAL, OWNERSHIP, REFERENCE_COUNTED.");
 
-        RuleFor(x => x.ExecutionModel)
-            .NotEmpty().WithMessage("Execution model is required.")
-            .Must(v => Enum.TryParse<ExecutionModel>(v, true, out _))
-            .WithMessage("Execution model must be one of: Compiled, Interpreted, BytecodeJIT.");
+        RuleFor(x => x.ScopeSyntax)
+            .NotEmpty().WithMessage("Scope syntax is required.")
+            .Must(v => Enum.TryParse<ScopeSyntax>(v, true, out _))
+            .WithMessage("Scope syntax must be one of: BRACES, INDENTATION, KEYWORDS, MIXED.");
 
-        RuleFor(x => x.MemoryManagement)
-            .NotEmpty().WithMessage("Memory management is required.")
-            .Must(v => Enum.TryParse<MemoryManagement>(v, true, out _))
-            .WithMessage("Memory management must be one of: GarbageCollected, Manual, OwnershipBorrowing, ARC.");
+        RuleFor(x => x.Semicolons)
+            .NotEmpty().WithMessage("Semicolons is required.")
+            .Must(v => Enum.TryParse<Semicolons>(v, true, out _))
+            .WithMessage("Semicolons must be one of: REQUIRED, OPTIONAL, NONE.");
 
         RuleFor(x => x.Tags)
             .NotNull().WithMessage("Tags are required.")

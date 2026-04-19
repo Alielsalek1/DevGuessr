@@ -8,10 +8,10 @@ public class Langdle
     public Guid Id { get; private set; } = Guid.NewGuid();
     public string Name { get; private set; } = null!;
     public int YearFirstAppeared { get; private set; }
-    public TypingDiscipline TypingDiscipline { get; private set; }
-    public TypeStrength TypeStrength { get; private set; }
-    public ExecutionModel ExecutionModel { get; private set; }
-    public MemoryManagement MemoryManagement { get; private set; }
+    public TypeChecking TypeChecking { get; private set; }
+    public Memory Memory { get; private set; }
+    public ScopeSyntax ScopeSyntax { get; private set; }
+    public Semicolons Semicolons { get; private set; }
     public List<string> Tags { get; private set; } = [];
 
     // Parameterless constructor for EF Core
@@ -28,20 +28,20 @@ public class Langdle
 
         Name = creationParams.Name;
         YearFirstAppeared = creationParams.YearFirstAppeared;
-        TypingDiscipline = creationParams.TypingDiscipline;
-        TypeStrength = creationParams.TypeStrength;
-        ExecutionModel = creationParams.ExecutionModel;
-        MemoryManagement = creationParams.MemoryManagement;
+        TypeChecking = creationParams.TypeChecking;
+        Memory = creationParams.Memory;
+        ScopeSyntax = creationParams.ScopeSyntax;
+        Semicolons = creationParams.Semicolons;
         Tags = creationParams.Tags;
     }
 
     public void Update(
         string? name = null,
         int? yearFirstAppeared = null,
-        TypingDiscipline? typingDiscipline = null,
-        TypeStrength? typeStrength = null,
-        ExecutionModel? executionModel = null,
-        MemoryManagement? memoryManagement = null)
+        TypeChecking? typeChecking = null,
+        Memory? memory = null,
+        ScopeSyntax? scopeSyntax = null,
+        Semicolons? semicolons = null)
     {
         if (name is not null)
         {
@@ -55,24 +55,24 @@ public class Langdle
             YearFirstAppeared = yearFirstAppeared.Value;
         }
 
-        if (typingDiscipline is not null)
+        if (typeChecking is not null)
         {
-            TypingDiscipline = typingDiscipline.Value;
+            TypeChecking = typeChecking.Value;
         }
 
-        if (typeStrength is not null)
+        if (memory is not null)
         {
-            TypeStrength = typeStrength.Value;
+            Memory = memory.Value;
         }
 
-        if (executionModel is not null)
+        if (scopeSyntax is not null)
         {
-            ExecutionModel = executionModel.Value;
+            ScopeSyntax = scopeSyntax.Value;
         }
 
-        if (memoryManagement is not null)
+        if (semicolons is not null)
         {
-            MemoryManagement = memoryManagement.Value;
+            Semicolons = semicolons.Value;
         }
     }
 

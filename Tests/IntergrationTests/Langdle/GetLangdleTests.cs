@@ -32,10 +32,10 @@ public class GetLangdleTests(CustomWebApplicationFactory factory) : BaseIntegrat
         {
             Name = "ExistingLang",
             YearFirstAppeared = 2020,
-            TypingDiscipline = "Dynamic",
-            TypeStrength = "Weak",
-            ExecutionModel = "Interpreted",
-            MemoryManagement = "GarbageCollected",
+            TypeChecking = "DYNAMIC",
+            Memory = "GC",
+            ScopeSyntax = "BRACES",
+            Semicolons = "OPTIONAL",
             Tags = ["Scripting"]
         };
 
@@ -71,10 +71,10 @@ public class GetLangdleTests(CustomWebApplicationFactory factory) : BaseIntegrat
             {
                 Name = $"PagedLang{i}",
                 YearFirstAppeared = 2000,
-                TypingDiscipline = "Static",
-                TypeStrength = "Strong",
-                ExecutionModel = "Compiled",
-                MemoryManagement = "Manual",
+                TypeChecking = "STATIC",
+                Memory = "MANUAL",
+                ScopeSyntax = "BRACES",
+                Semicolons = "REQUIRED",
                 Tags = ["PagedTag"]
             });
         }

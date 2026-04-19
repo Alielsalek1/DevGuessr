@@ -32,10 +32,10 @@ public class LangdleTagTests(CustomWebApplicationFactory factory) : BaseIntegrat
         {
             Name = "TagLang",
             YearFirstAppeared = 2010,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["InitialTag"]
         };
 
@@ -71,10 +71,10 @@ public class LangdleTagTests(CustomWebApplicationFactory factory) : BaseIntegrat
         {
             Name = "RemTagLang",
             YearFirstAppeared = 2010,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["TagToRemove", "TagToKeep"]
         };
 
@@ -109,10 +109,10 @@ public class LangdleTagTests(CustomWebApplicationFactory factory) : BaseIntegrat
         {
             Name = "DupTagLang",
             YearFirstAppeared = 2010,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["ExistingTag"]
         };
 
@@ -137,10 +137,10 @@ public class LangdleTagTests(CustomWebApplicationFactory factory) : BaseIntegrat
         {
             Name = "RemMissTagLang",
             YearFirstAppeared = 2010,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["ExistingTag"]
         };
 

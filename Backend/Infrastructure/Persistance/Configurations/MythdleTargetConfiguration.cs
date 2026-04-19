@@ -22,6 +22,9 @@ public class MythdleTargetConfiguration : IEntityTypeConfiguration<MythdleTarget
             .HasMaxLength(500)
             .IsRequired();
 
+        builder.Property(m => m.Difficulty)
+            .IsRequired();
+
         builder
             .HasIndex(m => m.Name)
             .IsUnique();

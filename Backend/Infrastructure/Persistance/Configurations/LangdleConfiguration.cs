@@ -25,19 +25,19 @@ public class LangdleConfiguration : IEntityTypeConfiguration<LangdleModel>
             .IsRequired();
 
         builder
-            .Property(pl => pl.TypingDiscipline)
+            .Property(pl => pl.TypeChecking)
             .IsRequired();
 
         builder
-            .Property(pl => pl.TypeStrength)
+            .Property(pl => pl.Memory)
             .IsRequired();
 
         builder
-            .Property(pl => pl.ExecutionModel)
+            .Property(pl => pl.ScopeSyntax)
             .IsRequired();
 
         builder
-            .Property(pl => pl.MemoryManagement)
+            .Property(pl => pl.Semicolons)
             .IsRequired();
 
         builder

@@ -32,10 +32,10 @@ public class UpdateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "UpdatableLang",
             YearFirstAppeared = 2000,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["UpdateTag"]
         };
 
@@ -47,10 +47,10 @@ public class UpdateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "UpdatedLangName",
             YearFirstAppeared = 2005,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual"
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED"
         };
 
         var (response, content, _) = await LangdleTestHelpers.UpdateAsync<SuccessApiResponse<UpdateLangdleByNameResponseDto>>(client, name, updateRequest);
@@ -70,10 +70,10 @@ public class UpdateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "RandomLangName",
             YearFirstAppeared = 2005,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual"
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED"
         };
 
         var (response, _, _) = await LangdleTestHelpers.UpdateAsync<FailApiResponse>(client, "NonExistentLang", updateRequest);
@@ -89,20 +89,20 @@ public class UpdateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "FirstLang",
             YearFirstAppeared = 2000,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["UpdateTag1"]
         };
         var createRequest2 = new CreateLangdleRequestDto
         {
             Name = "SecondLang",
             YearFirstAppeared = 2000,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual",
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED",
             Tags = ["UpdateTag2"]
         };
 
@@ -116,10 +116,10 @@ public class UpdateLangdleTests(CustomWebApplicationFactory factory) : BaseInteg
         {
             Name = "FirstLang", // Already taken
             YearFirstAppeared = 2000,
-            TypingDiscipline = "Static",
-            TypeStrength = "Strong",
-            ExecutionModel = "Compiled",
-            MemoryManagement = "Manual"
+            TypeChecking = "STATIC",
+            Memory = "MANUAL",
+            ScopeSyntax = "BRACES",
+            Semicolons = "REQUIRED"
         };
 
         var (response, _, _) = await LangdleTestHelpers.UpdateAsync<FailApiResponse>(client, nameToUpdate, updateRequest);

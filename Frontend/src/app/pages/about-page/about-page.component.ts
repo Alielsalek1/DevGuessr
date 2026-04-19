@@ -23,34 +23,21 @@ import { Component } from '@angular/core';
           
           <div class="space-y-4 pt-4 border-t border-white/10">
             <div>
-              <h3 class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-system)] mb-1">MODULE_01 // GUESS BY LANGUAGE</h3>
-              <p class="text-sm text-white/60">Identify a secret programming language. Each guess provides feedback on paradigm, typing structure, and release chronology. Attributes glow green for a match, yellow for partial logic, and blue for a miss.</p>
+              <h3 class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-system)] mb-1">MODULE_01 // LANGDLE</h3>
+              <p class="text-sm text-white/60">Identify a secret programming language. Each guess provides feedback on year, typing, memory management, and syntax. Attributes glow green for a match and red for a mismatch.</p>
             </div>
             <div>
-              <h3 class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-system)] mb-1">MODULE_02 // GUESS BY LOGO</h3>
-              <p class="text-sm text-white/60">Identify a tech brand from its abstracted logo. The visual data starts maximally blurred and gains resolution with each incorrect attempt. You have a limited number of guesses before the system locks.</p>
+              <h3 class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-system)] mb-1">MODULE_02 // LOGODLE</h3>
+              <p class="text-sm text-white/60">Identify a tech brand from its abstracted logo. The visual data starts maximally pixelated and gains resolution with each incorrect attempt.</p>
             </div>
             <div>
-              <h3 class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-system)] mb-1">MODULE_03 // CONNECTIONS</h3>
-              <p class="text-sm text-white/60">Find groups of four items that share a common tech-related link. 16 cells, 4 categories—decode the structure behind the noise.</p>
+              <h3 class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-system)] mb-1">MODULE_03 // MYTHDLE</h3>
+              <p class="text-sm text-white/60">One fabrication lies among five truths. Discard the myth to secure the signal. You have two attempts.</p>
             </div>
           </div>
         </div>
 
         <div class="space-y-8">
-          <div class="rounded-xl border border-white/5 bg-white/[0.02] p-8 backdrop-blur-sm">
-            <h2 class="mb-4 font-headline text-2xl font-bold uppercase tracking-wide text-white">CONTRIBUTE</h2>
-            <p class="font-mono text-xs text-white/50 mb-6">
-              SYSTEM_OPEN_SOURCE // GIT_REPOSITORY_ACTIVE
-            </p>
-            <p class="text-sm text-white/70 mb-6">
-              DevGuessr is an open-source project. If you're interested in the technical stack, the underlying engine, or want to contribute new puzzles, check out our repository.
-            </p>
-            <a href="https://github.com/Alielsalek1/devguessr" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded bg-white/5 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-white transition-colors hover:bg-white/10">
-              <span class="material-symbols-outlined text-sm">terminal</span>
-              Access Repository
-            </a>
-          </div>
         </div>
       </div>
     </section>

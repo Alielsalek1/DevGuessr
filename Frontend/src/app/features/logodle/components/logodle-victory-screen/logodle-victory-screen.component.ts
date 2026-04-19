@@ -88,10 +88,10 @@ import { VictoryParticle, VictoryStats } from '../../models/logodle-ui.models';
                 Close
               </button>
               <a
-                routerLink="/langdle"
+                routerLink="/mythdle"
                 class="rounded-full border border-[var(--color-primary)]/70 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-secondary)] to-[var(--color-system)] px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[#120a19] transition-all hover:brightness-110"
               >
-                Next game
+                Next game: mythdle
               </a>
             </div>
           </div>

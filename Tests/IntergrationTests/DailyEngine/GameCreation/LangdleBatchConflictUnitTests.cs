@@ -18,10 +18,10 @@ public class LangdleBatchConflictUnitTests
         {
             Name = name,
             YearFirstAppeared = 2000,
-            TypingDiscipline = TypingDiscipline.Static,
-            TypeStrength = TypeStrength.Strong,
-            ExecutionModel = ExecutionModel.Compiled,
-            MemoryManagement = MemoryManagement.Manual,
+            TypeChecking = TypeChecking.STATIC,
+            Memory = Memory.MANUAL,
+            ScopeSyntax = ScopeSyntax.BRACES,
+            Semicolons = Semicolons.REQUIRED,
             Tags = ["systems"]
         });
     }

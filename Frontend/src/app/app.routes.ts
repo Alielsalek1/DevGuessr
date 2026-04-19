@@ -18,14 +18,12 @@ export const routes: Routes = [
 			import('./features/logodle/pages/logodle-page.component').then((m) => m.LogodlePageComponent)
 	},
 	{
-		path: 'clusterdle',
+		path: 'mythdle',
 		loadComponent: () =>
-			import('./features/clusterdle/pages/clusterdle-page.component').then(
-				(m) => m.ClusterdlePageComponent
-			)
+			import('./features/mythdle/pages/mythdle-page.component').then((m) => m.MythdlePageComponent)
 	},
 	{
-		path: 'archive',
+		path: 'past-drops',
 		loadComponent: () =>
 			import('./pages/archive-page/archive-page.component').then((m) => m.ArchivePageComponent)
 	},

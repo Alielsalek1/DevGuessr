@@ -1,4 +1,5 @@
 using Domain.Constraints.MythdleTarget;
+using Domain.Enums;
 
 namespace Domain.Models.MythdleTarget;
 
@@ -9,6 +10,7 @@ public class MythdleTarget
     public string Category { get; private set; } = null!;
     public bool IsFake { get; private set; }
     public string Description { get; private set; } = null!;
+    public MythdleDifficulty Difficulty { get; private set; }
 
     // Parameterless constructor for EF Core
     private MythdleTarget() { }
@@ -23,5 +25,6 @@ public class MythdleTarget
         Category = creationParams.Category;
         IsFake = creationParams.IsFake;
         Description = creationParams.Description;
+        Difficulty = creationParams.Difficulty;
     }
 }

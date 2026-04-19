@@ -29,7 +29,8 @@ public class MythdleTargetTests(CustomWebApplicationFactory factory) : BaseInteg
         Name = name,
         Category = "Creature",
         IsFake = isFake,
-        Description = $"Description for {name}"
+        Description = $"Description for {name}",
+        Difficulty = Domain.Enums.MythdleDifficulty.Easy
     };
 
     [Fact]

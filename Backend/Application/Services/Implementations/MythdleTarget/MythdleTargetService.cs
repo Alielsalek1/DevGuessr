@@ -29,7 +29,8 @@ public class MythdleTargetService : IMythdleTargetService
                 Name = t.Name,
                 Category = t.Category,
                 IsFake = t.IsFake,
-                Description = t.Description
+                Description = t.Description,
+                Difficulty = t.Difficulty
             })
         };
 
@@ -49,7 +50,8 @@ public class MythdleTargetService : IMythdleTargetService
             Name = request.Name,
             Category = request.Category,
             IsFake = request.IsFake,
-            Description = request.Description
+            Description = request.Description,
+            Difficulty = request.Difficulty
         };
 
         var target = new Domain.Models.MythdleTarget.MythdleTarget(creationParams);

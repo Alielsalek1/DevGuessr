@@ -1,0 +1,113 @@
+<section class="space-y-8">
+  <app-mythdle-victory-screen
+    [victoryScreenActive]="victoryScreenActive"
+    [victoryScreenVisible]="victoryScreenVisible"
+    [victoryStats]="victoryStats"
+    [victoryParticles]="victoryParticles"
+    (closeEvent)="closeVictoryScreen()"
+  ></app-mythdle-victory-screen>
+
+  <div class="max-w-4xl">
+    <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--color-system)]">system id: mythdle-v1</p>
+    <h1 class="mt-2 text-5xl font-black leading-none tracking-tighter text-white font-headline sm:text-6xl md:text-7xl uppercase">
+      Myth<span class="italic text-[var(--color-primary)]">dle</span>
+    </h1>
+  </div>
+
+  @if (loadingGame) {
+    <div class="max-w-5xl rounded-lg border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-4 text-sm text-[var(--color-muted)]">
+      Loading today's myth puzzle...
+    </div>
+  }
+
+  @if (bannerMessage) {
+    <div class="max-w-5xl rounded-lg border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-4 text-sm text-white">
+      <p>{{ bannerMessage }}</p>
+      @if (canRetryLoading()) {
+        <button
+          type="button"
+          (click)="loadGame()"
+          class="mt-3 inline-flex rounded bg-[var(--color-primary)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-black transition-opacity hover:opacity-90"
+        >
+          Retry
+        </button>
+      }
+    </div>
+  }
+
+  @if (puzzle && !loadingGame) {
+    <div class="max-w-5xl space-y-5 rounded-lg border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-5">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted)]">Attempts</p>
+          <div class="mt-2 flex items-center gap-2">
+            @for (slot of attemptsRange(); track slot) {
+              <span
+                class="h-2 w-8 rounded-full"
+                [class]="history.length > slot ? 'bg-[var(--color-primary)] shadow-[0_0_8px_rgba(255,124,245,0.4)]' : 'bg-[var(--color-layer-2)]'"
+              ></span>
+            }
+          </div>
+        </div>
+
+        <div class="text-right">
+          @if (solved) {
+            <span class="inline-flex items-center rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-300">
+              Solved
+            </span>
+          } @else if (failed) {
+            <span class="inline-flex items-center rounded-full border border-rose-400/40 bg-rose-500/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-rose-200">
+              Failed
+            </span>
+          } @else {
+            <span class="inline-flex items-center rounded-full border border-[var(--color-system)]/40 bg-[var(--color-system)]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-system)]">
+              {{ attemptsLeft() }} left
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        @for (target of puzzle.targets; track target.name) {
+          <button
+            type="button"
+            [disabled]="isCardDisabled(target.name)"
+            (click)="handleCardGuess(target)"
+            class="group relative min-h-[180px] overflow-hidden rounded border text-left transition-all duration-300"
+            [class]="isCardCorrect(target.name)
+              ? 'border-emerald-400/45 bg-emerald-500/10'
+              : isCardWrong(target.name)
+                ? 'border-rose-400/40 bg-rose-500/10'
+                : isCardDisabled(target.name)
+                  ? 'border-[var(--color-layer-2)] bg-[var(--color-layer-2)]/55'
+                  : 'border-[var(--color-layer-2)] bg-[linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.03))] hover:border-[var(--color-primary)]/60 hover:bg-[var(--color-layer-2)]/45 focus-visible:border-[var(--color-primary)]/70 focus-visible:outline-none'"
+          >
+            <div class="absolute inset-0 flex items-center px-4 py-4 transition-opacity duration-300 group-hover:opacity-0 group-focus-visible:opacity-0">
+              <p class="font-headline text-2xl font-bold tracking-[-0.02em] text-[var(--color-primary)]">
+                {{ target.name }}
+              </p>
+            </div>
+
+            <div class="pointer-events-none absolute inset-0 flex flex-col justify-between px-4 py-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+              <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--color-system)]">{{ target.category }}</p>
+              <p class="mt-3 flex-1 overflow-y-auto text-xs leading-5 text-[var(--color-muted)]">{{ target.description }}</p>
+            </div>
+          </button>
+        }
+      </div>
+
+      @if (feedbackMessage) {
+        <div class="rounded border border-[var(--color-layer-2)] bg-[var(--color-layer-2)]/40 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
+          {{ feedbackMessage }}
+        </div>
+      }
+
+      @if (failed) {
+        <div class="rounded border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 p-4">
+          <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--color-muted)]">Correct Target</p>
+          <p class="mt-2 text-2xl font-black tracking-tight text-[var(--color-primary)]">{{ correctTargetName() }}</p>
+        </div>
+      }
+    </div>
+  }
+</section>

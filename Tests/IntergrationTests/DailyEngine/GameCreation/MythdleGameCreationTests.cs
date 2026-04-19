@@ -21,14 +21,15 @@ namespace Tests.IntergrationTests.DailyEngine.GameCreation;
 [Collection("Integration Tests")]
 public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : BaseIntegrationTest(factory)
 {
-    private static MythdleTarget CreateTarget(string name, string category = "Creature", bool isFake = false)
+    private static MythdleTarget CreateTarget(string name, string category = "Creature", bool isFake = false, MythdleDifficulty difficulty = MythdleDifficulty.Easy)
     {
         return new MythdleTarget(new MythdleTargetCreationParams
         {
             Name = name,
             Category = category,
             IsFake = isFake,
-            Description = $"Description for {name}"
+            Description = $"Description for {name}",
+            Difficulty = difficulty
         });
     }
 
@@ -91,15 +92,20 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     public async Task CreateGames_AdminWithTargets_Returns201CreatedWithBatchData()
     {
         var adminClient = await GetAdminClientAsync();
-        var actualTargets = new[]
+        var easyTargets = new[]
         {
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}")
+            CreateTarget($"Easy_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy),
+            CreateTarget($"Easy_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy)
         };
+        var mediumTargets = new[]
+        {
+            CreateTarget($"Med_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium),
+            CreateTarget($"Med_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium)
+        };
+        var hardTarget = CreateTarget($"Hard_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard);
         var mythTarget = CreateTarget($"Myth_{Guid.NewGuid():N}", "Legend", true);
-        await SeedTargetsAsync(actualTargets.Append(mythTarget).ToArray());
+        
+        await SeedTargetsAsync(easyTargets.Concat(mediumTargets).Append(hardTarget).Append(mythTarget).ToArray());
 
         var response = await adminClient.PostAsync("/api/v1/mythdle/games", null);
         var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateMythdleGamesResponseDto>>();
@@ -111,7 +117,7 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
         Assert.Equal(1, content.Data.CreatedCount);
 
         var createdGame = content.Data.Items.Single();
-        Assert.Equal(5, createdGame.Targets.Count);
+        Assert.Equal(6, createdGame.Targets.Count);
         Assert.Equal(1, createdGame.Targets.Count(target => target.IsFake));
         Assert.Contains(createdGame.Targets, target => target.Name == mythTarget.Name && target.IsFake);
     }
@@ -153,30 +159,42 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
         Assert.Equal(AdminMythdleErrorCodes.NoTargetsFound, content.ErrorCode);
     }
 
+    private async Task SeedTargetSetAsync(int count)
+    {
+        var targets = new List<MythdleTarget>();
+        for (var i = 0; i < count; i++)
+        {
+            targets.Add(CreateTarget($"Easy_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy));
+            targets.Add(CreateTarget($"Med_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium));
+            targets.Add(CreateTarget($"Hard_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard));
+            targets.Add(CreateTarget($"Myth_{Guid.NewGuid():N}", isFake: true));
+        }
+        // For game creation we need 2 easy, 2 medium, 1 hard, 1 myth
+        // If we want 'count' games, we need count*2 easy/med, count*1 hard/myth
+        var neededTargets = new List<MythdleTarget>();
+        for (var i = 0; i < count; i++)
+        {
+            neededTargets.Add(CreateTarget($"Easy1_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy));
+            neededTargets.Add(CreateTarget($"Easy2_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy));
+            neededTargets.Add(CreateTarget($"Med1_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium));
+            neededTargets.Add(CreateTarget($"Med2_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium));
+            neededTargets.Add(CreateTarget($"Hard_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard));
+            neededTargets.Add(CreateTarget($"Myth_{i}_{Guid.NewGuid():N}", isFake: true));
+        }
+        await SeedTargetsAsync(neededTargets.ToArray());
+    }
+
     [Fact]
     public async Task CreateGames_WithFutureLatestPuzzle_StartsFromLatestPlusOne()
     {
         var adminClient = await GetAdminClientAsync();
-        var actualTargets = new[]
-        {
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}")
-        };
-        var mythTargets = new[]
-        {
-            CreateTarget($"Myth_{Guid.NewGuid():N}", "Legend", true),
-            CreateTarget($"Myth_{Guid.NewGuid():N}", "Legend", true)
-        };
-        await SeedTargetsAsync(actualTargets.Concat(mythTargets).ToArray());
+        await SeedTargetSetAsync(2);
+
+        var mythTarget = CreateTarget($"ExistingMyth_{Guid.NewGuid():N}", isFake: true);
+        await SeedTargetsAsync(mythTarget);
 
         var futureLatest = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(12);
-        await SeedPuzzleAsync(futureLatest, mythTargets[0].Name);
+        await SeedPuzzleAsync(futureLatest, mythTarget.Name);
 
         var response = await adminClient.PostAsync("/api/v1/mythdle/games", null);
         var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateMythdleGamesResponseDto>>();
@@ -193,15 +211,7 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     [Fact]
     public async Task CreateGames_DuplicateDateConcurrentRequest_ReturnsCreatedOrConflict()
     {
-        var actualTargets = new[]
-        {
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}")
-        };
-        var mythTarget = CreateTarget($"Myth_{Guid.NewGuid():N}", "Legend", true);
-        await SeedTargetsAsync(actualTargets.Append(mythTarget).ToArray());
+        await SeedTargetSetAsync(1);
 
         var clients = new List<HttpClient>();
         for (var i = 0; i < 8; i++)
@@ -226,15 +236,7 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     public async Task CreateGames_ItemsMatchDatabaseRows()
     {
         var adminClient = await GetAdminClientAsync();
-        var targets = new[]
-        {
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Tech_{Guid.NewGuid():N}"),
-            CreateTarget($"Myth_{Guid.NewGuid():N}", "Legend", true)
-        };
-        await SeedTargetsAsync(targets);
+        await SeedTargetSetAsync(1);
 
         var response = await adminClient.PostAsync("/api/v1/mythdle/games", null);
         var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateMythdleGamesResponseDto>>();
@@ -247,10 +249,9 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
         foreach (var item in content.Data.Items)
         {
             Assert.True(byId.TryGetValue(item.PuzzleId, out var puzzle));
-            Assert.Equal(5, item.Targets.Count);
+            Assert.Equal(6, item.Targets.Count);
             Assert.Equal(1, item.Targets.Count(target => target.IsFake));
-            var myth = targets.Single(t => t.Name == puzzle!.MythdleTargetName);
-            Assert.True(item.Targets.Any(target => target.Name == myth.Name && target.IsFake));
+            Assert.Contains(item.Targets, target => target.Name == puzzle!.MythdleTargetName && target.IsFake);
             Assert.Equal(item.PuzzleDate, puzzle.PuzzleDate);
         }
     }
