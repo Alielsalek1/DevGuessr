@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Xunit;
 using Tests.Common.TestContainerDependencies;
 using Tests.MailHog;
 using Application.Services.Interfaces;
+using Infrastructure.Common.Services;
 using Microsoft.AspNetCore.Builder;
 
 namespace Tests.Common;
@@ -94,6 +96,16 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
         builder.UseEnvironment("Testing");
         builder.ConfigureTestServices(services =>
         {
+            // Prevent the production migration hosted service from running in tests.
+            // The test container orchestrator handles migrations explicitly.
+            var migrationHostedServices = services
+                .Where(d => d.ServiceType == typeof(IHostedService) && d.ImplementationType == typeof(DatabaseMigrationHostedService))
+                .ToList();
+            foreach (var descriptor in migrationHostedServices)
+            {
+                services.Remove(descriptor);
+            }
+
             // Replace IGoogleAuthValidator with test implementation
             var googleAuthValidatorDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IGoogleAuthValidator));
             if (googleAuthValidatorDescriptor != null)
