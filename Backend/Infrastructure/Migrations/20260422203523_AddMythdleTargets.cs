@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace DevGuessr.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialClean : Migration
+    public partial class AddMythdleTargets : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,10 +35,10 @@ namespace DevGuessr.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     year_first_appeared = table.Column<int>(type: "integer", nullable: false),
-                    typing_discipline = table.Column<int>(type: "integer", nullable: false),
-                    type_strength = table.Column<int>(type: "integer", nullable: false),
-                    execution_model = table.Column<int>(type: "integer", nullable: false),
-                    memory_management = table.Column<int>(type: "integer", nullable: false),
+                    type_checking = table.Column<int>(type: "integer", nullable: false),
+                    memory = table.Column<int>(type: "integer", nullable: false),
+                    scope_syntax = table.Column<int>(type: "integer", nullable: false),
+                    semicolons = table.Column<int>(type: "integer", nullable: false),
                     tags = table.Column<List<string>>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
@@ -59,6 +60,35 @@ namespace DevGuessr.Infrastructure.Migrations
                 {
                     table.PrimaryKey("pk_logodle_targets", x => x.id);
                     table.UniqueConstraint("ak_logodle_targets_name", x => x.name);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "mythdle_targets",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    category = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    is_fake = table.Column<bool>(type: "boolean", nullable: false),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    difficulty = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_mythdle_targets", x => x.id);
+                    table.UniqueConstraint("ak_mythdle_targets_name", x => x.name);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "test",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_test", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,6 +144,26 @@ namespace DevGuessr.Infrastructure.Migrations
                         name: "fk_daily_logodles_logodle_targets_logodle_target_name",
                         column: x => x.logodle_target_name,
                         principalTable: "logodle_targets",
+                        principalColumn: "name",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "daily_mythdles",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    puzzle_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    mythdle_target_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    target_names = table.Column<List<string>>(type: "jsonb", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_daily_mythdles", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_daily_mythdles_mythdle_targets_mythdle_target_name",
+                        column: x => x.mythdle_target_name,
+                        principalTable: "mythdle_targets",
                         principalColumn: "name",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -184,6 +234,16 @@ namespace DevGuessr.Infrastructure.Migrations
                 column: "puzzle_date");
 
             migrationBuilder.CreateIndex(
+                name: "ix_daily_mythdles_mythdle_target_name",
+                table: "daily_mythdles",
+                column: "mythdle_target_name");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_daily_mythdles_puzzle_date",
+                table: "daily_mythdles",
+                column: "puzzle_date");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_langdle_targets_name",
                 table: "langdle_targets",
                 column: "name",
@@ -192,6 +252,12 @@ namespace DevGuessr.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "ix_logodle_targets_name",
                 table: "logodle_targets",
+                column: "name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_mythdle_targets_name",
+                table: "mythdle_targets",
                 column: "name",
                 unique: true);
 
@@ -227,6 +293,12 @@ namespace DevGuessr.Infrastructure.Migrations
                 name: "daily_logodles");
 
             migrationBuilder.DropTable(
+                name: "daily_mythdles");
+
+            migrationBuilder.DropTable(
+                name: "test");
+
+            migrationBuilder.DropTable(
                 name: "user_devices");
 
             migrationBuilder.DropTable(
@@ -237,6 +309,9 @@ namespace DevGuessr.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "logodle_targets");
+
+            migrationBuilder.DropTable(
+                name: "mythdle_targets");
 
             migrationBuilder.DropTable(
                 name: "users");

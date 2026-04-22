@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevGuessr.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260422133834_AddTestTable")]
-    partial class AddTestTable
+    [Migration("20260422203523_AddMythdleTargets")]
+    partial class AddMythdleTargets
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
