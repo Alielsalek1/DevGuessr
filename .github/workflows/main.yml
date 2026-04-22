@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Run the tests
 
 on:
   push:
