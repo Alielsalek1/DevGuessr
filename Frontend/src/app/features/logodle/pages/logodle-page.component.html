@@ -54,6 +54,7 @@
             [history]="history"
             [inputError]="inputError"
             (guessSubmitted)="handleGuessSubmitted($event)"
+            (invalidGuess)="inputError = $event"
             (errorCleared)="clearInputError()"
           ></app-logodle-guess-input>
 

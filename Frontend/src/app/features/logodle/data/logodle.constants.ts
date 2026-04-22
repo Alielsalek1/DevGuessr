@@ -28,6 +28,5 @@ export const LOGODLE_TARGETS: string[] = [
   'TensorFlow',
   'Figma',
   'Postman',
-  'Jira',
-  'Unity'
+  'Jira'
 ];

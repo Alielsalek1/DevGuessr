@@ -86,6 +86,7 @@ export class LogodleGuessInputComponent {
   @Input() inputError = '';
 
   @Output() guessSubmitted = new EventEmitter<string>();
+  @Output() invalidGuess = new EventEmitter<string>();
   @Output() errorCleared = new EventEmitter<void>();
 
   @ViewChild('guessInputField') private guessInputField?: ElementRef<HTMLInputElement>;
@@ -194,11 +195,17 @@ export class LogodleGuessInputComponent {
     let finalGuess = this.guessText.trim();
     if (!finalGuess) return;
 
+    const hasValidLogo = this.isValidLogo(finalGuess);
+
     // Apply suggestion if dropdown is open and nothing was explicitly selected yet
     if (this.showDropdown && this.filteredLogos.length > 0) {
       const idx = this.selectedIndex >= 0 ? this.selectedIndex : 0;
       finalGuess = this.filteredLogos[idx];
       this.guessText = finalGuess;
+    } else if (!hasValidLogo) {
+      const message = 'Logo not found. Please select a target from the list.';
+      this.invalidGuess.emit(message);
+      return;
     }
 
     this.guessSubmitted.emit(finalGuess);
@@ -221,6 +228,11 @@ export class LogodleGuessInputComponent {
     setTimeout(() => {
       this.guessInputField?.nativeElement.focus();
     }, 0);
+  }
+
+  private isValidLogo(guess: string): boolean {
+    const normalized = guess.trim().toLowerCase();
+    return LOGODLE_TARGETS.some((logo) => logo.toLowerCase() === normalized);
   }
 
   private scrollActiveSuggestionIntoView(): void {

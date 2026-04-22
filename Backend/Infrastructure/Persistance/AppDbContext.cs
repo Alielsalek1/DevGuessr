@@ -23,6 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<DailyLogodle> DailyLogodles => Set<DailyLogodle>();
     public DbSet<DailyMythdle> DailyMythdles => Set<DailyMythdle>();
     public DbSet<MythdleTarget> MythdleTargets => Set<MythdleTarget>();
+    public DbSet<TestEntity> Tests => Set<TestEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,5 +31,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         // Apply all configurations from the current assembly
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        modelBuilder.Entity<TestEntity>().ToTable("test");
     }
 }

@@ -47,6 +47,8 @@ public static class DependencyInjection
                    })
                    .UseSnakeCaseNamingConvention();
         });
+
+        services.AddHostedService<DatabaseMigrationHostedService>();
         return services;
     }
 
