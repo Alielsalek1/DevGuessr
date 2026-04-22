@@ -53,7 +53,6 @@ try
     builder.Services.AddApplication();
     builder.Services.AddApiLayer(builder.Environment.IsDevelopment());
 
-    // testing purposes only
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowAll", policy =>
@@ -65,8 +64,8 @@ try
     });
 
     // Health Checks - Using Loader to maintain consistent validation behavior
-    var connectionString = EnvironmentVariableLoader.GetRequired("CONNECTION_STRING");
-    var redisConnectionString = EnvironmentVariableLoader.GetRequired("REDIS_CONNECTION_STRING");
+    var connectionString = EnvironmentVariableLoader.GetRequired("CONNECTION_STRING") ?? throw new InvalidOperationException("CONNECTION_STRING is required");
+    var redisConnectionString = EnvironmentVariableLoader.GetRequired("REDIS_CONNECTION_STRING") ?? throw new InvalidOperationException("REDIS_CONNECTION_STRING is required");
 
     builder.Services.AddHealthChecks()
         .AddNpgSql(sp => sp.GetRequiredService<NpgsqlDataSource>(), name: "database", tags: ["ready"])
@@ -81,8 +80,7 @@ try
     app.UseSerilogRequestLogging();
     app.UseForwardedHeaders();
 
-    // testing purposes only
-    app.UseCors("AllowAll");
+    app.UseCors("DefaultCorsPolicy");
 
     if (app.Environment.IsDevelopment())
     {
@@ -99,9 +97,9 @@ try
     app.UseHangfireDashboard("/hangfire");
 
     // Serve uploaded images (e.g. /uploads/...) as static files
-    var uploadPath = EnvironmentVariableLoader.GetRequired("UPLOAD_PATH");
-    var uploadBaseUrl = EnvironmentVariableLoader.GetRequired("UPLOAD_BASE_URL");
-    
+    var uploadPath = EnvironmentVariableLoader.GetRequired("UPLOAD_PATH") ?? throw new InvalidOperationException("UPLOAD_PATH is required");
+    var uploadBaseUrl = EnvironmentVariableLoader.GetRequired("UPLOAD_BASE_URL") ?? throw new InvalidOperationException("UPLOAD_BASE_URL is required");
+
     var fullUploadPath = Path.Combine(builder.Environment.ContentRootPath, uploadPath);
     if (!Directory.Exists(fullUploadPath))
     {
