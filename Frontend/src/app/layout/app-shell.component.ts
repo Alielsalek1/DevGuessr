@@ -11,7 +11,7 @@ import { APP_ENV } from '../core/config/app-env.token';
     <div class="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
       <header class="fixed inset-x-0 top-0 z-50 bg-[#0E0E0E]/80 backdrop-blur-xl border-b border-white/5">
         <div class="relative mx-auto h-[64px] max-w-[1600px] flex items-center gap-3 px-4">
-          <a routerLink="/" class="shrink-0 pr-2 text-[15px] font-black italic uppercase tracking-tight text-[var(--color-primary)] sm:text-lg">
+          <a routerLink="/" class="shrink-0 pr-2 text-[15px] font-black italic uppercase tracking-tight text-[var(--color-primary)] sm:text-lg md:hidden">
             {{ env.projectName }}
           </a>
 

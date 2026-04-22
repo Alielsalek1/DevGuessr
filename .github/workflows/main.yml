@@ -2,9 +2,9 @@ name: Run the tests
 
 on:
   push:
-    branches: [ master, main, "feature/**" ]
+    branches: [ dev]
   pull_request:
-    branches: [ master, main ]
+    branches: [ dev, master ]
   workflow_dispatch:
 
 env:
