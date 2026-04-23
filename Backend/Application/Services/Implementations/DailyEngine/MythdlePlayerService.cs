@@ -26,7 +26,7 @@ public class MythdlePlayerService(
             return Result<SuccessApiResponse<MythdleGameDto>>.Failure(MythdlePlayerErrors.GameNotFoundForDate);
         }
 
-        var targets = await GetTargetsByNamesAsync(puzzle.TargetNames, cancellationToken);
+        var targets = await GetPlayerTargetsByNamesAsync(puzzle.TargetNames, cancellationToken);
 
         return MythdlePlayerSuccesses.GameFetched(new MythdleGameDto
         {
@@ -50,7 +50,8 @@ public class MythdlePlayerService(
         return MythdlePlayerSuccesses.GuessEvaluated(new MythdleGuessResultDto
         {
             IsCorrect = isCorrect,
-            TargetName = isCorrect ? targetName : null
+            TargetName = isCorrect ? targetName : null,
+            CorrectTargetName = targetName
         });
     }
 
@@ -68,7 +69,8 @@ public class MythdlePlayerService(
         var hardTargets = allTargets.Where(target => target.Difficulty == Domain.Enums.MythdleDifficulty.Hard && !target.IsFake).ToList();
         var mythTargets = allTargets.Where(target => target.IsFake).ToList();
 
-        if (easyTargets.Count < 2 || mediumTargets.Count < 2 || hardTargets.Count < 1 || mythTargets.Count < 1)
+        // Per day: 2 hard + 2 medium + 1 easy + 1 fake = 6 cards
+        if (hardTargets.Count < 2 || mediumTargets.Count < 2 || easyTargets.Count < 1 || mythTargets.Count < 1)
         {
             return Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>.Failure(AdminMythdleErrors.NoTargetsFound);
         }
@@ -80,9 +82,9 @@ public class MythdlePlayerService(
 
         // Calculate potential games based on available pool
         var gameCount = new[] {
-            easyTargets.Count / 2,
+            hardTargets.Count / 2,
             mediumTargets.Count / 2,
-            hardTargets.Count / 1,
+            easyTargets.Count / 1,
             mythTargets.Count / 1,
         }.Min();
 
@@ -99,9 +101,9 @@ public class MythdlePlayerService(
             var puzzleDate = startPuzzleDate.AddDays(index);
             var mythTarget = mythTargets[index];
             
-            var selectedActuals = easyTargets.Skip(index * 2).Take(2)
+            var selectedActuals = hardTargets.Skip(index * 2).Take(2)
                 .Concat(mediumTargets.Skip(index * 2).Take(2))
-                .Concat(hardTargets.Skip(index * 1).Take(1))
+                .Concat(easyTargets.Skip(index * 1).Take(1))
                 .ToList();
 
             var selectedTargets = selectedActuals
@@ -117,7 +119,7 @@ public class MythdlePlayerService(
             {
                 PuzzleId = puzzle.Id,
                 PuzzleDate = puzzleDate,
-                Targets = selectedTargets.Select(MapTargetDto).ToList()
+                Targets = selectedTargets.Select(MapAdminTargetDto).ToList()
             });
         }
 
@@ -142,7 +144,7 @@ public class MythdlePlayerService(
         }
     }
 
-    private async Task<List<MythdleTargetDto>> GetTargetsByNamesAsync(IEnumerable<string> targetNames, CancellationToken cancellationToken)
+    private async Task<List<MythdlePlayerTargetDto>> GetPlayerTargetsByNamesAsync(IEnumerable<string> targetNames, CancellationToken cancellationToken)
     {
         var targetOrder = targetNames.ToList();
         var allTargets = await _mythdleTargetRepository.GetAllAsync(cancellationToken);
@@ -150,11 +152,18 @@ public class MythdlePlayerService(
 
         return targetOrder
             .Where(targetName => targetsByName.ContainsKey(targetName))
-            .Select(targetName => MapTargetDto(targetsByName[targetName]))
+            .Select(targetName => MapPlayerTargetDto(targetsByName[targetName]))
             .ToList();
     }
 
-    private static MythdleTargetDto MapTargetDto(MythdleTargetModel target) => new()
+    private static MythdlePlayerTargetDto MapPlayerTargetDto(MythdleTargetModel target) => new()
+    {
+        Name = target.Name,
+        Category = target.Category,
+        Description = target.Description
+    };
+
+    private static MythdleTargetDto MapAdminTargetDto(MythdleTargetModel target) => new()
     {
         Name = target.Name,
         Category = target.Category,

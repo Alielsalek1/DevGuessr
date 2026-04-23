@@ -27,6 +27,7 @@ export class MythdlePageComponent implements OnInit {
   protected bannerMessage = '';
   protected feedbackMessage = '';
   protected history: MythdleHistoryEntry[] = [];
+  private revealedCorrectTarget = '';
 
   private solvedElapsedLabel = '';
   protected victoryScreenActive = false;
@@ -87,6 +88,10 @@ export class MythdlePageComponent implements OnInit {
         next: (result) => {
           this.submittingGuess = false;
           this.history = [...this.history, { guess: target.name, isCorrect: result.isCorrect }];
+
+          if (result.correctTargetName) {
+            this.revealedCorrectTarget = result.correctTargetName;
+          }
 
           this.solved = result.isCorrect;
           this.failed = !this.solved && this.history.length >= this.maxAttempts;
@@ -151,8 +156,7 @@ export class MythdlePageComponent implements OnInit {
   }
 
   protected correctTargetName(): string {
-    const target = this.puzzle?.targets.find((item) => item.isFake);
-    return target?.name ?? 'Unknown';
+    return this.revealedCorrectTarget || 'Unknown';
   }
 
   private restoreStateForPuzzle(puzzle: MythdleGameDto): void {
@@ -164,6 +168,10 @@ export class MythdlePageComponent implements OnInit {
       return;
     }
 
+    this.revealedCorrectTarget = state.correctTargetName || '';
+    this.puzzleStartedAtIso = state.startedAtIso || new Date().toISOString();
+    this.solvedElapsedLabel = state.solvedElapsedLabel || '';
+
     const correctTarget = this.correctTargetName();
     this.history = state.guesses.map((guess) => ({
       guess,
@@ -172,8 +180,6 @@ export class MythdlePageComponent implements OnInit {
 
     this.solved = state.solved || this.history.some((entry) => entry.isCorrect);
     this.failed = !this.solved && this.history.length >= this.maxAttempts;
-    this.puzzleStartedAtIso = state.startedAtIso || new Date().toISOString();
-    this.solvedElapsedLabel = state.solvedElapsedLabel || '';
 
     if (this.solved) {
       this.feedbackMessage = 'Puzzle already solved for today.';
@@ -192,7 +198,8 @@ export class MythdlePageComponent implements OnInit {
       solved: this.solved,
       guesses: this.history.map((entry) => entry.guess),
       startedAtIso: this.puzzleStartedAtIso,
-      solvedElapsedLabel: this.solvedElapsedLabel
+      solvedElapsedLabel: this.solvedElapsedLabel,
+      correctTargetName: this.revealedCorrectTarget
     };
 
     localStorage.setItem(this.storageKey(this.puzzle.puzzleDate), JSON.stringify(state));

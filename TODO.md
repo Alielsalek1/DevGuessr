@@ -1,1 +1,3 @@
 - possible problems with the way randoms are shuffled
+- when you return the images from logodle they have the name of the image on them from the path so anyone who wants to cheat will get it
+- everytime you load into a page you get the image and request the backend like you weren't on the page so you should persist that at least in the daily game

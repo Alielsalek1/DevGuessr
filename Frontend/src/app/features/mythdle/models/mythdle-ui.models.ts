@@ -9,6 +9,7 @@ export interface PersistedMythdleState {
   guesses: string[];
   startedAtIso?: string;
   solvedElapsedLabel?: string;
+  correctTargetName?: string;
 }
 
 export interface VictoryStats {

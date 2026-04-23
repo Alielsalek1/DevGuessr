@@ -178,8 +178,7 @@ public class MythdlePlayerTests(CustomWebApplicationFactory factory) : BaseInteg
         Assert.Equal(puzzleId, content!.Data.PuzzleId);
         Assert.Equal(puzzleDate, content.Data.PuzzleDate);
         Assert.Equal(5, content.Data.Targets.Count);
-        Assert.Equal(1, content.Data.Targets.Count(target => target.IsFake));
-        Assert.Contains(content.Data.Targets, target => target.Name == mythTargetName && target.IsFake);
+        Assert.Contains(content.Data.Targets, target => target.Name == mythTargetName);
     }
 
     [Fact]

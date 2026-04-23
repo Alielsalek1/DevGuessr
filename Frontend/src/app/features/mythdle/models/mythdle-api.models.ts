@@ -1,7 +1,6 @@
 export interface MythdleTargetDto {
   name: string;
   category: string;
-  isFake: boolean;
   description: string;
 }
 
@@ -19,6 +18,7 @@ export interface MythdleGuessRequestDto {
 export interface MythdleGuessResultDto {
   isCorrect: boolean;
   targetName?: string;
+  correctTargetName?: string;
 }
 
 export interface SuccessApiResponse<T> {
