@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AppShellComponent } from './layout/app-shell.component';
+import { SeoService } from './core/services/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,8 @@ import { AppShellComponent } from './layout/app-shell.component';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {}
+export class App {
+  constructor(private seoService: SeoService) {
+    this.seoService.init();
+  }
+}
