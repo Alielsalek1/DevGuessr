@@ -1,2 +1,1 @@
-- when you select from the drop-down window. it should be things only in the scrollable bar (logodle)
-- you can't select targets outside teh scrollable bar (logodle & langdle)
+- possible problems with the way randoms are shuffled

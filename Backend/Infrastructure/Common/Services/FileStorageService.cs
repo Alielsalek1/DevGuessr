@@ -21,13 +21,16 @@ public class FileStorageService(IOptions<FileStorageOptions> options) : IFileSto
 
     // Stored least -> most blurred. Gameplay reads this in reverse (hardest first).
     // Keep sigma <= 250 to avoid ImageSharp kernel sampling failures.
-    private static readonly float[] BlurSigmas = [0.01f, 18f, 62f, 142f, 220f, 250f];
+    // Stored least -> most blurred. Gameplay reads this in reverse (hardest first).
+    // Keep sigma <= 250 to avoid ImageSharp kernel sampling failures.
+    private static readonly float[] BlurSigmas = [0.01f, 4f, 12f, 24f, 36f, 48f];
 
     // Aggressive per-tier pixelation jumps for stronger visual separation.
-    private static readonly float[] PixelationScales = [1f, 0.985f, 0.78f, 0.34f, 0.08f, 0.008f];
+    // Aggressive per-tier pixelation jumps for stronger visual separation.
+    private static readonly float[] PixelationScales = [1f, 0.12f, 0.04f, 0.02f, 0.01f, 0.006f];
 
     // Allow extremely small mosaics only on hardest tiers.
-    private static readonly int[] MinPixelDimsPerTier = [64, 48, 32, 16, 8, 4];
+    private static readonly int[] MinPixelDimsPerTier = [500, 48, 16, 8, 4, 2];
 
     /// <inheritdoc />
     public async Task<string> SaveOriginalImageAsync(IFormFile file, string targetName, CancellationToken ct)
@@ -69,6 +72,15 @@ public class FileStorageService(IOptions<FileStorageOptions> options) : IFileSto
         using var original = await Image.LoadAsync(originalDisk, ct);
         using var matte = new Image<Rgba32>(original.Width, original.Height, LogodleMatteColor.ToPixel<Rgba32>());
         matte.Mutate(ctx => ctx.DrawImage(original, 1f));
+
+        if (matte.Width > 500 || matte.Height > 500)
+        {
+            matte.Mutate(ctx => ctx.Resize(new ResizeOptions
+            {
+                Size = new Size(500, 500),
+                Mode = ResizeMode.Max
+            }));
+        }
 
         var maxSafeSigma = Math.Max(0.01f, Math.Min(matte.Width, matte.Height) / 8f);
 
