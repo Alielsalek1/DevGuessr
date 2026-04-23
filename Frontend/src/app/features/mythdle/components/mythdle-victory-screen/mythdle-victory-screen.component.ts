@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { VictoryParticle, VictoryStats } from '../../models/mythdle-ui.models';
 
@@ -83,6 +83,17 @@ import { VictoryParticle, VictoryStats } from '../../models/mythdle-ui.models';
                 </div>
               </div>
             }
+
+            <div class="mt-3 rounded-2xl border border-[#ff7cf5]/30 bg-[#0a0813]/70 p-4 text-center">
+              <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60">Next Mythdle in</p>
+              <p class="mt-1 text-2xl font-black tabular-nums tracking-tight text-[#ff9af7]">{{ timeToNextDle }}</p>
+            </div>
+
+            <div class="mt-4 mb-2 text-center">
+              <p class="text-sm font-medium text-white/80">
+                Like DevGuessr? Check out <a href="https://linuxdle.site/" target="_blank" class="text-[#ff9af7] hover:text-white hover:underline transition-colors">Linuxdle</a>!
+              </p>
+            </div>
 
             <div class="flex flex-wrap items-center justify-center gap-2 pt-1" (click)="$event.stopPropagation()">
               <button
@@ -207,13 +218,42 @@ import { VictoryParticle, VictoryStats } from '../../models/mythdle-ui.models';
     }
   `]
 })
-export class MythdleVictoryScreenComponent {
+export class MythdleVictoryScreenComponent implements OnInit, OnDestroy {
   @Input() victoryScreenActive = false;
   @Input() victoryScreenVisible = false;
   @Input() victoryStats: VictoryStats | null = null;
   @Input() victoryParticles: VictoryParticle[] = [];
 
   @Output() closeEvent = new EventEmitter<void>();
+
+  timeToNextDle = '';
+  private timerInterval: any;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.updateTimer();
+    this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+  }
+
+  ngOnDestroy() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+  }
+
+  private updateTimer() {
+    const now = new Date();
+    const nextMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+    const diff = nextMidnight.getTime() - now.getTime();
+
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / 1000 / 60) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    this.timeToNextDle = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    this.cdr.markForCheck();
+  }
 
   closeVictory(): void {
     this.closeEvent.emit();
