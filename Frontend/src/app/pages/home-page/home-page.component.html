@@ -1,62 +1,68 @@
 <section class="min-h-screen w-full pt-12">
   <div class="mx-auto w-full max-w-7xl px-6 md:px-8">
-    <div class="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-[var(--color-system)] md:text-base text-center md:text-left">
+    <div
+      class="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-[var(--color-system)] md:text-base text-center md:text-left">
       SYSTEM_READY // {{ env.projectName.toUpperCase() }}
     </div>
     <div class="text-center md:text-left">
-      <h1 class="mx-auto max-w-4xl text-5xl font-black leading-[0.92] tracking-[-0.03em] text-white md:mx-0 md:text-7xl font-headline">
+      <h1
+        class="mx-auto max-w-4xl text-5xl font-black leading-[0.92] tracking-[-0.03em] text-white md:mx-0 md:text-7xl font-headline">
         SELECT YOUR <span class="text-[var(--color-primary)] italic">TERMINAL</span>
       </h1>
 
       <div class="mt-8 max-w-md mx-auto md:mx-0">
         <div class="mb-2 flex items-end justify-between">
-          <span class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-muted)]">Daily Quest Progress</span>
-          <span class="font-mono text-xs font-bold uppercase text-[var(--color-system)]">{{ completedGames }}/{{ totalGames }} Completed</span>
+          <span class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-muted)]">Daily Quest
+            Progress</span>
+          <span class="font-mono text-xs font-bold uppercase text-[var(--color-system)]">{{ completedGames }}/{{
+            totalGames }} Completed</span>
         </div>
         <div class="relative h-[2px] w-full bg-[#131313]">
-          <div
-            class="absolute left-0 top-0 h-full bg-[var(--color-system)] shadow-[0_0_8px_var(--color-system)]"
-            [style.width.%]="progressPercent"
-          ></div>
+          <div class="absolute left-0 top-0 h-full bg-[var(--color-system)] shadow-[0_0_8px_var(--color-system)]"
+            [style.width.%]="progressPercent"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="mt-12 mx-auto grid w-full max-w-3xl gap-4 px-6 grid-cols-1 2xl:mt-16 2xl:max-w-7xl 2xl:grid-cols-3 2xl:gap-6 md:px-8">
+  <div
+    class="mt-12 mx-auto grid w-full max-w-3xl gap-4 px-6 grid-cols-1 2xl:mt-16 2xl:max-w-7xl 2xl:grid-cols-3 2xl:gap-6 md:px-8">
     @for (game of games; track game.route) {
-      @let isCompleted = isGameCompleted(game.route);
-      <a
-        [routerLink]="game.route"
-        class="group relative flex min-h-[230px] w-full flex-col justify-between overflow-hidden border-l-2 p-4 transition-all duration-300 hover:-translate-y-1 2xl:min-h-[340px] 2xl:p-6 2xl:hover:-translate-y-2 {{ isCompleted ? 'border-emerald-400/40 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#10b981,2px_0_0_#10b981]' : 'border-white/15 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#ff00ff,2px_0_0_#00ffff]' }}"
-      >
-        @if (isCompleted) {
-          <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rotate-45 bg-gradient-to-b from-emerald-400/20 via-emerald-400/10 to-transparent blur-2xl"></div>
-        }
-        
-        <div class="relative z-10 mb-4 2xl:mb-8">
-          <div class="min-w-0">
-            <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted)] truncate">{{ game.tag }}</p>
-            <h2 class="mt-2 text-xl font-bold tracking-[-0.02em] text-white font-headline break-words 2xl:mt-3 2xl:text-2xl">{{ game.title }}</h2>
-          </div>
-        </div>
+    @let isCompleted = isGameCompleted(game.route);
+    <a [routerLink]="game.route"
+      class="group relative flex min-h-[230px] w-full flex-col justify-between overflow-hidden border-l-2 p-4 transition-all duration-300 hover:-translate-y-1 2xl:min-h-[340px] 2xl:p-6 2xl:hover:-translate-y-2 {{ isCompleted ? 'border-emerald-400/40 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#10b981,2px_0_0_#10b981]' : 'border-white/15 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#ff00ff,2px_0_0_#00ffff]' }}">
+      @if (isCompleted) {
+      <div
+        class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rotate-45 bg-gradient-to-b from-emerald-400/20 via-emerald-400/10 to-transparent blur-2xl">
+      </div>
+      }
 
-        <p class="relative z-10 max-w-sm text-xs leading-relaxed text-[var(--color-muted)] 2xl:text-sm">
-          {{ game.description }}
-        </p>
-
-        <div class="relative z-10 mt-4 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[10px] uppercase tracking-[0.25em] 2xl:mt-8 2xl:pt-4" [class]="isCompleted ? 'text-emerald-300/70' : 'text-[var(--color-muted)]'">
-          <span class="truncate">Status</span>
-          <span
-            class="inline-flex items-center rounded border px-2 py-1 text-[9px] tracking-[0.18em]"
-            [style.color]="isCompleted ? '#10b981' : game.accent"
-            [style.border-color]="isCompleted ? '#10b98166' : game.accent + '66'"
-            [style.background]="isCompleted ? '#10b9811a' : game.accent + '1a'"
-          >
-            {{ isCompleted ? 'Resolved' : 'Ready' }}
-          </span>
+      <div class="relative z-10 mb-4 2xl:mb-8">
+        <div class="min-w-0">
+          <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted)] truncate">{{ game.tag }}
+          </p>
+          <h2
+            class="mt-2 text-xl font-bold tracking-[-0.02em] text-white font-headline break-words 2xl:mt-3 2xl:text-2xl">
+            {{ game.title }}</h2>
         </div>
-      </a>
+      </div>
+
+      <p class="relative z-10 max-w-sm text-xs leading-relaxed text-[var(--color-muted)] 2xl:text-sm">
+        {{ game.description }}
+      </p>
+
+      <div
+        class="relative z-10 mt-4 flex items-center justify-between border-t border-white/10 pt-3 font-mono text-[10px] uppercase tracking-[0.25em] 2xl:mt-8 2xl:pt-4"
+        [class]="isCompleted ? 'text-emerald-300/70' : 'text-[var(--color-muted)]'">
+        <span class="truncate">Status</span>
+        <span class="inline-flex items-center rounded border px-2 py-1 text-[9px] tracking-[0.18em]"
+          [style.color]="isCompleted ? '#10b981' : game.accent"
+          [style.border-color]="isCompleted ? '#10b98166' : game.accent + '66'"
+          [style.background]="isCompleted ? '#10b9811a' : game.accent + '1a'">
+          {{ isCompleted ? 'Resolved' : 'Ready' }}
+        </span>
+      </div>
+    </a>
     }
   </div>
 </section>

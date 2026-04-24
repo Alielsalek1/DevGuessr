@@ -90,7 +90,7 @@ export class HomePageComponent implements OnInit {
 
   protected isGameCompleted(route: string): boolean {
     const today = this.todayAsDateOnly();
-    
+
     switch (route) {
       case '/langdle':
         return this.readBooleanState(`langdle:state:${today}`, 'solved');

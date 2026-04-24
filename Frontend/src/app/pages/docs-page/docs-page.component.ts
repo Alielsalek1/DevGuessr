@@ -10,6 +10,9 @@ import { Component } from '@angular/core';
         <h1 class="font-headline text-5xl font-black uppercase tracking-tight text-white md:text-7xl">
           HOW TO PLAY<span class="text-[var(--color-system)]">_</span>
         </h1>
+        <p class="mt-8 max-w-3xl text-lg leading-relaxed text-white/80">
+          DevGuessr is the <strong>daily puzzle game for software engineers</strong> and tech enthusiasts. Test your expertise across various domains of software development, from syntax recognition to architectural intuition. Whether you're a senior developer or a coding student, DevGuessr offers a unique <strong>developer challenge</strong> every 24 hours.
+        </p>
       </div>
 
       <div class="grid gap-12 md:grid-cols-3">
@@ -20,7 +23,7 @@ import { Component } from '@angular/core';
             <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">LANGDLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
-            Identify the daily programming language. Each guess provides feedback through illuminated cells for Year, Type Checking, Memory, Scope Syntax, Semicolons, and Tags.
+            Guess the daily <strong>programming language</strong> in this syntax-based puzzle. Each attempt provides feedback on the language's release year, type system, memory management, and unique syntax features. It's the ultimate <strong>coding game</strong> for polyglot developers.
           </p>
           <ul class="space-y-3 font-mono text-[10px] tracking-wider text-white/50">
             <li class="flex items-center gap-2"><span class="h-1 w-1 bg-emerald-500 rounded-full"></span> GREEN: EXACT MATCH</li>
@@ -36,7 +39,7 @@ import { Component } from '@angular/core';
             <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">LOGODLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
-            Identify the brand or service from a pixelated visual fragment. The logo gains resolution with every failed attempt. Guess correctly within 6 attempts.
+            Identify the <strong>tech framework, library, or service</strong> from a pixelated visual fragment. The logo becomes clearer with each of your 6 attempts. Put your knowledge of the <strong>modern tech stack</strong> to the test and spot the brand.
           </p>
           <div class="mt-4 p-4 rounded bg-white/5 font-mono text-[9px] uppercase tracking-widest text-white/40">
             Attempts remaining: <span class="text-white">6 / 6</span><br>
@@ -51,13 +54,20 @@ import { Component } from '@angular/core';
             <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">MYTHDLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
-            Find the fabricated legend. One card is fake, five are real. You have exactly two attempts to identify the myth among the truths.
+            Find the fabricated tech legend. In this <strong>developer logic game</strong>, you are presented with 6 items—5 are real technologies and 1 is a "myth." You have 2 tries to identify the fake among the truths.
           </p>
           <div class="mt-4 flex gap-1">
             <span class="h-1 w-8 bg-[var(--color-primary)] rounded-full"></span>
             <span class="h-1 w-8 bg-[var(--color-layer-2)] rounded-full"></span>
           </div>
         </div>
+      </div>
+
+      <div class="mt-16 border-t border-white/10 pt-12">
+        <h3 class="font-headline text-3xl font-bold uppercase text-white mb-6">About DevGuessr</h3>
+        <p class="text-sm leading-relaxed text-white/60 max-w-4xl">
+          DevGuessr was created as a <strong>wordle-style game for developers</strong> who want to sharpen their technical edge. By combining visual puzzles, data-driven guessing, and tech lore, we provide a fun, educational <strong>daily coding streak</strong> for the global software engineering community. Our mission is to celebrate the diversity of the <strong>tech ecosystem</strong> while giving developers a quick mental workout every day.
+        </p>
       </div>
     </section>
   `
