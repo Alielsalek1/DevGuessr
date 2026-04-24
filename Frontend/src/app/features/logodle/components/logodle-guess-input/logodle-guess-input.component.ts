@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GuessHistoryEntry } from '../../models/logodle-ui.models';
 import { LOGODLE_MAX_ATTEMPTS, LOGODLE_TARGETS } from '../../data/logodle.constants';
@@ -43,9 +43,10 @@ import { LOGODLE_MAX_ATTEMPTS, LOGODLE_TARGETS } from '../../data/logodle.consta
         </button>
 
         @if (showDropdown && filteredLogos.length > 0) {
-          <div 
+          <div
             #suggestionMenu
             class="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded border border-[var(--color-layer-2)] bg-[#0E0E0E] shadow-lg"
+            style="overscroll-behavior: contain;"
           >
             @for (logo of filteredLogos; track logo; let i = $index) {
               <button
@@ -79,7 +80,7 @@ import { LOGODLE_MAX_ATTEMPTS, LOGODLE_TARGETS } from '../../data/logodle.consta
     </div>
   `
 })
-export class LogodleGuessInputComponent {
+export class LogodleGuessInputComponent implements OnDestroy {
   @Input() solved = false;
   @Input() submittingGuess = false;
   @Input() history: GuessHistoryEntry[] = [];
@@ -90,12 +91,42 @@ export class LogodleGuessInputComponent {
   @Output() errorCleared = new EventEmitter<void>();
 
   @ViewChild('guessInputField') private guessInputField?: ElementRef<HTMLInputElement>;
-  @ViewChild('suggestionMenu') private suggestionMenu?: ElementRef<HTMLDivElement>;
+  @ViewChild('suggestionMenu') private set suggestionMenuSetter(el: ElementRef<HTMLDivElement> | undefined) {
+    // Tear down old listener
+    if (this._menuWheelCleanup) {
+      this._menuWheelCleanup();
+      this._menuWheelCleanup = undefined;
+    }
+    this._suggestionMenu = el;
+    // Attach a non-passive wheel listener so we can call preventDefault() at scroll boundaries
+    if (el?.nativeElement) {
+      const menuEl = el.nativeElement;
+      const onWheel = (event: WheelEvent) => {
+        const atTop = menuEl.scrollTop === 0 && event.deltaY < 0;
+        const atBottom =
+          menuEl.scrollTop + menuEl.clientHeight >= menuEl.scrollHeight && event.deltaY > 0;
+        if (atTop || atBottom) {
+          event.preventDefault();
+        }
+        event.stopPropagation();
+      };
+      // { passive: false } is required to allow preventDefault() on wheel events
+      menuEl.addEventListener('wheel', onWheel, { passive: false });
+      this._menuWheelCleanup = () => menuEl.removeEventListener('wheel', onWheel);
+    }
+  }
+
+  private _suggestionMenu?: ElementRef<HTMLDivElement>;
+  private _menuWheelCleanup?: () => void;
 
   guessText = '';
   filteredLogos: string[] = [];
   selectedIndex = -1;
   showDropdown = false;
+
+  ngOnDestroy(): void {
+    this._menuWheelCleanup?.();
+  }
 
   attemptsLeft(): number {
     return Math.max(0, LOGODLE_MAX_ATTEMPTS - this.history.length);
@@ -104,7 +135,7 @@ export class LogodleGuessInputComponent {
   onInputChange(): void {
     this.errorCleared.emit();
     const query = this.guessText.trim().toLowerCase();
-    
+
     if (!query || this.solved || this.attemptsLeft() === 0) {
       this.filteredLogos = [];
       this.showDropdown = false;
@@ -113,14 +144,14 @@ export class LogodleGuessInputComponent {
     }
 
     this.filteredLogos = LOGODLE_TARGETS
-      .filter(logo => 
-        logo.toLowerCase().includes(query) && 
+      .filter(logo =>
+        logo.toLowerCase().includes(query) &&
         !this.history.some(h => h.guess.toLowerCase() === logo.toLowerCase())
       )
       .sort((a, b) => {
         const aLower = a.toLowerCase();
         const bLower = b.toLowerCase();
-        
+
         // Exact start match
         const aStarts = aLower.startsWith(query);
         const bStarts = bLower.startsWith(query);
@@ -149,13 +180,19 @@ export class LogodleGuessInputComponent {
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        this.selectedIndex = (this.selectedIndex + 1) % this.filteredLogos.length;
-        this.scrollActiveSuggestionIntoView();
+        // Clamp at bottom — do not wrap so the page never gets a stray scroll
+        if (this.selectedIndex < this.filteredLogos.length - 1) {
+          this.selectedIndex++;
+          this.scrollActiveSuggestionIntoView();
+        }
         break;
       case 'ArrowUp':
         event.preventDefault();
-        this.selectedIndex = (this.selectedIndex - 1 + this.filteredLogos.length) % this.filteredLogos.length;
-        this.scrollActiveSuggestionIntoView();
+        // Clamp at top — do not wrap
+        if (this.selectedIndex > 0) {
+          this.selectedIndex--;
+          this.scrollActiveSuggestionIntoView();
+        }
         break;
       case 'Enter':
         event.preventDefault();
@@ -239,15 +276,17 @@ export class LogodleGuessInputComponent {
     setTimeout(() => {
       if (this.selectedIndex < 0) return;
       const activeEl = document.getElementById('logodle-suggestion-' + this.selectedIndex);
-      const menuEl = this.suggestionMenu?.nativeElement;
+      const menuEl = this._suggestionMenu?.nativeElement;
       if (activeEl && menuEl) {
-        const menuRect = menuEl.getBoundingClientRect();
-        const itemRect = activeEl.getBoundingClientRect();
+        const itemOffsetTop = activeEl.offsetTop;
+        const itemOffsetBottom = itemOffsetTop + activeEl.offsetHeight;
+        const menuScrollTop = menuEl.scrollTop;
+        const menuClientHeight = menuEl.clientHeight;
 
-        if (itemRect.bottom > menuRect.bottom) {
-          activeEl.scrollIntoView({ block: 'end' });
-        } else if (itemRect.top < menuRect.top) {
-          activeEl.scrollIntoView({ block: 'start' });
+        if (itemOffsetBottom > menuScrollTop + menuClientHeight) {
+          menuEl.scrollTop = itemOffsetBottom - menuClientHeight;
+        } else if (itemOffsetTop < menuScrollTop) {
+          menuEl.scrollTop = itemOffsetTop;
         }
       }
     });
