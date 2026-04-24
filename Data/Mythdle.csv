@@ -1,177 +1,163 @@
 Name,Category,IsFake,Description,Difficulty
-Zig,Programming Language,false,A systems programming language designed for optimal runtime performance and compile-time evaluation,Hard
-Gleam,Programming Language,false,A type-safe functional language that compiles to Erlang and JavaScript for fault-tolerant systems,Hard
-Roc,Programming Language,false,A fast and friendly functional programming language inspired by Elm for application development,Hard
-Pkl,Configuration Language,false,A programmable configuration language by Apple for generating validated and type-safe config files,Hard
-Mojo,Programming Language,false,A Python-superset programming language by Modular designed for high-performance AI workloads,Hard
-Vale,Programming Language,false,A programming language that uses generational references for memory safety without a borrow checker,Hard
-Odin,Programming Language,false,A data-oriented systems programming language designed as an alternative to C with modern features,Hard
-Nim,Programming Language,false,A compiled systems programming language combining metaprogramming and multiple compilation backends,Hard
-Crystal,Programming Language,false,A compiled language with Ruby-inspired syntax that provides type inference and static type checking,Hard
-Pony,Programming Language,false,A capabilities-secure actor-model language designed for high-performance lock-free concurrency,Hard
-Idris,Programming Language,false,A general-purpose dependently typed functional programming language with interactive theorem proving,Hard
-Unison,Programming Language,false,A content-addressed programming language where code is identified by hash rather than file location,Hard
-Dioxus,UI Framework,false,A cross-platform Rust framework for building user interfaces on web desktop and mobile targets,Hard
-Leptos,Web Framework,false,A full-stack Rust web framework using fine-grained reactivity for server-rendered applications,Hard
-Yew,Web Framework,false,A Rust component-based framework for building WebAssembly applications with a virtual DOM,Hard
-Effect-TS,TypeScript Library,false,A TypeScript library for building complex applications using structured concurrency and typed effects,Hard
-Bazel,Build System,false,A fast and scalable build system by Google that supports multi-language and large-scale repositories,Hard
-Buck2,Build System,false,A large-scale build system by Meta designed for fast parallel and incremental monorepo builds,Hard
-Nix,Package Manager,false,A purely functional package manager that ensures reproducible builds through declarative configuration,Hard
-Ceph,Distributed Storage,false,A unified distributed storage system providing object block and file interfaces for scale-out clusters,Hard
-Longhorn,Storage System,false,A lightweight cloud-native distributed block storage system built for Kubernetes clusters,Hard
-Rook,Storage Orchestrator,false,A storage orchestrator for Kubernetes that integrates distributed storage systems as native services,Hard
-Crossplane,Infrastructure,false,A Kubernetes-native control plane for composing cloud infrastructure using custom resource definitions,Hard
-KEDA,Autoscaling,false,A Kubernetes event-driven autoscaler that scales workloads based on external event source metrics,Hard
-Thanos,Monitoring,false,A highly available Prometheus setup providing long-term metric storage and global query capabilities,Hard
-Mimir,Monitoring,false,A scalable long-term storage backend for Prometheus metrics providing global query and multi-tenancy,Hard
-Loki,Log Aggregation,false,A horizontally scalable log aggregation system by Grafana Labs inspired by Prometheus design principles,Hard
-Tempo,Distributed Tracing,false,A high-volume distributed tracing backend by Grafana Labs requiring only object storage,Hard
-Jaeger,Distributed Tracing,false,An open-source distributed tracing system by Uber for monitoring and troubleshooting microservices,Hard
-Falco,Runtime Security,false,A cloud-native runtime security tool that detects anomalous behavior in containers and Kubernetes,Hard
-Cilium,Networking,false,An eBPF-based networking and security solution for Kubernetes providing transparent load balancing,Hard
-Calico,Networking,false,An open-source networking and security solution for containers using Linux kernel data plane,Hard
-Weaviate,Vector Database,false,An open-source vector search engine for building AI-powered applications with semantic search,Hard
-Qdrant,Vector Database,false,A high-performance vector similarity search engine built in Rust for neural network matching,Hard
-Chroma,Vector Database,false,An AI-native open-source embedding database designed for building applications with large language models,Hard
-pgvector,Database Extension,false,A PostgreSQL extension that adds vector similarity search for storing and querying embeddings,Hard
-DuckDB,Database,false,An in-process analytical database management system optimized for online analytical processing workloads,Hard
-EdgeDB,Database,false,A graph-relational database with a built-in migration system and a dedicated query language called EdgeQL,Hard
-SurrealDB,Database,false,A multi-model database supporting document graph and relational paradigms with real-time queries,Hard
-Tigris,Object Storage,false,A globally distributed S3-compatible object storage service designed for low-latency data access,Hard
-Tekton,CI/CD,false,A cloud-native framework for creating CI/CD pipelines that run as Kubernetes custom resources,Hard
-Skaffold,Developer Tool,false,A continuous development tool that automates the build push and deploy cycle for Kubernetes apps,Hard
-Buildah,Container Tool,false,An OCI container image builder that creates images without requiring a running container daemon,Hard
-Podman,Container Engine,false,A daemonless container engine for developing and running OCI containers compatible with Docker CLI,Hard
-CRI-O,Container Runtime,false,A lightweight container runtime for Kubernetes implementing the Container Runtime Interface standard,Hard
-Vitess,Database Clustering,false,A database clustering system for horizontal scaling of MySQL through sharding and connection pooling,Hard
-TiKV,Key-Value Store,false,A distributed transactional key-value database providing ACID transactions with Raft consensus,Hard
-FoundationDB,Key-Value Store,false,A distributed ACID-compliant key-value store by Apple designed as a foundation for complex data layers,Hard
-CockroachDB,Database,false,A cloud-native distributed SQL database designed for global data consistency and horizontal scaling,Hard
-YugabyteDB,Database,false,A distributed SQL database designed for global cloud-native applications with PostgreSQL compatibility,Hard
-Dapr,Microservices,false,A distributed application runtime providing building blocks for microservice communication and state,Hard
-NATS,Messaging System,false,A cloud-native high-performance messaging system for microservices and distributed applications,Hard
-ZeroMQ,Messaging Library,false,A high-performance asynchronous messaging library for building distributed and concurrent applications,Hard
-Emissary-Ingress,API Gateway,false,A Kubernetes-native API gateway built on Envoy proxy for managing microservice traffic routing,Hard
-Argo Workflows,Workflow Engine,false,A container-native workflow engine for orchestrating parallel jobs on Kubernetes clusters,Hard
-Containerd,Container Runtime,false,An industry-standard container runtime providing an abstraction layer for managing container lifecycles,Hard
-Kustomize,Configuration Tool,false,A template-free configuration customization tool for Kubernetes manifests using declarative overlays,Hard
-Nomad,Orchestration,false,A flexible workload orchestrator by HashiCorp for deploying containers and non-containerized applications,Hard
-Packer,Image Builder,false,A tool by HashiCorp for creating identical machine images for multiple platforms from a single source,Hard
-Waypoint,Deployment Tool,false,A tool by HashiCorp that provides a consistent workflow for building deploying and releasing applications,Hard
-Dagger,CI/CD,false,A programmable CI/CD engine that runs build pipelines inside containers for full portability,Medium
-Earthly,CI/CD,false,A CI/CD framework that combines the best of Dockerfiles and Makefiles for reproducible builds,Medium
-Pulumi,Infrastructure as Code,false,An infrastructure as code platform using general-purpose programming languages instead of domain-specific ones,Medium
-Temporal,Workflow Engine,false,A durable execution platform for orchestrating long-running workflows with automatic failure recovery,Medium
-Prefect,Workflow Orchestration,false,A modern workflow orchestration platform for data engineering with dynamic pipeline scheduling,Medium
-Dagster,Data Orchestration,false,A data orchestration platform that unifies data pipelines assets and observability in one framework,Medium
-Airbyte,Data Integration,false,An open-source data integration platform for syncing data from APIs databases and files to warehouses,Medium
-MinIO,Object Storage,false,A high-performance S3-compatible object storage system designed for large-scale data infrastructure,Medium
-Caddy,Web Server,false,A web server with automatic HTTPS certificate provisioning and renewal built in Go,Medium
-Traefik,Reverse Proxy,false,A cloud-native reverse proxy and load balancer that integrates with container orchestration platforms,Medium
-Meilisearch,Search Engine,false,A lightning-fast open-source search engine with typo tolerance and instant results for end users,Medium
-Upstash,Serverless Database,false,A serverless data platform providing Redis and Kafka with per-request pricing for edge computing,Medium
-Neon,Database,false,A serverless Postgres platform with database branching autoscaling and point-in-time recovery,Medium
-Turso,Database,false,An edge-hosted distributed database built on libSQL for low-latency reads at the network edge,Medium
-PlanetScale,Database,false,A serverless MySQL-compatible database platform with non-blocking schema changes and branching,Medium
+Docker,Containerization,false,A platform for developing and running applications in lightweight isolated containers,Easy
+Kubernetes,Container Orchestration,false,An open-source platform for automating deployment scaling and management of containerized workloads,Easy
+React,Frontend Library,false,A JavaScript library for building user interfaces using a component-based architecture with a virtual DOM,Easy
+Vue.js,Frontend Framework,false,A progressive JavaScript framework for building user interfaces with a reactive data-binding system,Easy
+Angular,Frontend Framework,false,A TypeScript-based web application framework by Google for building scalable single-page applications,Easy
+Node.js,Runtime,false,A JavaScript runtime built on Chrome's V8 engine for building fast and scalable server-side applications,Easy
+TypeScript,Programming Language,false,A typed superset of JavaScript by Microsoft that compiles to plain JavaScript for large-scale applications,Easy
+Python,Programming Language,false,A high-level interpreted programming language known for its readability and extensive standard library,Easy
+Git,Version Control,false,A distributed version control system for tracking changes in source code during software development,Easy
+VS Code,Code Editor,false,A lightweight but powerful source code editor by Microsoft with built-in debugging and Git integration,Easy
+PostgreSQL,Database,false,An advanced open-source relational database known for extensibility and standards compliance,Easy
+MongoDB,Database,false,A document-oriented NoSQL database that stores data in flexible JSON-like BSON documents,Easy
+Redis,Database,false,An open-source in-memory data structure store used as a database cache and message broker,Easy
+Tailwind CSS,CSS Framework,false,A utility-first CSS framework for building custom designs without leaving your HTML markup,Easy
+Next.js,Web Framework,false,A React-based framework for building full-stack web applications with server-side rendering and static generation,Easy
+Vite,Build Tool,false,A next-generation frontend build tool offering fast development server startup and hot module replacement,Easy
+ESLint,Linter,false,A static code analysis tool for identifying and fixing problematic patterns in JavaScript and TypeScript,Easy
+Prettier,Code Formatter,false,An opinionated code formatter supporting multiple languages that enforces a consistent style,Easy
+npm,Package Manager,false,The default package manager for Node.js providing access to the world's largest software registry,Easy
+GitHub Actions,CI/CD,false,A CI/CD platform integrated into GitHub that automates build test and deployment workflows,Easy
+Webpack,Build Tool,false,A static module bundler for JavaScript applications that processes and bundles assets and dependencies,Easy
+Jest,Testing Framework,false,A delightful JavaScript testing framework with a focus on simplicity and support for large applications,Easy
+Sass,CSS Preprocessor,false,A CSS preprocessor that adds variables nesting and mixins to make stylesheets more maintainable,Easy
+Bootstrap,CSS Framework,false,A popular front-end framework for building responsive and mobile-first websites with prebuilt components,Easy
+Figma,Design Tool,false,A collaborative browser-based design tool for creating user interfaces prototypes and design systems,Easy
+GraphQL,Query Language,false,A query language for APIs that lets clients request exactly the data they need in a single request,Easy
+Nginx,Web Server,false,A high-performance HTTP server and reverse proxy known for its stability and low resource consumption,Easy
+Linux,Operating System,false,An open-source Unix-like operating system kernel that powers servers containers and most of the cloud,Easy
+AWS,Cloud Platform,false,Amazon's cloud computing platform offering compute storage databases and hundreds of other services,Easy
+Vercel,Cloud Platform,false,A cloud platform for deploying frontend applications with serverless functions and edge computing,Easy
+Firebase,Backend Platform,false,A Google platform providing authentication real-time databases cloud functions and hosting for web and mobile apps,Easy
+Supabase,Backend Platform,false,An open-source Firebase alternative providing a PostgreSQL database authentication and storage,Easy
+Sentry,Error Tracking,false,An application monitoring platform that helps developers identify and fix errors in real time,Easy
+Storybook,UI Tool,false,An open-source tool for building and testing UI components in isolation for frontend development,Easy
+Prisma,ORM,false,A next-generation TypeScript ORM providing type-safe database access with an intuitive data model,Easy
+Svelte,Frontend Framework,false,A component framework that shifts work into a compile step producing efficient vanilla JavaScript,Easy
+Rust,Programming Language,false,A systems programming language focused on safety concurrency and performance with zero-cost abstractions,Medium
+Go,Programming Language,false,A statically typed compiled language by Google designed for simplicity concurrency and cloud-native development,Medium
+Kotlin,Programming Language,false,A modern programming language by JetBrains that runs on the JVM and is the preferred language for Android,Medium
+Swift,Programming Language,false,Apple's programming language for iOS macOS and other Apple platforms known for safety and performance,Medium
+C#,Programming Language,false,A modern object-oriented language by Microsoft used for building desktop web and game applications with .NET,Medium
+Dart,Programming Language,false,A client-optimized programming language by Google for building fast apps on mobile web and desktop via Flutter,Medium
+Ruby,Programming Language,false,A dynamic open-source programming language focused on simplicity and productivity with elegant syntax,Medium
+PHP,Programming Language,false,A widely-used server-side scripting language especially suited for web development and embedded in HTML,Medium
+Elixir,Programming Language,false,A functional concurrent language built on the Erlang VM designed for scalable and maintainable applications,Medium
+Flutter,Mobile Framework,false,Google's UI toolkit for building natively compiled applications for mobile web and desktop from a single codebase,Medium
+React Native,Mobile Framework,false,A framework by Meta for building native mobile applications using React and JavaScript,Medium
+Django,Web Framework,false,A high-level Python web framework that encourages rapid development and clean pragmatic design,Medium
+Flask,Web Framework,false,A lightweight WSGI web application framework in Python designed for quick starts and scalable applications,Medium
+Spring Boot,Web Framework,false,A Java-based framework that simplifies building production-ready Spring applications with minimal configuration,Medium
+Express.js,Web Framework,false,A minimal and flexible Node.js web application framework providing robust features for web and mobile apps,Medium
+Laravel,Web Framework,false,A PHP web framework with expressive elegant syntax providing tools for routing authentication and caching,Medium
+FastAPI,Web Framework,false,A modern high-performance Python web framework for building APIs with automatic OpenAPI documentation,Medium
+NestJS,Web Framework,false,A progressive Node.js framework for building efficient and scalable server-side applications with TypeScript,Medium
+Nuxt.js,Web Framework,false,A Vue.js framework for building server-side rendered and statically generated web applications,Medium
+Remix,Web Framework,false,A full-stack web framework focused on web standards and progressive enhancement for fast user experiences,Medium
+Astro,Web Framework,false,A web framework for building fast content-focused websites using an islands architecture approach,Medium
+htmx,Frontend Library,false,A library that accesses modern browser features directly from HTML using attributes instead of JavaScript,Medium
+SolidJS,Frontend Framework,false,A declarative reactive JavaScript library for building user interfaces without a virtual DOM,Medium
+Bun,JavaScript Runtime,false,An all-in-one JavaScript runtime with a built-in bundler transpiler and package manager,Medium
+Deno,JavaScript Runtime,false,A secure runtime for JavaScript and TypeScript built in Rust with built-in tooling and permissions,Medium
+Terraform,Infrastructure as Code,false,An infrastructure as code tool for building changing and versioning cloud infrastructure safely,Medium
+Ansible,Automation,false,An open-source automation platform for configuration management application deployment and task automation,Medium
+Jenkins,CI/CD,false,An open-source automation server for building testing and deploying software with hundreds of plugins,Medium
+Grafana,Monitoring,false,An open-source analytics and interactive visualization web application for monitoring dashboards,Medium
+Prometheus,Monitoring,false,An open-source monitoring and alerting toolkit designed for reliability in cloud-native environments,Medium
+Elasticsearch,Search Engine,false,A distributed search and analytics engine for all types of data including text numbers and geospatial,Medium
+RabbitMQ,Message Queue,false,An open-source message broker that supports multiple messaging protocols for reliable communication,Medium
+Kafka,Streaming Platform,false,A distributed event streaming platform for high-performance real-time data pipelines and event-driven apps,Medium
+MySQL,Database,false,The world's most popular open-source relational database known for reliability and ease of use,Medium
+SQLite,Database,false,A self-contained serverless SQL database engine that is the most widely deployed database in the world,Medium
+DynamoDB,Database,false,A fully managed NoSQL database service by AWS that provides fast and predictable performance at any scale,Medium
+Cypress,Testing Framework,false,A JavaScript end-to-end testing framework for web applications that runs directly in the browser,Medium
+Playwright,Testing Framework,false,A framework for reliable end-to-end testing of modern web apps across Chromium Firefox and WebKit,Medium
+Vitest,Testing Framework,false,A fast unit test framework powered by Vite with native ES modules support and hot module replacement,Medium
+Zustand,State Management,false,A small fast and scalable state management library for React using simplified flux principles,Medium
+Redux,State Management,false,A predictable state container for JavaScript apps commonly used with React for managing application state,Medium
+Pinia,State Management,false,A lightweight and intuitive state management library for Vue.js with full TypeScript support,Medium
+React Query,Data Library,false,A library for fetching caching and synchronizing server state in React applications,Medium
+Socket.IO,Real-time Library,false,A library enabling real-time bidirectional event-based communication between web clients and servers,Medium
+Netlify,Cloud Platform,false,An all-in-one platform for automating modern web projects with CI/CD and serverless functions,Medium
+Heroku,Cloud Platform,false,A cloud platform as a service supporting several programming languages for deploying and running apps,Medium
+DigitalOcean,Cloud Platform,false,A cloud infrastructure provider focused on simplicity for developers deploying and scaling applications,Medium
+Postman,API Tool,false,A collaboration platform for API development that simplifies building testing and documenting APIs,Medium
+Swagger,API Documentation,false,An open-source toolset for designing building documenting and consuming RESTful APIs,Medium
+Helm,Package Manager,false,A package manager for Kubernetes that helps define install and upgrade complex applications,Medium
+pnpm,Package Manager,false,A fast disk-space-efficient package manager that uses a content-addressable storage approach,Medium
+Turborepo,Build System,false,A high-performance build system for JavaScript and TypeScript monorepos with smart caching,Medium
+ESBuild,Build Tool,false,An extremely fast JavaScript and TypeScript bundler and minifier written in Go,Medium
+SWC,Compiler,false,A super-fast TypeScript and JavaScript compiler written in Rust used as a drop-in Babel replacement,Medium
 Drizzle ORM,ORM,false,A lightweight TypeScript ORM with SQL-like query syntax and zero-overhead database abstractions,Medium
 tRPC,API Framework,false,An end-to-end typesafe API framework for TypeScript that eliminates the need for code generation,Medium
 Zod,Validation Library,false,A TypeScript-first schema declaration and validation library with static type inference,Medium
-Turborepo,Build System,false,A high-performance build system for JavaScript and TypeScript monorepos with smart caching,Medium
-pnpm,Package Manager,false,A fast disk-space-efficient package manager that uses a content-addressable storage approach,Medium
-Polars,Data Library,false,A blazingly fast DataFrame library implemented in Rust with Python and Node.js bindings,Medium
-K6,Load Testing,false,A modern load testing tool using JavaScript for scriptable and developer-friendly performance tests,Medium
-Locust,Load Testing,false,A scalable load testing framework written in Python for testing web applications under load,Medium
-Grafana Alloy,Observability,false,A vendor-neutral distribution of the OpenTelemetry Collector maintained by Grafana Labs,Medium
-Vector,Data Pipeline,false,A high-performance observability data pipeline for collecting transforming and routing log data,Medium
-KeyDB,Database,false,A multithreaded fork of Redis providing active replication and MVCC-based concurrent access,Medium
-Valkey,Database,false,An open-source in-memory data store forked from Redis and maintained by the Linux Foundation,Medium
-Dragonfly,Database,false,A modern in-memory data store compatible with Redis and Memcached APIs with vertical scaling,Medium
-Payload CMS,Content Management,false,A headless CMS and application framework for Node.js with code-first configuration,Medium
-Resend,Email API,false,A developer-focused email sending API with React-based email template support and deliverability tools,Medium
-Trigger.dev,Background Jobs,false,An open-source background jobs framework for TypeScript with durable execution and long-running tasks,Medium
-Inngest,Event Platform,false,An event-driven durable functions platform for building reliable background jobs and workflows,Medium
-Convex,Backend Platform,false,A reactive backend-as-a-service providing real-time data sync and serverless TypeScript functions,Medium
-Sonic,Search Backend,false,A lightweight and fast search backend written in Rust designed as an alternative to Elasticsearch,Medium
-Typesense,Search Engine,false,A typo-tolerant open-source search engine optimized for instant search-as-you-type experiences,Medium
-Apache Flink,Stream Processing,false,A distributed stream processing framework for stateful computations over bounded and unbounded data,Medium
-Apache Arrow,Data Format,false,A cross-language columnar in-memory data format designed for efficient analytic operations,Medium
-DBeaver,Database Tool,false,A universal database management tool with an SQL editor supporting all major relational databases,Medium
-Insomnia,API Testing,false,A collaborative API design and testing platform for REST GraphQL and gRPC endpoints,Medium
-Bruno,API Client,false,An open-source API client that stores API collections directly in the filesystem using plain text,Medium
-Hono,Web Framework,false,An ultrafast web framework for the edge that runs on Cloudflare Workers Deno Bun and Node.js,Medium
-Elysia,Web Framework,false,A TypeScript web framework built on Bun with end-to-end type safety and ergonomic developer experience,Medium
-Wrangler,CLI Tool,false,A command-line tool for building and deploying Cloudflare Workers and Pages applications,Medium
-Coolify,Deployment Platform,false,An open-source self-hostable alternative to Heroku and Netlify for deploying applications,Medium
-Dokku,Deployment Platform,false,An open-source single-server Platform-as-a-Service implementation powered by Docker,Medium
-Fig,Terminal Tool,false,A terminal tool that adds IDE-style autocomplete to the command line for shells and CLI tools,Medium
-Atuin,Shell Tool,false,A shell history manager that syncs and searches command history across machines using SQLite,Medium
-Zellij,Terminal Multiplexer,false,A terminal workspace manager with a layout system and WebAssembly plugin architecture,Medium
-htmx,Frontend Library,false,A library that accesses modern browser features directly from HTML using attributes instead of JavaScript,Easy
-Astro,Web Framework,false,A web framework for building fast content-focused websites using an islands architecture approach,Easy
-SolidJS,Frontend Framework,false,A declarative reactive JavaScript library for building user interfaces without a virtual DOM,Easy
-Svelte,Frontend Framework,false,A component framework that shifts work into a compile step producing efficient vanilla JavaScript,Easy
-Bun,JavaScript Runtime,false,An all-in-one JavaScript runtime with a built-in bundler transpiler and package manager,Easy
-Deno,JavaScript Runtime,false,A secure runtime for JavaScript and TypeScript built in Rust with built-in tooling and permissions,Easy
-Vitest,Testing Framework,false,A fast unit test framework powered by Vite with native ES modules support and hot module replacement,Easy
-Playwright,Testing Framework,false,A framework for reliable end-to-end testing of modern web apps across Chromium Firefox and WebKit,Easy
-Prisma,ORM,false,A next-generation TypeScript ORM providing type-safe database access with an intuitive data model,Easy
-Zustand,State Management,false,A small fast and scalable state management library for React using simplified flux principles,Easy
-React Query,Data Library,false,A library for fetching caching and synchronizing server state in React applications,Easy
-Supabase,Backend Platform,false,An open-source Firebase alternative providing a PostgreSQL database authentication and storage,Easy
-Vercel,Cloud Platform,false,A cloud platform for deploying frontend applications with serverless functions and edge computing,Easy
-Netlify,Cloud Platform,false,An all-in-one platform for automating modern web projects with CI/CD and serverless functions,Easy
-Tailwind CSS,CSS Framework,false,A utility-first CSS framework for building custom designs without leaving your HTML markup,Easy
-Storybook,UI Tool,false,An open-source tool for building and testing UI components in isolation for frontend development,Easy
-Vite,Build Tool,false,A next-generation frontend build tool offering fast development server startup and hot module replacement,Easy
-ESBuild,Build Tool,false,An extremely fast JavaScript and TypeScript bundler and minifier written in Go,Easy
-Prettier,Code Formatter,false,An opinionated code formatter supporting multiple languages that enforces a consistent style,Easy
-Pinia,State Management,false,A lightweight and intuitive state management library for Vue.js with full TypeScript support,Easy
-Sentry,Error Tracking,false,An application monitoring platform that helps developers identify and fix errors in real time,Easy
-Grafana,Monitoring,false,An open-source analytics and interactive visualization web application for monitoring dashboards,Easy
-Prometheus,Monitoring,false,An open-source monitoring and alerting toolkit designed for reliability in cloud-native environments,Easy
-Docker,Containerization,false,A platform for developing and running applications in lightweight isolated containers,Easy
-Kubernetes,Container Orchestration,false,An open-source platform for automating deployment scaling and management of containerized workloads,Easy
-Terraform,Infrastructure as Code,false,An infrastructure as code tool for building changing and versioning cloud infrastructure safely,Easy
-Redis,Database,false,An open-source in-memory data structure store used as a database cache and message broker,Easy
-MongoDB,Database,false,A document-oriented NoSQL database that stores data in flexible JSON-like BSON documents,Easy
-PostgreSQL,Database,false,An advanced open-source relational database known for extensibility and standards compliance,Easy
-ESLint,Linter,false,A static code analysis tool for identifying and fixing problematic patterns in JavaScript and TypeScript,Easy
-Wasp,Web Framework,false,A full-stack web development framework for React and Node.js with a declarative configuration language,Medium
-Encore,Backend Framework,false,A backend development platform for TypeScript and Go with built-in infrastructure automation,Medium
-Nitro,Server Engine,false,A portable server engine that powers Nuxt and other frameworks with cross-platform deployment support,Medium
-SST,Deployment Framework,false,A framework for building full-stack serverless applications on AWS with infrastructure as code,Medium
-Biome,Developer Tool,false,A fast formatter and linter for JavaScript TypeScript JSON and CSS designed to replace multiple tools,Medium
-Oxlint,Linter,false,A high-performance JavaScript and TypeScript linter written in Rust for large codebase analysis,Medium
-SWC,Compiler,false,A super-fast TypeScript and JavaScript compiler written in Rust used as a drop-in Babel replacement,Medium
-Partykit,Real-time Platform,false,A platform for building real-time collaborative multiplayer applications using serverless infrastructure,Medium
-LiveKit,Real-time Infrastructure,false,An open-source platform for building real-time video audio and data streaming applications,Medium
-Zitadel,Identity Management,false,An open-source identity management platform with built-in multi-tenancy and OIDC support,Medium
-Infisical,Secret Management,false,An open-source secret management platform for syncing environment variables across teams and infrastructure,Medium
-Redpanda,Streaming Platform,false,A Kafka-compatible streaming platform written in C++ for low-latency high-throughput event processing,Medium
-Stellix,Cloud Platform,true,A multi-region serverless compute platform that dynamically provisions GPU resources for parallel batch workloads,Medium
+MinIO,Object Storage,false,A high-performance S3-compatible object storage system designed for large-scale data infrastructure,Medium
+Caddy,Web Server,false,A web server with automatic HTTPS certificate provisioning and renewal built in Go,Medium
+Traefik,Reverse Proxy,false,A cloud-native reverse proxy and load balancer that integrates with container orchestration platforms,Medium
+Pulumi,Infrastructure as Code,false,An infrastructure as code platform using general-purpose programming languages instead of domain-specific ones,Medium
+Zig,Programming Language,false,A systems programming language designed for optimal runtime performance and compile-time evaluation,Hard
+Gleam,Programming Language,false,A type-safe functional language that compiles to Erlang and JavaScript for fault-tolerant systems,Hard
+Mojo,Programming Language,false,A Python-superset programming language by Modular designed for high-performance AI workloads,Hard
+Nim,Programming Language,false,A compiled systems programming language combining metaprogramming and multiple compilation backends,Hard
+Crystal,Programming Language,false,A compiled language with Ruby-inspired syntax that provides type inference and static type checking,Hard
+Haskell,Programming Language,false,A purely functional programming language with strong static typing and lazy evaluation for reliable software,Hard
+OCaml,Programming Language,false,A multi-paradigm programming language combining functional imperative and object-oriented features with type inference,Hard
+Clojure,Programming Language,false,A dynamic functional programming language that runs on the JVM with immutable data structures and LISP syntax,Hard
+Scala,Programming Language,false,A programming language combining object-oriented and functional programming that runs on the JVM,Hard
+Erlang,Programming Language,false,A concurrent functional language designed for building scalable fault-tolerant telecommunications systems,Hard
+Lua,Programming Language,false,A lightweight embeddable scripting language designed for extending applications with simple procedural syntax,Hard
+R,Programming Language,false,A programming language and environment for statistical computing data analysis and graphical visualization,Hard
+Hono,Web Framework,false,An ultrafast web framework for the edge that runs on Cloudflare Workers Deno Bun and Node.js,Hard
+Elysia,Web Framework,false,A TypeScript web framework built on Bun with end-to-end type safety and ergonomic developer experience,Hard
+Leptos,Web Framework,false,A full-stack Rust web framework using fine-grained reactivity for server-rendered applications,Hard
+Yew,Web Framework,false,A Rust component-based framework for building WebAssembly applications with a virtual DOM,Hard
+Dioxus,UI Framework,false,A cross-platform Rust framework for building user interfaces on web desktop and mobile targets,Hard
+Bazel,Build System,false,A fast and scalable build system by Google that supports multi-language and large-scale repositories,Hard
+Nix,Package Manager,false,A purely functional package manager that ensures reproducible builds through declarative configuration,Hard
+CockroachDB,Database,false,A cloud-native distributed SQL database designed for global data consistency and horizontal scaling,Hard
+DuckDB,Database,false,An in-process analytical database management system optimized for online analytical processing workloads,Hard
+Weaviate,Vector Database,false,An open-source vector search engine for building AI-powered applications with semantic search,Hard
+Podman,Container Engine,false,A daemonless container engine for developing and running OCI containers compatible with Docker CLI,Hard
+Nomad,Orchestration,false,A flexible workload orchestrator by HashiCorp for deploying containers and non-containerized applications,Hard
+Jaeger,Distributed Tracing,false,An open-source distributed tracing system by Uber for monitoring and troubleshooting microservices,Hard
+Loki,Log Aggregation,false,A horizontally scalable log aggregation system by Grafana Labs inspired by Prometheus design principles,Hard
+Cilium,Networking,false,An eBPF-based networking and security solution for Kubernetes providing transparent load balancing,Hard
+Temporal,Workflow Engine,false,A durable execution platform for orchestrating long-running workflows with automatic failure recovery,Hard
+NATS,Messaging System,false,A cloud-native high-performance messaging system for microservices and distributed applications,Hard
+Neon,Database,false,A serverless Postgres platform with database branching autoscaling and point-in-time recovery,Hard
+PlanetScale,Database,false,A serverless MySQL-compatible database platform with non-blocking schema changes and branching,Hard
+Polars,Data Library,false,A blazingly fast DataFrame library implemented in Rust with Python and Node.js bindings,Hard
+K6,Load Testing,false,A modern load testing tool using JavaScript for scriptable and developer-friendly performance tests,Hard
+Tekton,CI/CD,false,A cloud-native framework for creating CI/CD pipelines that run as Kubernetes custom resources,Hard
+Coolify,Deployment Platform,false,An open-source self-hostable alternative to Heroku and Netlify for deploying applications,Hard
+Redpanda,Streaming Platform,false,A Kafka-compatible streaming platform written in C++ for low-latency high-throughput event processing,Hard
+Apache Flink,Stream Processing,false,A distributed stream processing framework for stateful computations over bounded and unbounded data,Hard
+Vitess,Database Clustering,false,A database clustering system for horizontal scaling of MySQL through sharding and connection pooling,Hard
+Crossplane,Infrastructure,false,A Kubernetes-native control plane for composing cloud infrastructure using custom resource definitions,Hard
+BeanStack,Web Framework,true,A convention-over-configuration web framework that scaffolds RESTful microservices from annotated data models,Easy
+Yolo.js,Frontend Library,true,A reactive frontend library that optimizes rendering by predicting user interaction patterns at compile time,Easy
+ChadDB,Database,true,A schemaless distributed database engine optimized for high-throughput social graph queries and fan-out writes,Easy
+GitGud,Developer Tool,true,A gamified CLI companion that tracks coding streaks and provides real-time refactoring suggestions,Easy
+Broski,Package Manager,true,A dependency manager that resolves version conflicts using behavioral compatibility scoring across semver ranges,Easy
+404.css,CSS Framework,true,A utility-first CSS framework that generates responsive breakpoints from viewport usage telemetry data,Medium
+CopyPasta,Code Generator,true,A template engine that synthesizes boilerplate code by analyzing project structure and naming conventions,Medium
+Dumpster,Log Aggregation,true,A structured log aggregation platform that classifies and prioritizes entries using anomaly detection models,Medium
+Kernelwave,Runtime,true,A WebAssembly runtime with ahead-of-time compilation optimized for deterministic execution on edge devices,Medium
+Chonkbase,Database,true,A wide-column store that dynamically partitions data based on access frequency to optimize read-heavy workloads,Medium
+StackOverflow.js,Error Handler,true,A runtime error recovery library that matches exceptions to known solutions using semantic code analysis,Medium
+DeployAndPray,CI/CD,true,A CI/CD pipeline runner that automatically retries flaky builds and posts deployment status updates to team chat channels,Medium
+Spaghettify,State Management,true,A reactive state orchestration library that resolves circular dependencies through topological event sorting,Medium
+ShipIt,Code Review,true,An automated code review agent that performs static analysis and generates inline improvement suggestions,Medium
+CloudyMcCloudface,Cloud Platform,true,A serverless compute platform that dynamically provisions GPU resources for parallel batch processing workloads,Medium
+Burnout.js,Task Scheduler,true,A distributed task scheduler with priority inheritance and automatic deadline propagation across worker pools,Medium
+Crestline,Load Balancer,true,An application-layer load balancer using consistent hashing with bounded load to prevent hotspot formation,Hard
 Ferrox,Database,true,A columnar storage engine optimized for time-series ingestion with adaptive partition management and compression,Hard
 Meridex,API Gateway,true,An API gateway with built-in schema validation request coalescing and automatic client SDK generation,Medium
 Vektis,Monitoring,true,A distributed observability platform that correlates traces metrics and logs using causal inference models,Hard
 Stratos,Container Orchestration,true,A lightweight container orchestrator designed for edge deployments with intermittent network connectivity,Hard
 Pyxis,Build Tool,true,A polyglot build system that infers cross-language dependency graphs from source-level import analysis,Hard
 Nocturn,Security,true,A zero-trust network mesh that derives ephemeral service credentials from hardware attestation signals,Hard
-Axiora,ORM,true,A schema-first object-relational mapper that generates statically verified queries from database introspection,Medium
-Kolvex,Message Queue,true,A persistent message queue using log-structured merge trees for exactly-once delivery across partitions,Medium
-Cyphex,Encryption Library,true,A post-quantum cryptography library implementing lattice-based key encapsulation for transport security,Hard
-Driftline,CI/CD,true,A pipeline orchestrator that replays failed CI builds from the last verified checkpoint using content hashing,Medium
-Quartzite,Task Scheduler,true,A distributed task scheduler with priority inheritance and automatic deadline propagation across workers,Medium
-Synclite,Database,true,An embeddable relational database with built-in conflict-free replication designed for offline-first applications,Medium
-Pinnex,Package Manager,true,A deterministic package resolver using content-addressed storage to guarantee reproducible dependency trees,Medium
-Zephyra,Stream Processing,true,A stream processing engine using punctuated watermarks for correct windowed aggregation of late-arriving events,Hard
-Nexora,Runtime,true,A WebAssembly runtime with ahead-of-time compilation targeting deterministic execution on constrained edge devices,Medium
-Orbita,Service Mesh,true,A sidecar-free service mesh using kernel-level probes to generate real-time topology maps of microservices,Hard
-Helixdb,Database,true,A graph database engine that optimizes recursive common table expressions for deep multi-hop traversals,Hard
-Torchline,Logging,true,A structured logging library that auto-correlates log entries across services using distributed trace context,Easy
-Prismix,Data Pipeline,true,A schema-aware data pipeline framework that validates transforms and routes records using pluggable codec chains,Medium
-Candelis,Testing Framework,true,A property-based testing framework that generates adversarial edge-case inputs from algebraic type specifications,Medium
-Vertexflow,Workflow Engine,true,A DAG-based workflow engine with configurable retry policies and automatic dead-letter queue routing,Medium
-Crestline,Load Balancer,true,An application-layer load balancer using consistent hashing with bounded load to prevent hotspot formation,Hard
 Solstice,Compiler Toolchain,true,A multi-target compiler infrastructure that lowers typed intermediate representation to platform-native machine code,Hard
 Ecliptix,Deployment Platform,true,A progressive deployment platform that uses traffic mirroring and automated canary analysis before promotion,Medium
 Synthara,Code Generation,true,A source code generator that scaffolds fully typed API clients from annotated protocol buffer definitions,Easy
@@ -179,3 +165,5 @@ Arctis,Cache Layer,true,A tiered caching system using access-frequency analysis 
 Lucentra,Frontend Framework,true,A compiled reactive UI framework that performs incremental DOM reconciliation using ahead-of-time static analysis,Medium
 Terravex,Infrastructure Scanner,true,A drift detection tool that continuously compares deployed infrastructure state against declared configurations,Medium
 Sigillum,Authentication,true,A token-based authentication library using rotating asymmetric key pairs with automatic key ceremony orchestration,Hard
+Zephyra,Stream Processing,true,A stream processing engine using punctuated watermarks for correct windowed aggregation of late-arriving events,Hard
+Helixdb,Database,true,A graph database engine that optimizes recursive common table expressions for deep multi-hop traversals,Hard

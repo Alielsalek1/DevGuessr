@@ -69,8 +69,8 @@ public class MythdlePlayerService(
         var hardTargets = allTargets.Where(target => target.Difficulty == Domain.Enums.MythdleDifficulty.Hard && !target.IsFake).ToList();
         var mythTargets = allTargets.Where(target => target.IsFake).ToList();
 
-        // Per day: 2 hard + 2 medium + 1 easy + 1 fake = 6 cards
-        if (hardTargets.Count < 2 || mediumTargets.Count < 2 || easyTargets.Count < 1 || mythTargets.Count < 1)
+        // Per day: 2 easy + 2 medium + 1 hard + 1 fake = 6 cards
+        if (easyTargets.Count < 2 || mediumTargets.Count < 2 || hardTargets.Count < 1 || mythTargets.Count < 1)
         {
             return Result<SuccessApiResponse<CreateMythdleGamesResponseDto>>.Failure(AdminMythdleErrors.NoTargetsFound);
         }
@@ -82,9 +82,9 @@ public class MythdlePlayerService(
 
         // Calculate potential games based on available pool
         var gameCount = new[] {
-            hardTargets.Count / 2,
+            easyTargets.Count / 2,
             mediumTargets.Count / 2,
-            easyTargets.Count / 1,
+            hardTargets.Count / 1,
             mythTargets.Count / 1,
         }.Min();
 
@@ -101,9 +101,9 @@ public class MythdlePlayerService(
             var puzzleDate = startPuzzleDate.AddDays(index);
             var mythTarget = mythTargets[index];
             
-            var selectedActuals = hardTargets.Skip(index * 2).Take(2)
+            var selectedActuals = easyTargets.Skip(index * 2).Take(2)
                 .Concat(mediumTargets.Skip(index * 2).Take(2))
-                .Concat(easyTargets.Skip(index * 1).Take(1))
+                .Concat(hardTargets.Skip(index * 1).Take(1))
                 .ToList();
 
             var selectedTargets = selectedActuals
