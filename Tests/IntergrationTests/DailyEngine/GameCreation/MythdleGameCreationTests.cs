@@ -92,20 +92,20 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
     public async Task CreateGames_AdminWithTargets_Returns201CreatedWithBatchData()
     {
         var adminClient = await GetAdminClientAsync();
-        var easyTarget = CreateTarget($"Easy_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy);
+        var easyTargets = new[]
+        {
+            CreateTarget($"Easy_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy),
+            CreateTarget($"Easy_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy)
+        };
         var mediumTargets = new[]
         {
             CreateTarget($"Med_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium),
             CreateTarget($"Med_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium)
         };
-        var hardTargets = new[]
-        {
-            CreateTarget($"Hard_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard),
-            CreateTarget($"Hard_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard)
-        };
+        var hardTarget = CreateTarget($"Hard_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard);
         var mythTarget = CreateTarget($"Myth_{Guid.NewGuid():N}", "Legend", true);
         
-        await SeedTargetsAsync(hardTargets.Concat(mediumTargets).Append(easyTarget).Append(mythTarget).ToArray());
+        await SeedTargetsAsync(easyTargets.Concat(mediumTargets).Append(hardTarget).Append(mythTarget).ToArray());
 
         var response = await adminClient.PostAsync("/api/v1/mythdle/games", null);
         var content = await response.Content.ReadFromJsonAsync<SuccessApiResponse<CreateMythdleGamesResponseDto>>();
@@ -161,15 +161,15 @@ public class MythdleGameCreationTests(CustomWebApplicationFactory factory) : Bas
 
     private async Task SeedTargetSetAsync(int count)
     {
-        // For game creation we need 2 hard, 2 medium, 1 easy, 1 myth per day
+        // For game creation we need 1 hard, 2 medium, 2 easy, 1 myth per day
         var neededTargets = new List<MythdleTarget>();
         for (var i = 0; i < count; i++)
         {
-            neededTargets.Add(CreateTarget($"Hard1_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard));
-            neededTargets.Add(CreateTarget($"Hard2_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard));
+            neededTargets.Add(CreateTarget($"Hard_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Hard));
             neededTargets.Add(CreateTarget($"Med1_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium));
             neededTargets.Add(CreateTarget($"Med2_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Medium));
-            neededTargets.Add(CreateTarget($"Easy_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy));
+            neededTargets.Add(CreateTarget($"Easy1_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy));
+            neededTargets.Add(CreateTarget($"Easy2_{i}_{Guid.NewGuid():N}", difficulty: MythdleDifficulty.Easy));
             neededTargets.Add(CreateTarget($"Myth_{i}_{Guid.NewGuid():N}", isFake: true));
         }
         await SeedTargetsAsync(neededTargets.ToArray());
