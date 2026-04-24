@@ -6,6 +6,7 @@ export interface MythdleHistoryEntry {
 export interface PersistedMythdleState {
   puzzleId: string;
   solved: boolean;
+  failed: boolean;
   guesses: string[];
   startedAtIso?: string;
   solvedElapsedLabel?: string;

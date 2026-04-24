@@ -179,7 +179,7 @@ export class MythdlePageComponent implements OnInit {
     }));
 
     this.solved = state.solved || this.history.some((entry) => entry.isCorrect);
-    this.failed = !this.solved && this.history.length >= this.maxAttempts;
+    this.failed = state.failed ?? (!this.solved && this.history.length >= this.maxAttempts);
 
     if (this.solved) {
       this.feedbackMessage = 'Puzzle already solved for today.';
@@ -196,6 +196,7 @@ export class MythdlePageComponent implements OnInit {
     const state: PersistedMythdleState = {
       puzzleId: this.puzzle.puzzleId,
       solved: this.solved,
+      failed: this.failed,
       guesses: this.history.map((entry) => entry.guess),
       startedAtIso: this.puzzleStartedAtIso,
       solvedElapsedLabel: this.solvedElapsedLabel,

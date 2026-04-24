@@ -71,9 +71,9 @@ export class HomePageComponent implements OnInit {
   private getCompletedCount(): number {
     const today = this.todayAsDateOnly();
     const completionChecks = [
-      this.isLangdleSolved(today),
-      this.readBooleanState(`logodle:state:${today}`, 'solved'),
-      this.readBooleanState(`mythdle:state:${today}`, 'solved')
+      this.isCompleted(`langdle:state:${today}`),
+      this.isCompleted(`logodle:state:${today}`),
+      this.isCompleted(`mythdle:state:${today}`)
     ];
 
     return completionChecks.filter(Boolean).length;
@@ -84,23 +84,24 @@ export class HomePageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  private isLangdleSolved(today: string): boolean {
-    return this.readBooleanState(`langdle:state:${today}`, 'solved');
-  }
 
   protected isGameCompleted(route: string): boolean {
     const today = this.todayAsDateOnly();
 
     switch (route) {
       case '/langdle':
-        return this.readBooleanState(`langdle:state:${today}`, 'solved');
+        return this.isCompleted(`langdle:state:${today}`);
       case '/logodle':
-        return this.readBooleanState(`logodle:state:${today}`, 'solved');
+        return this.isCompleted(`logodle:state:${today}`);
       case '/mythdle':
-        return this.readBooleanState(`mythdle:state:${today}`, 'solved');
+        return this.isCompleted(`mythdle:state:${today}`);
       default:
         return false;
     }
+  }
+
+  private isCompleted(storageKey: string): boolean {
+    return this.readBooleanState(storageKey, 'solved') || this.readBooleanState(storageKey, 'failed');
   }
 
   private readBooleanState(storageKey: string, fieldName: string): boolean {

@@ -181,7 +181,7 @@ export class LogodlePageComponent implements OnInit {
     if (state && state.puzzleId === puzzle.puzzleId) {
       this.solved = state.solved;
       this.history = state.history;
-      this.failed = !this.solved && this.history.length >= LOGODLE_MAX_ATTEMPTS;
+      this.failed = state.failed ?? (!this.solved && this.history.length >= LOGODLE_MAX_ATTEMPTS);
       this.solvedElapsedLabel = state.solvedElapsedLabel;
       this.puzzleStartedAtIso = state.startedAtIso;
 
@@ -206,6 +206,7 @@ export class LogodlePageComponent implements OnInit {
     const state: PersistedLogodleState = {
       puzzleId: this.puzzle.puzzleId,
       solved: this.solved,
+      failed: this.failed,
       startedAtIso: this.puzzleStartedAtIso,
       solvedElapsedLabel: this.solvedElapsedLabel,
       history: this.history

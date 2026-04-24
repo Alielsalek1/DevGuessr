@@ -8,6 +8,7 @@ export interface GuessHistoryEntry {
 export interface PersistedLogodleState {
   puzzleId: string;
   solved: boolean;
+  failed: boolean;
   startedAtIso: string;
   solvedElapsedLabel: string;
   history: GuessHistoryEntry[];
