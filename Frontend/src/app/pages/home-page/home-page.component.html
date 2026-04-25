@@ -21,6 +21,27 @@
           <div class="absolute left-0 top-0 h-full bg-[var(--color-system)] shadow-[0_0_8px_var(--color-system)]"
             [style.width.%]="progressPercent"></div>
         </div>
+
+        @if (completedGames === totalGames) {
+        <div
+          class="mt-6 flex flex-col border border-white/5 bg-white/[0.02] p-4 rounded animate-in fade-in slide-in-from-top-2 duration-700">
+          <div class="flex items-center gap-3">
+            <div class="h-1.5 w-1.5 rounded-full bg-[var(--color-system)] animate-pulse"></div>
+            <div class="flex flex-col">
+              <span class="font-mono text-[9px] uppercase tracking-widest text-[var(--color-muted)]">Next Terminals
+                Online In</span>
+              <span class="font-mono text-lg font-bold tracking-wider text-white">{{ nextPuzzleTimer }}</span>
+            </div>
+          </div>
+
+          <div class="mt-4 border-t border-white/5 pt-3">
+            <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Bonus module active at <a href="https://linuxdle.site" target="_blank"
+                class="text-[var(--color-system)] hover:underline decoration-[var(--color-system)]/50 transition-all">linuxdle</a>
+            </p>
+          </div>
+        </div>
+        }
       </div>
     </div>
   </div>
