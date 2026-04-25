@@ -13,7 +13,7 @@ export interface PersistedMythdleState {
   correctTargetName?: string;
 }
 
-export interface VictoryStats {
+export interface MythdleResultStats {
   attempts: number;
   wrongGuesses: number;
   elapsedLabel: string;
@@ -21,7 +21,7 @@ export interface VictoryStats {
   mythName: string;
 }
 
-export interface VictoryParticle {
+export interface MythdleParticle {
   id: number;
   left: string;
   top: string;

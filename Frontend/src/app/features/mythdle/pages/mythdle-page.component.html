@@ -1,11 +1,12 @@
 <section class="space-y-8">
-  <app-mythdle-victory-screen
-    [victoryScreenActive]="victoryScreenActive"
-    [victoryScreenVisible]="victoryScreenVisible"
-    [victoryStats]="victoryStats"
-    [victoryParticles]="victoryParticles"
-    (closeEvent)="closeVictoryScreen()"
-  ></app-mythdle-victory-screen>
+  <app-mythdle-result-screen
+    [resultScreenActive]="resultScreenActive"
+    [resultScreenVisible]="resultScreenVisible"
+    [failed]="failed"
+    [resultStats]="resultStats"
+    [resultParticles]="resultParticles"
+    (closeEvent)="closeResultScreen()"
+  ></app-mythdle-result-screen>
 
   <div class="max-w-4xl">
     <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--color-system)]">system id: mythdle-v1</p>

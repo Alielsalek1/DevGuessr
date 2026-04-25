@@ -4,14 +4,14 @@ import { RouterLink } from '@angular/router';
 
 import { MYTHDLE_MAX_ATTEMPTS } from '../data/mythdle.constants';
 import { MythdleApiError, MythdleGameDto, MythdleTargetDto } from '../models/mythdle-api.models';
-import { MythdleHistoryEntry, PersistedMythdleState, VictoryParticle, VictoryStats } from '../models/mythdle-ui.models';
+import { MythdleHistoryEntry, PersistedMythdleState, MythdleParticle, MythdleResultStats } from '../models/mythdle-ui.models';
 import { MythdleApiService } from '../services/mythdle-api.service';
-import { MythdleVictoryScreenComponent } from '../components/mythdle-victory-screen/mythdle-victory-screen.component';
+import { MythdleResultScreenComponent } from '../components/mythdle-result-screen/mythdle-result-screen.component';
 
 @Component({
   selector: 'app-mythdle-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, MythdleVictoryScreenComponent],
+  imports: [CommonModule, RouterLink, MythdleResultScreenComponent],
   templateUrl: './mythdle-page.component.html'
 })
 export class MythdlePageComponent implements OnInit {
@@ -30,17 +30,17 @@ export class MythdlePageComponent implements OnInit {
   private revealedCorrectTarget = '';
 
   private solvedElapsedLabel = '';
-  protected victoryScreenActive = false;
-  protected victoryScreenVisible = false;
-  protected victoryStats: VictoryStats | null = null;
-  protected victoryParticles: VictoryParticle[] = [];
+  protected resultScreenActive = false;
+  protected resultScreenVisible = false;
+  protected resultStats: MythdleResultStats | null = null;
+  protected resultParticles: MythdleParticle[] = [];
   private puzzleStartedAtIso = '';
-  private victoryScreenTimer: ReturnType<typeof setTimeout> | null = null;
+  private resultScreenTimer: ReturnType<typeof setTimeout> | null = null;
 
   @HostListener('window:keydown.escape')
   protected handleEscapeKey(): void {
-    if (this.victoryScreenActive) {
-      this.closeVictoryScreen();
+    if (this.resultScreenActive) {
+      this.closeResultScreen();
     }
   }
 
@@ -107,8 +107,8 @@ export class MythdlePageComponent implements OnInit {
 
           this.persistStateForPuzzle();
           
-          if (this.solved) {
-            this.triggerVictoryScreen();
+          if (this.solved || this.failed) {
+            this.triggerResultScreen();
           }
           
           this.cdr.detectChanges();
@@ -160,7 +160,7 @@ export class MythdlePageComponent implements OnInit {
   }
 
   private restoreStateForPuzzle(puzzle: MythdleGameDto): void {
-    this.hideVictoryScreen(true);
+    this.hideResultScreen(true);
     const state = this.getPersistedStateForPuzzle(puzzle);
     if (!state || state.puzzleId !== puzzle.puzzleId) {
       this.puzzleStartedAtIso = new Date().toISOString();
@@ -244,66 +244,71 @@ export class MythdlePageComponent implements OnInit {
     return `Error loading puzzle: ${error.message}`;
   }
 
-  protected closeVictoryScreen(): void {
-    this.hideVictoryScreen();
+  protected closeResultScreen(): void {
+    this.hideResultScreen();
   }
 
-  private hideVictoryScreen(skipDelay = false): void {
-    if (this.victoryScreenTimer) {
-      clearTimeout(this.victoryScreenTimer);
-      this.victoryScreenTimer = null;
+  private hideResultScreen(skipDelay = false): void {
+    if (this.resultScreenTimer) {
+      clearTimeout(this.resultScreenTimer);
+      this.resultScreenTimer = null;
     }
 
-    this.victoryScreenVisible = false;
+    this.resultScreenVisible = false;
 
     if (skipDelay) {
-      this.victoryScreenActive = false;
+      this.resultScreenActive = false;
       return;
     }
 
-    this.victoryScreenTimer = setTimeout(() => {
-      this.victoryScreenActive = false;
-      this.victoryScreenTimer = null;
+    this.resultScreenTimer = setTimeout(() => {
+      this.resultScreenActive = false;
+      this.resultScreenTimer = null;
       this.cdr.detectChanges();
     }, 260);
   }
 
-  private triggerVictoryScreen(): void {
-    this.prepareVictoryStats();
-    this.victoryParticles = this.buildVictoryParticles();
-    this.victoryScreenActive = true;
-    this.victoryScreenVisible = false;
+  private triggerResultScreen(): void {
+    this.prepareResultStats();
+    this.resultParticles = this.solved ? this.buildResultParticles() : [];
+    this.resultScreenActive = true;
+    this.resultScreenVisible = false;
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     requestAnimationFrame(() => {
-      this.victoryScreenVisible = true;
+      this.resultScreenVisible = true;
       this.cdr.detectChanges();
     });
   }
 
-  private prepareVictoryStats(): void {
-    if (!this.puzzle || !this.solved || this.history.length === 0) {
-      this.victoryStats = null;
+  private prepareResultStats(): void {
+    if (!this.puzzle || (!this.solved && !this.failed) || this.history.length === 0) {
+      this.resultStats = null;
       return;
     }
 
     const elapsedLabel = this.solvedElapsedLabel || this.formatDuration(Math.max(0, Date.now() - Date.parse(this.puzzleStartedAtIso || new Date().toISOString())));
-    this.solvedElapsedLabel = elapsedLabel;
-    const finalGuess = this.history.find((h) => h.isCorrect)?.guess || this.history[this.history.length - 1]?.guess || 'n/a';
+    if (this.solved) {
+      this.solvedElapsedLabel = elapsedLabel;
+    }
 
-    this.victoryStats = {
+    const finalGuess = this.solved 
+      ? (this.history.find((h) => h.isCorrect)?.guess || 'n/a')
+      : this.correctTargetName();
+
+    this.resultStats = {
       attempts: this.history.length,
-      wrongGuesses: Math.max(0, this.history.length - 1),
+      wrongGuesses: this.solved ? Math.max(0, this.history.length - 1) : this.history.length,
       elapsedLabel,
       puzzleDate: this.puzzle.puzzleDate,
       mythName: finalGuess
     };
   }
 
-  private buildVictoryParticles(): VictoryParticle[] {
+  private buildResultParticles(): MythdleParticle[] {
     const palette = ['bg-[#FF7CF5]', 'bg-[#FF7CF5]', 'bg-[#FFD166]', 'bg-[#00FFFF]', 'bg-[#C084FC]', 'bg-white'];
-    const particles: VictoryParticle[] = [];
+    const particles: MythdleParticle[] = [];
 
     for (let index = 0; index < 52; index++) {
       particles.push({
