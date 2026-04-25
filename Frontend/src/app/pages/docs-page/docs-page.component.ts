@@ -54,7 +54,7 @@ import { Component } from '@angular/core';
             <h2 class="font-headline text-2xl font-bold uppercase tracking-wide text-white">MYTHDLE</h2>
           </div>
           <p class="text-sm leading-relaxed text-white/70">
-            Find the fabricated tech legend. In this <strong>developer logic game</strong>, you are presented with 6 items—5 are real technologies and 1 is a "myth." You have 2 tries to identify the fake among the truths.
+            Find the fabricated tech legend. In this <strong>developer logic game</strong>, you are presented with 6 items: 5 are real technologies and 1 is a myth. You have 2 tries to identify the fake among the truths.
           </p>
           <div class="mt-4 flex gap-1">
             <span class="h-1 w-8 bg-[var(--color-primary)] rounded-full"></span>
@@ -66,7 +66,7 @@ import { Component } from '@angular/core';
       <div class="mt-16 border-t border-white/10 pt-12">
         <h3 class="font-headline text-3xl font-bold uppercase text-white mb-6">About DevGuessr</h3>
         <p class="text-sm leading-relaxed text-white/60 max-w-4xl">
-          DevGuessr was created as a <strong>wordle-style game for developers</strong> who want to sharpen their technical edge. By combining visual puzzles, data-driven guessing, and tech lore, we provide a fun, educational <strong>daily coding streak</strong> for the global software engineering community. Our mission is to celebrate the diversity of the <strong>tech ecosystem</strong> while giving developers a quick mental workout every day.
+          DevGuessr is a wordle-style game for engineers. We mix visual puzzles, technical attributes, and software lore to create a quick daily mental workout. It's built for the global dev community to celebrate the tools and languages we use every day.
         </p>
       </div>
     </section>

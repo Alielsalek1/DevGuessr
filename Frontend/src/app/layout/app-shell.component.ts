@@ -91,7 +91,10 @@ import { APP_ENV } from '../core/config/app-env.token';
           </div>
           
           <div class="flex items-center gap-10">
+            <a href="https://github.com/Alielsalek1/DevGuessr" target="_blank" rel="noopener noreferrer" class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">GitHub</a>
             <a routerLink="/about" class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">About</a>
+            <a routerLink="/privacy" class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">Privacy</a>
+            <a routerLink="/terms" class="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">Terms</a>
           </div>
           
           <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--color-muted)]">
