@@ -66,11 +66,11 @@ public class InternalSessionService(
             return validationResult;
         }
 
-        if (await IsDeviceNotTrustedAsync(user!.Id, deviceId, cancellationToken))
-        {
-            _logger.LogInformation("New device detected for user {UsernameOrEmail}. Confirmation email sent to {Email}", loginRequest.UsernameOrEmail, user.Email);
-            return await RegisterNewDevice(user, deviceId, cancellationToken);
-        }
+        // if (await IsDeviceNotTrustedAsync(user!.Id, deviceId, cancellationToken))
+        // {
+        //     _logger.LogInformation("New device detected for user {UsernameOrEmail}. Confirmation email sent to {Email}", loginRequest.UsernameOrEmail, user.Email);
+        //     return await RegisterNewDevice(user, deviceId, cancellationToken);
+        // }
 
         _logger.LogInformation("Device recognized for user {UsernameOrEmail}. Proceeding with login.", loginRequest.UsernameOrEmail);
         _logger.LogInformation("generating refresh token for user {UsernameOrEmail}", loginRequest.UsernameOrEmail);
