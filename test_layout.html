@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --color-bg: #000;
+    --color-text: #fff;
+    --color-primary: #00ffff;
+    --color-muted: #888;
+  }
+</style>
+</head>
+<body class="bg-[var(--color-bg)] text-[var(--color-text)]">
+  <div class="min-h-screen">
+    <header class="fixed inset-x-0 top-0 z-50 bg-[#0E0E0E]/80 border-b border-white/5">
+      <div class="relative mx-auto flex h-[64px] max-w-[1600px] w-full items-center justify-between gap-2 px-4">
+        <a href="#" class="shrink-0 text-[14px] font-black italic uppercase tracking-tight text-[var(--color-primary)]">
+          TECHDLE
+        </a>
+
+        <div class="flex min-w-0 flex-1 justify-center">
+          <div class="flex items-center gap-3">
+            <a href="#" class="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-muted)]">
+              Past Drops
+            </a>
+          </div>
+        </div>
+
+        <a href="#" class="shrink-0 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-[var(--color-primary)]">
+          Play Daily
+        </a>
+      </div>
+    </header>
+  </div>
+</body>
+</html>

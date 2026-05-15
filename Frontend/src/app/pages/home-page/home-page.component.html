@@ -10,12 +10,18 @@
         SELECT YOUR <span class="text-[var(--color-primary)] italic">TERMINAL</span>
       </h1>
 
+      @if (selectedDate) {
+      <div class="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--color-muted)]">
+        Viewing: {{ formatDate(selectedDate) }}
+      </div>
+      }
+
+      @if (!isHistoryMode) {
       <div class="mt-8 max-w-md mx-auto md:mx-0">
         <div class="mb-2 flex items-end justify-between">
           <span class="font-mono text-[10px] uppercase tracking-widest text-[var(--color-muted)]">Daily Quest
             Progress</span>
-          <span class="font-mono text-xs font-bold uppercase text-[var(--color-system)]">{{ completedGames }}/{{
-            totalGames }} Completed</span>
+          <span class="font-mono text-xs font-bold uppercase text-[var(--color-system)]">{{ completedGames }}/{{ totalGames }} Completed</span>
         </div>
         <div class="relative h-[2px] w-full bg-[#131313]">
           <div class="absolute left-0 top-0 h-full bg-[var(--color-system)] shadow-[0_0_8px_var(--color-system)]"
@@ -43,6 +49,7 @@
         </div>
         }
       </div>
+      }
     </div>
   </div>
 
@@ -50,7 +57,7 @@
     class="mt-12 mx-auto grid w-full max-w-3xl gap-4 px-6 grid-cols-1 2xl:mt-16 2xl:max-w-7xl 2xl:grid-cols-3 2xl:gap-6 md:px-8">
     @for (game of games; track game.route) {
     @let isCompleted = isGameCompleted(game.route);
-    <a [routerLink]="game.route"
+    <a [routerLink]="game.route" [queryParams]="selectedDate ? { date: selectedDate } : null"
       class="group relative flex min-h-[230px] w-full flex-col justify-between overflow-hidden border-l-2 p-4 transition-all duration-300 hover:-translate-y-1 2xl:min-h-[340px] 2xl:p-6 2xl:hover:-translate-y-2 {{ isCompleted ? 'border-emerald-400/40 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#10b981,2px_0_0_#10b981]' : 'border-white/15 bg-[var(--color-layer-1)] hover:shadow-[-2px_0_0_#ff00ff,2px_0_0_#00ffff]' }}">
       @if (isCompleted) {
       <div

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { LogodleApiError, LogodleGameDto } from '../models/logodle-api.models';
 import { LogodleApiService } from '../services/logodle-api.service';
@@ -29,6 +29,7 @@ import { LOGODLE_MAX_ATTEMPTS } from '../data/logodle.constants';
 export class LogodlePageComponent implements OnInit {
   private readonly logodleApi = inject(LogodleApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
 
   @ViewChild(LogodleGuessInputComponent) private guessInput?: LogodleGuessInputComponent;
 
@@ -40,6 +41,8 @@ export class LogodlePageComponent implements OnInit {
   protected inputError = '';
   protected bannerMessage = '';
   protected history: GuessHistoryEntry[] = [];
+  protected isReadOnly = false;
+  protected readOnlyMessage = '';
 
   private solvedElapsedLabel = '';
   protected victoryScreenActive = false;
@@ -48,6 +51,9 @@ export class LogodlePageComponent implements OnInit {
   protected victoryParticles: VictoryParticle[] = [];
   private puzzleStartedAtIso = '';
   private victoryScreenTimer: ReturnType<typeof setTimeout> | null = null;
+  protected puzzleDate = '';
+  protected historyQueryParams: { date: string } | null = null;
+  protected isHistoryMode = false;
 
   @HostListener('window:keydown.escape')
   protected handleEscapeKey(): void {
@@ -57,18 +63,38 @@ export class LogodlePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadGame();
+    this.route.queryParams.subscribe((params) => {
+      const dateParam = params['date'];
+      if (dateParam) {
+        this.puzzleDate = dateParam;
+        this.historyQueryParams = { date: dateParam };
+        this.isHistoryMode = dateParam !== this.todayAsDateOnly();
+      } else {
+        this.puzzleDate = this.todayAsDateOnly();
+        this.historyQueryParams = null;
+        this.isHistoryMode = false;
+      }
+      this.loadGame();
+    });
   }
 
   protected loadGame(): void {
     this.loadingGame = true;
     this.bannerMessage = '';
+    this.isReadOnly = false;
+    this.readOnlyMessage = '';
 
-    this.logodleApi.getGameByDate(this.todayAsDateOnly()).subscribe({
+    this.logodleApi.getGameByDate(this.puzzleDate).subscribe({
       next: (puzzle) => {
         this.puzzle = puzzle;
         this.loadingGame = false;
         this.restoreStateForPuzzle(puzzle);
+        
+        if (this.puzzleDate !== this.todayAsDateOnly() && this.solved) {
+          this.isReadOnly = true;
+          this.readOnlyMessage = 'This puzzle has already been solved. Viewing in read-only mode.';
+        }
+        
         this.cdr.detectChanges();
       },
       error: (error: LogodleApiError) => {
@@ -146,6 +172,9 @@ export class LogodlePageComponent implements OnInit {
   }
 
   private scheduleVictoryScreen(): void {
+    if (this.isHistoryMode) {
+      return;
+    }
     this.victoryScreenActive = true;
     this.victoryStats = {
       attempts: this.history.length,
@@ -185,12 +214,12 @@ export class LogodlePageComponent implements OnInit {
       this.solvedElapsedLabel = state.solvedElapsedLabel;
       this.puzzleStartedAtIso = state.startedAtIso;
 
-      if (this.solved || this.failed) {
-        const terminalEntry = [...this.history].reverse().find((entry) => entry.result.isGameOver || entry.result.isCorrect);
-        if (terminalEntry?.result.revealedImageUrl) {
+      if (this.history.length > 0) {
+        const latestEntryWithImage = [...this.history].reverse().find((entry) => entry.result.revealedImageUrl);
+        if (latestEntryWithImage?.result.revealedImageUrl) {
           this.puzzle = {
             ...puzzle,
-            initialImageUrl: terminalEntry.result.revealedImageUrl
+            initialImageUrl: latestEntryWithImage.result.revealedImageUrl
           };
         }
       }

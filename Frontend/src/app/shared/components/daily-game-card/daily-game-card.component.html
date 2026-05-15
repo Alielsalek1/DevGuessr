@@ -1,0 +1,127 @@
+<div class="bg-black/50 border border-white/20 rounded-lg p-6 mb-6">
+  <!-- Date Header -->
+  <h3 class="text-xl font-bold text-white mb-4">{{ formatDate(dailyGameSet.puzzleDate) }}</h3>
+  
+  <!-- Three Game Cards in Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Langdle Card -->
+    <div class="bg-black/30 border border-white/10 rounded-lg p-4 hover:border-white/30 transition-colors">
+      <div class="text-sm font-semibold text-blue-400 mb-2">LANGDLE</div>
+      
+      <div *ngIf="dailyGameSet.langdle; else noLangdle">
+        <p class="text-sm text-gray-300 mb-3">
+          {{ dailyGameSet.langdle.targetName }}
+        </p>
+        
+        <div 
+          [ngClass]="getStatusBadgeColor(getCompletionStatus('langdle', dailyGameSet.puzzleDate))"
+          class="inline-block text-xs font-bold px-3 py-1 rounded mb-3">
+          {{ getStatusBadgeText(getCompletionStatus('langdle', dailyGameSet.puzzleDate)) }}
+        </div>
+        
+        <div class="flex gap-2">
+          <button
+            *ngIf="!isSolved(getCompletionStatus('langdle', dailyGameSet.puzzleDate))"
+            [routerLink]="['/langdle']"
+            [queryParams]="{ date: dailyGameSet.puzzleDate }"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-3 rounded transition-colors">
+            Play
+          </button>
+          
+          <button
+            *ngIf="isSolved(getCompletionStatus('langdle', dailyGameSet.puzzleDate))"
+            [routerLink]="['/langdle']"
+            [queryParams]="{ date: dailyGameSet.puzzleDate }"
+            disabled
+            class="flex-1 bg-gray-600 text-gray-300 text-sm font-semibold py-2 px-3 rounded cursor-not-allowed">
+            View
+          </button>
+        </div>
+      </div>
+      
+      <ng-template #noLangdle>
+        <p class="text-xs text-gray-500">No game available</p>
+      </ng-template>
+    </div>
+
+    <!-- Logodle Card -->
+    <div class="bg-black/30 border border-white/10 rounded-lg p-4 hover:border-white/30 transition-colors">
+      <div class="text-sm font-semibold text-purple-400 mb-2">LOGODLE</div>
+      
+      <div *ngIf="dailyGameSet.logodle; else noLogodle">
+        <p class="text-sm text-gray-300 mb-3">
+          {{ dailyGameSet.logodle.targetName }}
+        </p>
+        
+        <div 
+          [ngClass]="getStatusBadgeColor(getCompletionStatus('logodle', dailyGameSet.puzzleDate))"
+          class="inline-block text-xs font-bold px-3 py-1 rounded mb-3">
+          {{ getStatusBadgeText(getCompletionStatus('logodle', dailyGameSet.puzzleDate)) }}
+        </div>
+        
+        <div class="flex gap-2">
+          <button
+            *ngIf="!isSolved(getCompletionStatus('logodle', dailyGameSet.puzzleDate))"
+            [routerLink]="['/logodle']"
+            [queryParams]="{ date: dailyGameSet.puzzleDate }"
+            class="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 px-3 rounded transition-colors">
+            Play
+          </button>
+          
+          <button
+            *ngIf="isSolved(getCompletionStatus('logodle', dailyGameSet.puzzleDate))"
+            [routerLink]="['/logodle']"
+            [queryParams]="{ date: dailyGameSet.puzzleDate }"
+            disabled
+            class="flex-1 bg-gray-600 text-gray-300 text-sm font-semibold py-2 px-3 rounded cursor-not-allowed">
+            View
+          </button>
+        </div>
+      </div>
+      
+      <ng-template #noLogodle>
+        <p class="text-xs text-gray-500">No game available</p>
+      </ng-template>
+    </div>
+
+    <!-- Mythdle Card -->
+    <div class="bg-black/30 border border-white/10 rounded-lg p-4 hover:border-white/30 transition-colors">
+      <div class="text-sm font-semibold text-amber-400 mb-2">MYTHDLE</div>
+      
+      <div *ngIf="dailyGameSet.mythdle; else noMythdle">
+        <p class="text-sm text-gray-300 mb-3">
+          {{ dailyGameSet.mythdle.targetNames.length }} target{{ dailyGameSet.mythdle.targetNames.length !== 1 ? 's' : '' }}
+        </p>
+        
+        <div 
+          [ngClass]="getStatusBadgeColor(getCompletionStatus('mythdle', dailyGameSet.puzzleDate))"
+          class="inline-block text-xs font-bold px-3 py-1 rounded mb-3">
+          {{ getStatusBadgeText(getCompletionStatus('mythdle', dailyGameSet.puzzleDate)) }}
+        </div>
+        
+        <div class="flex gap-2">
+          <button
+            *ngIf="!isSolved(getCompletionStatus('mythdle', dailyGameSet.puzzleDate))"
+            [routerLink]="['/mythdle']"
+            [queryParams]="{ date: dailyGameSet.puzzleDate }"
+            class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2 px-3 rounded transition-colors">
+            Play
+          </button>
+          
+          <button
+            *ngIf="isSolved(getCompletionStatus('mythdle', dailyGameSet.puzzleDate))"
+            [routerLink]="['/mythdle']"
+            [queryParams]="{ date: dailyGameSet.puzzleDate }"
+            disabled
+            class="flex-1 bg-gray-600 text-gray-300 text-sm font-semibold py-2 px-3 rounded cursor-not-allowed">
+            View
+          </button>
+        </div>
+      </div>
+      
+      <ng-template #noMythdle>
+        <p class="text-xs text-gray-500">No game available</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

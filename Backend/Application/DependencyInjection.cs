@@ -117,6 +117,9 @@ public static class DependencyInjection
         // Mythdle Services
         services.AddScoped<Application.Services.Interfaces.IMythdleTargetService, Application.Services.Implementations.MythdleTarget.MythdleTargetService>();
         services.AddScoped<IMythdlePlayerService, MythdlePlayerService>();
+
+        // Game Archive Services
+        services.AddScoped<IGameArchiveService, GameArchiveService>();
         
         return services;
     }

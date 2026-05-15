@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { MYTHDLE_MAX_ATTEMPTS } from '../data/mythdle.constants';
 import { MythdleApiError, MythdleGameDto, MythdleTargetDto } from '../models/mythdle-api.models';
@@ -17,6 +17,7 @@ import { MythdleResultScreenComponent } from '../components/mythdle-result-scree
 export class MythdlePageComponent implements OnInit {
   private readonly mythdleApi = inject(MythdleApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
 
   protected readonly maxAttempts = MYTHDLE_MAX_ATTEMPTS;
   protected puzzle: MythdleGameDto | null = null;
@@ -27,6 +28,8 @@ export class MythdlePageComponent implements OnInit {
   protected bannerMessage = '';
   protected feedbackMessage = '';
   protected history: MythdleHistoryEntry[] = [];
+  protected isReadOnly = false;
+  protected readOnlyMessage = '';
   private revealedCorrectTarget = '';
 
   private solvedElapsedLabel = '';
@@ -36,6 +39,8 @@ export class MythdlePageComponent implements OnInit {
   protected resultParticles: MythdleParticle[] = [];
   private puzzleStartedAtIso = '';
   private resultScreenTimer: ReturnType<typeof setTimeout> | null = null;
+  private puzzleDate = '';
+  protected isHistoryMode = false;
 
   @HostListener('window:keydown.escape')
   protected handleEscapeKey(): void {
@@ -45,18 +50,36 @@ export class MythdlePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadGame();
+    this.route.queryParams.subscribe((params) => {
+      const dateParam = params['date'];
+      if (dateParam) {
+        this.puzzleDate = dateParam;
+        this.isHistoryMode = dateParam !== this.todayAsDateOnly();
+      } else {
+        this.puzzleDate = this.todayAsDateOnly();
+        this.isHistoryMode = false;
+      }
+      this.loadGame();
+    });
   }
 
   protected loadGame(): void {
     this.loadingGame = true;
     this.bannerMessage = '';
+    this.isReadOnly = false;
+    this.readOnlyMessage = '';
 
-    this.mythdleApi.getGameByDate(this.todayAsDateOnly()).subscribe({
+    this.mythdleApi.getGameByDate(this.puzzleDate).subscribe({
       next: (puzzle) => {
         this.puzzle = puzzle;
         this.loadingGame = false;
         this.restoreStateForPuzzle(puzzle);
+        
+        if (this.puzzleDate !== this.todayAsDateOnly() && this.solved) {
+          this.isReadOnly = true;
+          this.readOnlyMessage = 'This puzzle has already been solved. Viewing in read-only mode.';
+        }
+        
         this.cdr.detectChanges();
       },
       error: (error: MythdleApiError) => {
@@ -68,7 +91,7 @@ export class MythdlePageComponent implements OnInit {
   }
 
   protected handleCardGuess(target: MythdleTargetDto): void {
-    if (!this.puzzle || this.submittingGuess || this.solved || this.failed) {
+    if (!this.puzzle || this.submittingGuess || this.solved || this.failed || this.isReadOnly) {
       return;
     }
 
@@ -269,6 +292,9 @@ export class MythdlePageComponent implements OnInit {
   }
 
   private triggerResultScreen(): void {
+    if (this.isHistoryMode) {
+      return;
+    }
     this.prepareResultStats();
     this.resultParticles = this.solved ? this.buildResultParticles() : [];
     this.resultScreenActive = true;

@@ -29,3 +29,9 @@ COBOL,1960,STATIC,MANUAL,KEYWORDS,NONE,Banking;Enterprise;Mainframe
 Ada,1980,STATIC,MANUAL,KEYWORDS,REQUIRED,Military;Embedded;Safety-critical
 MATLAB,1984,DYNAMIC,GC,KEYWORDS,OPTIONAL,Scientific;Numerical;Engineering;Data-Science
 PowerShell,2006,DYNAMIC,GC,BRACES,OPTIONAL,Scripting;Windows;Automation
+Groovy,2003,GRADUAL,GC,BRACES,OPTIONAL,JVM;Build;Scripting;Enterprise
+Raku,2015,GRADUAL,GC,BRACES,OPTIONAL,Text-processing;Scripting;Research
+OCaml,1996,STATIC,GC,KEYWORDS,NONE,Research;Functional;Compiler
+Crystal,2014,STATIC,GC,KEYWORDS,OPTIONAL,Systems;Web;Backend
+D,2001,STATIC,GC,BRACES,REQUIRED,Systems;Game-dev;HPC
+Vala,2006,STATIC,REFERENCE_COUNTED,BRACES,REQUIRED,Linux;Desktop;GNOME

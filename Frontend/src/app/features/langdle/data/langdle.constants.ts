@@ -40,4 +40,10 @@ export const LANGDLE_LANGUAGE_OPTIONS: string[] = [
   'Ada',
   'MATLAB',
   'PowerShell',
+  'Groovy',
+  'Raku',
+  'OCaml',
+  'Crystal',
+  'D',
+  'Vala'
 ];

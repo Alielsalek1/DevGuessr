@@ -35,6 +35,25 @@ public class MythdleGameRepository(AppDbContext dbContext) : IMythdleGameReposit
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<(List<DailyMythdle> Items, int TotalCount)> GetPastPuzzlesAsync(int skip, int take, CancellationToken cancellationToken)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var query = _dbContext.DailyMythdles
+            .Where(d => d.PuzzleDate < today)
+            .Include(d => d.Target)
+            .AsNoTracking();
+        
+        var totalCount = await query.CountAsync(cancellationToken);
+        
+        var items = await query
+            .OrderByDescending(d => d.PuzzleDate)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+        
+        return (items, totalCount);
+    }
+
     public async Task<bool> TryAddAsync(DailyMythdle puzzle, CancellationToken cancellationToken)
     {
         try

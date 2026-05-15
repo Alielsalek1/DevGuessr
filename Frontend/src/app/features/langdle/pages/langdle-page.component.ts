@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { LangdleApiError, LangdleGameDto } from '../models/langdle-api.models';
 import { LangdleApiService } from '../services/langdle-api.service';
@@ -24,6 +24,7 @@ import { LangdleGuessInputComponent } from '../components/langdle-guess-input/la
 export class LangdlePageComponent implements OnInit {
   private readonly langdleApi = inject(LangdleApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
 
   @ViewChild(LangdleGuessInputComponent) private guessInput?: LangdleGuessInputComponent;
 
@@ -34,6 +35,8 @@ export class LangdlePageComponent implements OnInit {
   protected inputError = '';
   protected bannerMessage = '';
   protected history: GuessHistoryEntry[] = [];
+  protected isReadOnly = false;
+  protected readOnlyMessage = '';
   
   private solvedElapsedLabel = '';
   protected victoryScreenActive = false;
@@ -42,6 +45,9 @@ export class LangdlePageComponent implements OnInit {
   protected victoryParticles: VictoryParticle[] = [];
   private puzzleStartedAtIso = '';
   private victoryScreenTimer: ReturnType<typeof setTimeout> | null = null;
+  protected puzzleDate = '';
+  protected historyQueryParams: { date: string } | null = null;
+  protected isHistoryMode = false;
 
   @HostListener('window:keydown.escape')
   protected handleEscapeKey(): void {
@@ -51,18 +57,40 @@ export class LangdlePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadGame();
+    // Check if there's a date query parameter for past games
+    this.route.queryParams.subscribe((params) => {
+      const dateParam = params['date'];
+      if (dateParam) {
+        this.puzzleDate = dateParam;
+        this.historyQueryParams = { date: dateParam };
+        this.isHistoryMode = dateParam !== this.todayAsDateOnly();
+      } else {
+        this.puzzleDate = this.todayAsDateOnly();
+        this.historyQueryParams = null;
+        this.isHistoryMode = false;
+      }
+      this.loadGame();
+    });
   }
 
   protected loadGame(): void {
     this.loadingGame = true;
     this.bannerMessage = '';
+    this.isReadOnly = false;
+    this.readOnlyMessage = '';
 
-    this.langdleApi.getGameByDate(this.todayAsDateOnly()).subscribe({
+    this.langdleApi.getGameByDate(this.puzzleDate).subscribe({
       next: (puzzle) => {
         this.puzzle = puzzle;
         this.loadingGame = false;
         this.restoreStateForPuzzle(puzzle);
+        
+        // Check if this is a past game and already solved
+        if (this.puzzleDate !== this.todayAsDateOnly() && this.solved) {
+          this.isReadOnly = true;
+          this.readOnlyMessage = 'This puzzle has already been solved. Viewing in read-only mode.';
+        }
+        
         this.cdr.detectChanges();
       },
       error: (error: LangdleApiError) => {
@@ -74,7 +102,7 @@ export class LangdlePageComponent implements OnInit {
   }
 
   protected handleGuessSubmitted(guess: string): void {
-    if (!this.puzzle || this.submittingGuess || this.solved) {
+    if (!this.puzzle || this.submittingGuess || this.solved || this.isReadOnly) {
       return;
     }
 
@@ -100,7 +128,7 @@ export class LangdlePageComponent implements OnInit {
           }
           this.persistCurrentState();
           
-          if (result.isCorrect) {
+          if (result.isCorrect && !this.isHistoryMode) {
             this.triggerVictoryScreen();
           }
           this.cdr.detectChanges();

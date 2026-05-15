@@ -1,5 +1,7 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, OnDestroy, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { APP_ENV } from '../../core/config/app-env.token';
 
@@ -21,9 +23,13 @@ export class HomePageComponent implements OnInit, OnDestroy {
   protected readonly env = inject(APP_ENV);
   protected readonly totalGames = 3;
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroy$ = new Subject<void>();
 
   protected completedGames = 0;
   protected nextPuzzleTimer = '';
+  protected selectedDate: string | null = null;
+  protected isHistoryMode = false;
   private timerInterval?: ReturnType<typeof setInterval>;
 
   protected get progressPercent(): number {
@@ -31,11 +37,20 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      const dateParam = params['date'];
+      this.selectedDate = typeof dateParam === 'string' && dateParam.length > 0 ? dateParam : null;
+      this.isHistoryMode = !!this.selectedDate && this.selectedDate !== this.todayAsDateOnly();
+      this.refreshQuestProgress();
+      this.cdr.detectChanges();
+    });
     this.refreshQuestProgress();
   }
 
   ngOnDestroy(): void {
     this.stopCountdown();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   @HostListener('window:focus')
@@ -75,20 +90,22 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ];
 
   private getCompletedCount(): number {
-    const today = this.todayAsDateOnly();
+    const activeDate = this.getActiveDate();
     const completionChecks = [
-      this.isCompleted(`langdle:state:${today}`),
-      this.isCompleted(`logodle:state:${today}`),
-      this.isCompleted(`mythdle:state:${today}`)
+      this.isCompleted(`langdle:state:${activeDate}`),
+      this.isCompleted(`logodle:state:${activeDate}`),
+      this.isCompleted(`mythdle:state:${activeDate}`)
     ];
 
     return completionChecks.filter(Boolean).length;
   }
 
   private refreshQuestProgress(): void {
+    const activeDate = this.getActiveDate();
+    const isToday = activeDate === this.todayAsDateOnly();
     this.completedGames = this.getCompletedCount();
 
-    if (this.completedGames === this.totalGames) {
+    if (isToday && this.completedGames === this.totalGames) {
       this.startCountdown();
     } else {
       this.stopCountdown();
@@ -137,15 +154,15 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
 
   protected isGameCompleted(route: string): boolean {
-    const today = this.todayAsDateOnly();
+    const activeDate = this.getActiveDate();
 
     switch (route) {
       case '/langdle':
-        return this.isCompleted(`langdle:state:${today}`);
+        return this.isCompleted(`langdle:state:${activeDate}`);
       case '/logodle':
-        return this.isCompleted(`logodle:state:${today}`);
+        return this.isCompleted(`logodle:state:${activeDate}`);
       case '/mythdle':
-        return this.isCompleted(`mythdle:state:${today}`);
+        return this.isCompleted(`mythdle:state:${activeDate}`);
       default:
         return false;
     }
@@ -175,5 +192,18 @@ export class HomePageComponent implements OnInit, OnDestroy {
     const month = String(now.getUTCMonth() + 1).padStart(2, '0');
     const day = String(now.getUTCDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  protected formatDate(date: string): string {
+    const dateObj = new Date(date + 'T00:00:00');
+    return dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  private getActiveDate(): string {
+    return this.selectedDate ?? this.todayAsDateOnly();
   }
 }

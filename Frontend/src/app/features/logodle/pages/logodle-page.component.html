@@ -1,11 +1,14 @@
 <section class="space-y-8">
-  <app-logodle-victory-screen
-    [victoryScreenActive]="victoryScreenActive"
-    [victoryScreenVisible]="victoryScreenVisible"
-    [victoryStats]="victoryStats"
-    [victoryParticles]="victoryParticles"
-    (closeEvent)="closeVictoryScreen()"
-  ></app-logodle-victory-screen>
+  @if (!isHistoryMode) {
+    <app-logodle-victory-screen
+      [victoryScreenActive]="victoryScreenActive"
+      [victoryScreenVisible]="victoryScreenVisible"
+      [victoryStats]="victoryStats"
+      [victoryParticles]="victoryParticles"
+      [historyQueryParams]="historyQueryParams"
+      (closeEvent)="closeVictoryScreen()"
+    ></app-logodle-victory-screen>
+  }
 
   @if (loadingGame) {
     <div class="max-w-5xl rounded-lg border border-[var(--color-layer-2)] bg-[var(--color-layer-1)] p-4 text-sm text-[var(--color-muted)]">

@@ -35,6 +35,25 @@ public class LogodleGameRepository(AppDbContext dbContext) : ILogodleGameReposit
 			.FirstOrDefaultAsync(cancellationToken);
 	}
 
+	public async Task<(List<DailyLogodle> Items, int TotalCount)> GetPastPuzzlesAsync(int skip, int take, CancellationToken cancellationToken)
+	{
+		var today = DateOnly.FromDateTime(DateTime.UtcNow);
+		var query = _dbContext.DailyLogodles
+			.Where(d => d.PuzzleDate < today)
+			.Include(d => d.Target)
+			.AsNoTracking();
+		
+		var totalCount = await query.CountAsync(cancellationToken);
+		
+		var items = await query
+			.OrderByDescending(d => d.PuzzleDate)
+			.Skip(skip)
+			.Take(take)
+			.ToListAsync(cancellationToken);
+		
+		return (items, totalCount);
+	}
+
 	public async Task<bool> TryAddAsync(DailyLogodle puzzle, CancellationToken cancellationToken)
 	{
 		try

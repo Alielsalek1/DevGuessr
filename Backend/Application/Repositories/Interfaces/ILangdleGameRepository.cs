@@ -7,6 +7,7 @@ public interface ILangdleGameRepository
     Task<DailyLangdle?> GetByDateAsync(DateOnly date, CancellationToken cancellationToken);
     Task<DailyLangdle?> GetByIdAsync(Guid puzzleId, CancellationToken cancellationToken);
     Task<DateOnly?> GetLatestPuzzleDateAsync(CancellationToken cancellationToken);
+    Task<(List<DailyLangdle> Items, int TotalCount)> GetPastPuzzlesAsync(int skip, int take, CancellationToken cancellationToken);
     Task<bool> TryAddAsync(DailyLangdle puzzle, CancellationToken cancellationToken);
     Task<bool> TryAddRangeAsync(IReadOnlyCollection<DailyLangdle> puzzles, CancellationToken cancellationToken);
 }

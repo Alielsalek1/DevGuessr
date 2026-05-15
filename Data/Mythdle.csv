@@ -167,3 +167,55 @@ Terravex,Infrastructure Scanner,true,A drift detection tool that continuously co
 Sigillum,Authentication,true,A token-based authentication library using rotating asymmetric key pairs with automatic key ceremony orchestration,Hard
 Zephyra,Stream Processing,true,A stream processing engine using punctuated watermarks for correct windowed aggregation of late-arriving events,Hard
 Helixdb,Database,true,A graph database engine that optimizes recursive common table expressions for deep multi-hop traversals,Hard
+Java,Programming Language,false,A high-level object-oriented programming language designed for portability across platforms using the Java Virtual Machine,Easy
+C,Programming Language,false,A general-purpose procedural programming language that provides low-level memory access and efficient compilation to machine code,Easy
+C++,Programming Language,false,A high-performance programming language extending C with object-oriented features and generic programming support,Easy
+HTML,Markup Language,false,The standard markup language for creating web pages that defines the structure and content of documents on the World Wide Web,Easy
+CSS,Stylesheet Language,false,A stylesheet language used to describe the presentation and visual formatting of HTML documents across web browsers,Easy
+SQL,Query Language,false,A domain-specific language for managing and querying relational databases used across virtually all database systems,Easy
+Bash,Shell Language,false,A Unix shell and command language that serves as the default login shell on most Linux distributions and macOS,Easy
+GitHub,Version Control Platform,false,A web-based hosting platform for Git repositories providing collaboration features like pull requests and issue tracking,Easy
+jQuery,Frontend Library,false,A fast and lightweight JavaScript library that simplifies HTML document traversal event handling and Ajax interactions,Easy
+WordPress,Content Management,false,An open-source content management system powering over 40 percent of all websites with extensible plugins and themes,Easy
+Ubuntu,Operating System,false,A popular Debian-based Linux distribution known for its ease of use and strong community support for desktop and server use,Easy
+Yarn,Package Manager,false,A fast reliable and secure dependency management tool for JavaScript that caches every package and parallelizes operations,Easy
+Visual Studio,IDE,false,A comprehensive integrated development environment by Microsoft for building applications across web mobile and cloud platforms,Easy
+IntelliJ IDEA,IDE,false,A powerful Java IDE by JetBrains with intelligent code completion deep static analysis and advanced refactoring tools,Easy
+Vim,Code Editor,false,A highly configurable text editor built for efficient text editing known for its modal editing and extensive plugin ecosystem,Easy
+GitLab,DevOps Platform,false,A complete DevOps platform delivered as a single application providing source control CI/CD and project management,Easy
+Homebrew,Package Manager,false,A free and open-source package management system that simplifies the installation of software on macOS and Linux,Easy
+Android Studio,IDE,false,The official integrated development environment for Android app development built on JetBrains IntelliJ IDEA,Easy
+Xcode,IDE,false,Apple's integrated development environment for building applications for macOS iOS iPadOS watchOS and tvOS,Easy
+pip,Package Manager,false,The standard package installer for Python that downloads and manages packages from the Python Package Index,Easy
+Gradle,Build Tool,false,A flexible build automation tool for multi-language software development supporting Java Kotlin and Groovy projects,Easy
+Maven,Build Tool,false,A software project management and build automation tool primarily used for Java projects with XML-based configuration,Easy
+GCP,Cloud Platform,false,Google's suite of cloud computing services providing infrastructure platform and serverless computing solutions,Medium
+Azure,Cloud Platform,false,Microsoft's cloud computing platform offering a wide range of services including compute storage and AI capabilities,Medium
+Neo4j,Database,false,A native graph database management system designed for storing and querying highly connected data with the Cypher query language,Medium
+Cassandra,Database,false,A distributed NoSQL database designed for handling large amounts of data across commodity servers with high availability,Medium
+Rails,Web Framework,false,A server-side Ruby web application framework following the model-view-controller pattern with convention over configuration,Medium
+PyTorch,Machine Learning,false,An open-source machine learning framework by Meta providing tensor computation and deep neural network building capabilities,Medium
+Hugging Face,AI Platform,false,An open-source platform providing pretrained transformer models and tools for natural language processing and machine learning,Medium
+OpenTelemetry,Observability,false,A vendor-neutral open-source framework for collecting and exporting telemetry data including traces metrics and logs,Medium
+ArgoCD,CI/CD,false,A declarative GitOps continuous delivery tool for Kubernetes that automates application deployment from Git repositories,Medium
+Vault,Security,false,A tool by HashiCorp for securely accessing secrets through a unified interface with tight access control and audit logging,Medium
+Envoy,Proxy,false,A high-performance open-source edge and service proxy designed for cloud-native applications and microservice architectures,Medium
+ngrok,Tunneling Tool,false,A cross-platform tool that creates secure tunnels to expose local development servers to the public internet,Medium
+Istio,Service Mesh,false,An open-source service mesh providing traffic management security and observability for microservice architectures on Kubernetes,Hard
+InfluxDB,Database,false,A purpose-built time-series database optimized for fast high-availability storage and retrieval of time-stamped data,Hard
+TiDB,Database,false,A distributed SQL database providing horizontal scalability and MySQL compatibility with hybrid transactional and analytical processing,Hard
+ScyllaDB,Database,false,A high-performance NoSQL database compatible with Apache Cassandra written in C++ for ultra-low-latency workloads,Hard
+SurrealDB,Database,false,A multi-model database supporting document graph and relational paradigms with real-time queries and embedded or distributed modes,Hard
+Qwik,Frontend Framework,false,A web framework designed for instant-loading applications using resumability instead of hydration for optimal performance,Hard
+Lit,Frontend Framework,false,A simple library for building fast lightweight web components using standard web platform features and reactive properties,Hard
+Phoenix,Web Framework,false,An Elixir web framework for building scalable and maintainable applications with real-time features through channels,Hard
+Actix,Web Framework,false,A powerful actor-based Rust web framework providing type-safe request handling and high-throughput HTTP processing,Hard
+MLflow,Machine Learning,false,An open-source platform for managing the full machine learning lifecycle including experimentation reproducibility and deployment,Hard
+Stellox,API Gateway,true,A service-aware API gateway that performs automatic request sharding and response aggregation across upstream microservices,Medium
+Pipeweave,CI/CD,true,A pipeline orchestration engine that composes multi-stage build workflows from reusable declarative step definitions,Medium
+Cortexis,Observability,true,A unified observability backend that correlates distributed traces with infrastructure metrics using probabilistic sampling,Hard
+Nimbuild,Build System,true,A hermetic build system that derives reproducible artifact hashes from source-level dependency resolution and platform fingerprints,Hard
+Kelpie,Package Manager,true,A workspace-aware package manager that resolves cross-project dependencies using constraint propagation over semantic version ranges,Medium
+Gridform,CSS Framework,true,A layout-first CSS framework that generates responsive grid systems from declarative viewport breakpoint specifications,Medium
+Tensura,Machine Learning,true,A distributed tensor computation library optimized for sparse model training across heterogeneous GPU and TPU clusters,Hard
+Flowcache,Cache Layer,true,A hierarchical caching middleware that optimizes cache eviction strategies using access pattern prediction and frequency analysis,Medium

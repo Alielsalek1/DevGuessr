@@ -35,6 +35,25 @@ public class LangdleGameRepository(AppDbContext dbContext) : ILangdleGameReposit
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<(List<DailyLangdle> Items, int TotalCount)> GetPastPuzzlesAsync(int skip, int take, CancellationToken cancellationToken)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var query = _dbContext.DailyLangdles
+            .Where(d => d.PuzzleDate < today)
+            .Include(d => d.TargetLanguage)
+            .AsNoTracking();
+        
+        var totalCount = await query.CountAsync(cancellationToken);
+        
+        var items = await query
+            .OrderByDescending(d => d.PuzzleDate)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+        
+        return (items, totalCount);
+    }
+
     public async Task<bool> TryAddAsync(DailyLangdle puzzle, CancellationToken cancellationToken)
     {
         try

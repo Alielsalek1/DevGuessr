@@ -30,6 +30,7 @@ import { RouterLink } from '@angular/router';
             
             <a
               routerLink="/"
+              [queryParams]="historyQueryParams"
               class="block w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 rounded-lg transition-all active:scale-[0.98] uppercase tracking-wide border border-zinc-700"
             >
               View More Games
@@ -49,5 +50,6 @@ import { RouterLink } from '@angular/router';
 })
 export class LogodleGameOverScreenComponent {
   @Input() correctName = 'Unknown';
+  @Input() historyQueryParams: { date: string } | null = null;
   @Output() onClose = new EventEmitter<void>();
 }

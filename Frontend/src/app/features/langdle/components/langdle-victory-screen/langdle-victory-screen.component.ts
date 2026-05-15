@@ -14,6 +14,7 @@ export class LangdleVictoryScreenComponent {
   @Input() victoryScreenVisible = false;
   @Input() victoryStats: VictoryStats | null = null;
   @Input() victoryParticles: VictoryParticle[] = [];
+  @Input() historyQueryParams: { date: string } | null = null;
 
   @Output() closeEvent = new EventEmitter<void>();
 
